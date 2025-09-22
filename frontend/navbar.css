@@ -1,0 +1,19 @@
+:root{
+  --color1: #FFF3DA;
+  --color2: #F3F1F5;
+  --color3: #F0D9FF;
+  --color4: #BFA2DB;
+  --color5: #7F7C82;
+}
+
+.navbox {
+  display: flex;
+  background-color: var(--color4);
+  padding: 5%;
+  gap: 10px;
+  align-items: center;
+}
+
+.colorMode {
+  height: 50px;
+}
