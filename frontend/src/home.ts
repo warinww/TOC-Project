@@ -1,7 +1,15 @@
 import { createNavbar } from "./navbar.js";
-
 createNavbar();
 
-const title = document.createElement("h1");
-title.textContent = "Welcome to Home Page";
-document.body.appendChild(title);
+const onairing = document.createElement("p");
+onairing.textContent = "กำลังออนแอร์";
+onairing.className = "banner-text";
+document.body.appendChild(onairing);
+
+const banner = document.createElement("div");
+// banner.textContent = "คลิกเพื่อดูรายละเอียด";
+banner.className = "banner-ad";
+banner.addEventListener("click", () => {
+    window.location.href = "detail.html";
+});
+document.body.appendChild(banner);
