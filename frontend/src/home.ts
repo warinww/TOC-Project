@@ -8,8 +8,14 @@ document.body.appendChild(onairing);
 
 const banner = document.createElement("div");
 // banner.textContent = "คลิกเพื่อดูรายละเอียด";
+
 banner.className = "banner-ad";
 banner.addEventListener("click", () => {
     window.location.href = "detail.html";
 });
 document.body.appendChild(banner);
+
+const posterText = document.createElement("p");
+posterText.textContent = "ซีรี่ย์วายทั้งหมด";
+posterText.className = "poster-text"
+document.body.appendChild(posterText);
