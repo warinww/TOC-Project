@@ -11,4 +11,8 @@ banner.addEventListener("click", () => {
     window.location.href = "detail.html";
 });
 document.body.appendChild(banner);
+const posterText = document.createElement("p");
+posterText.textContent = "ซีรี่ย์วายทั้งหมด";
+posterText.className = "poster-text";
+document.body.appendChild(posterText);
 //# sourceMappingURL=home.js.map
