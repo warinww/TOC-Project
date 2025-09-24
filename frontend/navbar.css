@@ -4,14 +4,39 @@
   --color3: #F0D9FF;
   --color4: #BFA2DB;
   --color5: #7F7C82;
+  --dark1: #39375B;
+  --dark2: #D597CE;
+  --white: #FFFFFF;
+  --black: #000000;
 }
 
 .navbox {
   display: flex;
   background-color: var(--color4);
-  padding: 5%;
+  padding: 10px;
   gap: 10px;
   align-items: center;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  background-color: var(--white);
+  padding: 10px;
+  border-radius: 50px;
+  gap: 12px;
+}
+
+.searchBar {
+  border: none;
+  border-radius: 50px;
+  width: 50vw;
+  background-color: var(--white);
+  color: var(--color5);
+}
+
+.searchIcon {
+  height: 20px;
 }
 
 .colorMode {
