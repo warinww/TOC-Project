@@ -159,10 +159,11 @@ export class ShowDetail extends HTMLElement {
         const castHtml = (this._cast || []).map(({ id, first = '', last = '', img = '' }) => {
             const safeImg = img || FALLBACK_IMG;
             const alt = `${first} ${last}`.trim();
+            const last_realname = last.split(" ")[0];
             return `
         <div class="card" part="card" data-cast-id="${id !== null && id !== void 0 ? id : ''}">
           <img src="${safeImg}" alt="${alt}" loading="lazy" />
-          <p>${first}<br>${last}</p>
+          <p>${first}<br>${last_realname}</p>
         </div>
       `;
         }).join('');
@@ -206,7 +207,7 @@ export class ShowDetail extends HTMLElement {
 @media (max-width: 640px) { :host { --pad-x: 5vw; --gap: 24px; } }
       </style>
       <a class="navigate" href="${backHref}" aria-label="กลับไปหน้าหลัก">
-          <img src="../image/back.svg" alt="">
+          <img src="../assets/icons/back.svg" alt="">
           <span aria-hidden="true">กลับไปหน้าหลัก</span>
         </a>
       <div class="container" data-show-id="${showId}">
