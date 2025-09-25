@@ -24,7 +24,6 @@ export class ShowDetail extends HTMLElement {
         this._dataLoaded = false;
         this.attachShadow({ mode: 'open' });
     }
-    // ========== Public API ==========
     set cast(arr) {
         if (Array.isArray(arr)) {
             this._cast = arr.map(v => ({
@@ -37,15 +36,22 @@ export class ShowDetail extends HTMLElement {
         }
     }
     get cast() { return this._cast; }
-    // ========== Lifecycle ==========
     connectedCallback() {
-        // migrate legacy `title` -> `show-title` เพื่อกัน tooltip
         const legacyTitle = this.getAttribute('title');
         if (legacyTitle && !this.getAttribute('show-title')) {
             this.setAttribute('show-title', legacyTitle);
         }
         if (this.hasAttribute('title'))
             this.removeAttribute('title');
+        if (this.shadowRoot && !this._contentRoot) {
+            const link = document.createElement('link');
+            link.setAttribute('rel', 'stylesheet');
+            link.setAttribute('href', 'detail.css'); // ใช้ detail.css
+            const content = document.createElement('div');
+            content.setAttribute('id', 'root');
+            this.shadowRoot.append(link, content);
+            this._contentRoot = content;
+        }
         this.loadData().finally(() => {
             this._dataLoaded = true;
             this.render();
@@ -53,7 +59,6 @@ export class ShowDetail extends HTMLElement {
     }
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === 'data-src' && oldValue !== newValue) {
-            // เปลี่ยน source → โหลดใหม่
             this._dataLoaded = false;
             this.loadData().finally(() => {
                 this._dataLoaded = true;
@@ -64,7 +69,6 @@ export class ShowDetail extends HTMLElement {
         if (this._dataLoaded)
             this.render();
     }
-    // ========== Data loading ==========
     loadData() {
         return __awaiter(this, void 0, void 0, function* () {
             const dataSrc = this.getAttribute('data-src');
@@ -87,7 +91,6 @@ export class ShowDetail extends HTMLElement {
         });
     }
     applyData(d) {
-        // map JSON -> attributes (เก็บบน DOM เพื่อให้ render ใช้ค่ากลาง)
         if (d.title) {
             this.setAttribute('show-title', d.title);
             this.setAttribute('aria-label', d.title);
@@ -142,9 +145,8 @@ export class ShowDetail extends HTMLElement {
             }
         }
     }
-    // ========== Render ==========
     render() {
-        const root = this.shadowRoot;
+        const root = this._contentRoot;
         if (!root)
             return;
         const showTitle = this.getAttribute('show-title') || 'ชื่อเรื่อง';
@@ -168,50 +170,12 @@ export class ShowDetail extends HTMLElement {
       `;
         }).join('');
         root.innerHTML = `
-      <style>
-:host { display: block; box-sizing: border-box; --max-w: 1300px; --pad-x: 10vw; --gap: 5vw; }
-
-.container { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--pad-x); }
-
-/* Back link (ใช้ <a>, ไม่ใช้ title → ไม่มี tooltip) */
-.navigate, .navigate:link, .navigate:visited { color: inherit; text-decoration: none; }
-.navigate { font-size: 18px; margin: 0; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; padding: 12px 16px; border-radius: 12px; -webkit-tap-highlight-color: transparent; user-select: none; }
-.navigate img { width: 40px; height: 40px; }
-
-.title { font-size: 24px; text-align: left; margin: 10px 0 0 0; font-weight: 700; }
-
-/* layout ซ้าย-ขวา */
-.content { display: flex; flex-direction: row; align-items: flex-start; gap: var(--gap); margin: 20px 0; flex-wrap: wrap; }
-.left { flex: 1 1 320px; max-width: 450px; }
-.left img { width: 100%; height: 660px; object-fit: cover; display: block; border-radius: 15px; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
-.right { flex: 1 1 400px; min-width: 320px; display: flex; flex-direction: column; width: 100%; box-sizing: border-box; }
-
-.h2 { font-size: 20px; margin: 0; font-weight: 700; }
-
-/* description: เลื่อนอ่านได้ + ซ่อนสกอลบาร์ + โฟกัสคีย์บอร์ดได้ */
-.desc { 
-  height: 178px; width: 100%; overflow: auto; margin-right: 0;
-}
-
-.h2.trailer { margin: 20px 0 22px 0; }
-.video { height: 355px; width: 100%; aspect-ratio: 16 / 9; display: block; border: none; border-radius: 15px; }
-
-/* Cast */
-.cast-wrap { margin-top: 10px; }
-.cast-title { font-size: 20px; margin: 50px 0 20px 0; font-weight: 700; }
-.cast-list { display: flex; flex-direction: row; flex-wrap: wrap; gap: 30px 35px; justify-content: flex-start; }
-.card { width: 130px; display: flex; flex-direction: column; align-items: center; }
-.card img { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; background: #e5e7eb; }
-.card p { text-align: center; margin: 10px 0 0 0; line-height: 1.25; }
-
-@media (max-width: 640px) { :host { --pad-x: 5vw; --gap: 24px; } }
-      </style>
       <a class="navigate" href="${backHref}" aria-label="กลับไปหน้าหลัก">
-          <img src="../assets/icons/back.svg" alt="">
-          <span aria-hidden="true">กลับไปหน้าหลัก</span>
-        </a>
-      <div class="container" data-show-id="${showId}">
+        <img src="../assets/icons/back.svg" alt="">
+        <span aria-hidden="true">กลับไปหน้าหลัก</span>
+      </a>
 
+      <div class="container" data-show-id="${showId}">
         <p class="title">${showTitle}${year}</p>
 
         <div class="content">
@@ -235,7 +199,6 @@ export class ShowDetail extends HTMLElement {
     `;
     }
 }
-// Define once guard
 if (!customElements.get('show-detail')) {
     customElements.define('show-detail', ShowDetail);
 }
