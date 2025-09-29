@@ -14,7 +14,11 @@
 }
 
 body {
+  margin: 0;
+  width: 100vw;
+  padding-top: 80px;
   font-family: 'Anuphan';
+  overflow-x: hidden;
 }
 
 /* body.dark {
@@ -28,11 +32,16 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 10px 10vw;
-  height: 50px;
+  height: fit-content;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  box-sizing: border-box; 
 }
 
 .navbox img{
-  height: 80%;     
+  height: 48px;     
   width: auto;     
   object-fit: contain;
 }
@@ -44,21 +53,24 @@ body {
   padding: 10px;
   border-radius: 50px;
   gap: 12px;
-  height: 30px;
+  height: 48px;
+  width: 30vw;
+  box-sizing: border-box; 
 }
 
-.searchBar {
+.searchBox img {
+  height: 80%;
+}
+
+.searchBox input {
   height: 80%;
   border: none;
   outline: none;
   border-radius: 50px;
-  width: 30vw;
+  width: 80%;
   background-color: var(--white);
   color: var(--color5);
-}
-
-.searchIcon {
-  height: 80%;
+  box-sizing: border-box; 
 }
 
 .changeThemeDiv {

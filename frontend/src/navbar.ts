@@ -25,13 +25,10 @@ export function createNavbar() {
     searchBox.className = "searchBox";  
     const searchBar = document.createElement("input");
     searchBar.placeholder = "Search...";
-    searchBar.className = "searchBar";
     const searchIcon = document.createElement("img");
     searchIcon.src = "./assets/icons/search.svg";
-    searchIcon.className = "searchIcon";
     const filterIcon = document.createElement("img");
     filterIcon.src = "./assets/icons/filter.svg";
-    filterIcon.className = "searchIcon";
     searchBox.appendChild(searchIcon);
     searchBox.appendChild(searchBar);
     searchBox.appendChild(filterIcon);
