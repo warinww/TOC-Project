@@ -7,12 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "watch": "tsc --watch",
-    "start": "lite-server"
+    "start": "lite-server",
+    "dev": "concurrently \"tsc --watch\" \"lite-server\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "lite-server": "^2.6.1",
     "typescript": "^5.9.2"
   }

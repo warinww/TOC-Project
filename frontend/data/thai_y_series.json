@@ -1,0 +1,1602 @@
+[
+  {
+    "id": 1,
+    "title": "ซีรี่ย์ชาย 1",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 2,
+    "title": "ซีรี่ย์ชาย 2",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "ชาย",
+    "onair": true
+  },
+  {
+    "id": 3,
+    "title": "ซีรี่ย์ชาย 3",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 4,
+    "title": "ซีรี่ย์ชาย 4",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 5,
+    "title": "ซีรี่ย์ชาย 5",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 6,
+    "title": "ซีรี่ย์ชาย 6",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "คู่",
+    "onair": true
+  },
+  {
+    "id": 7,
+    "title": "ซีรี่ย์ชาย 7",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 8,
+    "title": "ซีรี่ย์ชาย 8",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 9,
+    "title": "ซีรี่ย์ชาย 9",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 10,
+    "title": "ซีรี่ย์ชาย 10",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 11,
+    "title": "ซีรี่ย์ชาย 11",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 12,
+    "title": "ซีรี่ย์ชาย 12",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 13,
+    "title": "ซีรี่ย์ชาย 13",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 14,
+    "title": "ซีรี่ย์ชาย 14",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 15,
+    "title": "ซีรี่ย์ชาย 15",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 16,
+    "title": "ซีรี่ย์ชาย 16",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 17,
+    "title": "ซีรี่ย์ชาย 17",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 18,
+    "title": "ซีรี่ย์ชาย 18",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 19,
+    "title": "ซีรี่ย์ชาย 19",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 20,
+    "title": "ซีรี่ย์ชาย 20",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 21,
+    "title": "ซีรี่ย์ชาย 21",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 22,
+    "title": "ซีรี่ย์ชาย 22",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 23,
+    "title": "ซีรี่ย์ชาย 23",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 24,
+    "title": "ซีรี่ย์ชาย 24",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 25,
+    "title": "ซีรี่ย์ชาย 25",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 26,
+    "title": "ซีรี่ย์ชาย 26",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 27,
+    "title": "ซีรี่ย์ชาย 27",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 28,
+    "title": "ซีรี่ย์ชาย 28",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 29,
+    "title": "ซีรี่ย์ชาย 29",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 30,
+    "title": "ซีรี่ย์ชาย 30",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 31,
+    "title": "ซีรี่ย์ชาย 31",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 32,
+    "title": "ซีรี่ย์ชาย 32",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 33,
+    "title": "ซีรี่ย์ชาย 33",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 34,
+    "title": "ซีรี่ย์ชาย 34",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 35,
+    "title": "ซีรี่ย์ชาย 35",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 36,
+    "title": "ซีรี่ย์ชาย 36",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 37,
+    "title": "ซีรี่ย์ชาย 37",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 38,
+    "title": "ซีรี่ย์ชาย 38",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 39,
+    "title": "ซีรี่ย์ชาย 39",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 40,
+    "title": "ซีรี่ย์ชาย 40",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 41,
+    "title": "ซีรี่ย์ชาย 41",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 42,
+    "title": "ซีรี่ย์ชาย 42",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 43,
+    "title": "ซีรี่ย์ชาย 43",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 44,
+    "title": "ซีรี่ย์ชาย 44",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 45,
+    "title": "ซีรี่ย์ชาย 45",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 46,
+    "title": "ซีรี่ย์ชาย 46",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 47,
+    "title": "ซีรี่ย์ชาย 47",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 48,
+    "title": "ซีรี่ย์ชาย 48",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 49,
+    "title": "ซีรี่ย์ชาย 49",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 50,
+    "title": "ซีรี่ย์ชาย 50",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "ชาย",
+    "onair": true
+  },
+  {
+    "id": 51,
+    "title": "ซีรี่ย์ชาย 51",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "ชาย",
+    "onair": true
+  },
+  {
+    "id": 52,
+    "title": "ซีรี่ย์ชาย 52",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "คู่",
+    "onair": true
+  },
+  {
+    "id": 53,
+    "title": "ซีรี่ย์ชาย 53",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "หญิง",
+    "onair": true
+  },
+  {
+    "id": 54,
+    "title": "ซีรี่ย์ชาย 54",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "ชาย",
+    "onair": true
+  },
+  {
+    "id": 55,
+    "title": "ซีรี่ย์ชาย 55",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 56,
+    "title": "ซีรี่ย์ชาย 56",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "คู่",
+    "onair": true
+  },
+  {
+    "id": 57,
+    "title": "ซีรี่ย์ชาย 57",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 58,
+    "title": "ซีรี่ย์ชาย 58",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 59,
+    "title": "ซีรี่ย์ชาย 59",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 60,
+    "title": "ซีรี่ย์ชาย 60",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 61,
+    "title": "ซีรี่ย์ชาย 61",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 62,
+    "title": "ซีรี่ย์ชาย 62",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 63,
+    "title": "ซีรี่ย์ชาย 63",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 64,
+    "title": "ซีรี่ย์ชาย 64",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 65,
+    "title": "ซีรี่ย์ชาย 65",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 66,
+    "title": "ซีรี่ย์ชาย 66",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 67,
+    "title": "ซีรี่ย์ชาย 67",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 68,
+    "title": "ซีรี่ย์ชาย 68",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 69,
+    "title": "ซีรี่ย์ชาย 69",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 70,
+    "title": "ซีรี่ย์ชาย 70",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 71,
+    "title": "ซีรี่ย์ชาย 71",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 72,
+    "title": "ซีรี่ย์ชาย 72",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 73,
+    "title": "ซีรี่ย์ชาย 73",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 74,
+    "title": "ซีรี่ย์ชาย 74",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 75,
+    "title": "ซีรี่ย์ชาย 75",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 76,
+    "title": "ซีรี่ย์ชาย 76",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 77,
+    "title": "ซีรี่ย์ชาย 77",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 78,
+    "title": "ซีรี่ย์ชาย 78",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 79,
+    "title": "ซีรี่ย์ชาย 79",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 80,
+    "title": "ซีรี่ย์ชาย 80",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 81,
+    "title": "ซีรี่ย์ชาย 81",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 82,
+    "title": "ซีรี่ย์ชาย 82",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 83,
+    "title": "ซีรี่ย์ชาย 83",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "คู่",
+    "onair": true
+  },
+  {
+    "id": 84,
+    "title": "ซีรี่ย์ชาย 84",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 85,
+    "title": "ซีรี่ย์ชาย 85",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 86,
+    "title": "ซีรี่ย์ชาย 86",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 87,
+    "title": "ซีรี่ย์ชาย 87",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 88,
+    "title": "ซีรี่ย์ชาย 88",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 89,
+    "title": "ซีรี่ย์ชาย 89",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "ชาย",
+    "onair": true
+  },
+  {
+    "id": 90,
+    "title": "ซีรี่ย์ชาย 90",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 91,
+    "title": "ซีรี่ย์ชาย 91",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 92,
+    "title": "ซีรี่ย์ชาย 92",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 93,
+    "title": "ซีรี่ย์ชาย 93",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 94,
+    "title": "ซีรี่ย์ชาย 94",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 95,
+    "title": "ซีรี่ย์ชาย 95",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 96,
+    "title": "ซีรี่ย์ชาย 96",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 97,
+    "title": "ซีรี่ย์ชาย 97",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 98,
+    "title": "ซีรี่ย์ชาย 98",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 99,
+    "title": "ซีรี่ย์ชาย 99",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "ชาย",
+    "onair": true
+  },
+  {
+    "id": 100,
+    "title": "ซีรี่ย์ชาย 100",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "ชาย",
+    "onair": true
+  },
+  {
+    "id": 101,
+    "title": "ซีรี่ย์หญิง 1",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 102,
+    "title": "ซีรี่ย์หญิง 2",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 103,
+    "title": "ซีรี่ย์หญิง 3",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 104,
+    "title": "ซีรี่ย์หญิง 4",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 105,
+    "title": "ซีรี่ย์หญิง 5",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 106,
+    "title": "ซีรี่ย์หญิง 6",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 107,
+    "title": "ซีรี่ย์หญิง 7",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 108,
+    "title": "ซีรี่ย์หญิง 8",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 109,
+    "title": "ซีรี่ย์หญิง 9",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 110,
+    "title": "ซีรี่ย์หญิง 10",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 111,
+    "title": "ซีรี่ย์หญิง 11",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 112,
+    "title": "ซีรี่ย์หญิง 12",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 113,
+    "title": "ซีรี่ย์หญิง 13",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 114,
+    "title": "ซีรี่ย์หญิง 14",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "ชาย",
+    "onair": true
+  },
+  {
+    "id": 115,
+    "title": "ซีรี่ย์หญิง 15",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 116,
+    "title": "ซีรี่ย์หญิง 16",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 117,
+    "title": "ซีรี่ย์หญิง 17",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 118,
+    "title": "ซีรี่ย์หญิง 18",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 119,
+    "title": "ซีรี่ย์หญิง 19",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 120,
+    "title": "ซีรี่ย์หญิง 20",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 121,
+    "title": "ซีรี่ย์หญิง 21",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 122,
+    "title": "ซีรี่ย์หญิง 22",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 123,
+    "title": "ซีรี่ย์หญิง 23",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 124,
+    "title": "ซีรี่ย์หญิง 24",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 125,
+    "title": "ซีรี่ย์หญิง 25",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 126,
+    "title": "ซีรี่ย์หญิง 26",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 127,
+    "title": "ซีรี่ย์หญิง 27",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "หญิง",
+    "onair": true
+  },
+  {
+    "id": 128,
+    "title": "ซีรี่ย์หญิง 28",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 129,
+    "title": "ซีรี่ย์หญิง 29",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 130,
+    "title": "ซีรี่ย์หญิง 30",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 131,
+    "title": "ซีรี่ย์หญิง 31",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 132,
+    "title": "ซีรี่ย์หญิง 32",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 133,
+    "title": "ซีรี่ย์หญิง 33",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 134,
+    "title": "ซีรี่ย์หญิง 34",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 135,
+    "title": "ซีรี่ย์หญิง 35",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 136,
+    "title": "ซีรี่ย์หญิง 36",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 137,
+    "title": "ซีรี่ย์หญิง 37",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 138,
+    "title": "ซีรี่ย์หญิง 38",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 139,
+    "title": "ซีรี่ย์หญิง 39",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 140,
+    "title": "ซีรี่ย์หญิง 40",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 141,
+    "title": "ซีรี่ย์หญิง 41",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 142,
+    "title": "ซีรี่ย์หญิง 42",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 143,
+    "title": "ซีรี่ย์หญิง 43",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 144,
+    "title": "ซีรี่ย์หญิง 44",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 145,
+    "title": "ซีรี่ย์หญิง 45",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 146,
+    "title": "ซีรี่ย์หญิง 46",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 147,
+    "title": "ซีรี่ย์หญิง 47",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 148,
+    "title": "ซีรี่ย์หญิง 48",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 149,
+    "title": "ซีรี่ย์หญิง 49",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 150,
+    "title": "ซีรี่ย์หญิง 50",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 151,
+    "title": "ซีรี่ย์หญิง 51",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 152,
+    "title": "ซีรี่ย์หญิง 52",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 153,
+    "title": "ซีรี่ย์หญิง 53",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 154,
+    "title": "ซีรี่ย์หญิง 54",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 155,
+    "title": "ซีรี่ย์หญิง 55",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "คู่",
+    "onair": true
+  },
+  {
+    "id": 156,
+    "title": "ซีรี่ย์หญิง 56",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 157,
+    "title": "ซีรี่ย์หญิง 57",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 158,
+    "title": "ซีรี่ย์หญิง 58",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 159,
+    "title": "ซีรี่ย์หญิง 59",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "หญิง",
+    "onair": true
+  },
+  {
+    "id": 160,
+    "title": "ซีรี่ย์หญิง 60",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 161,
+    "title": "ซีรี่ย์หญิง 61",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 162,
+    "title": "ซีรี่ย์หญิง 62",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 163,
+    "title": "ซีรี่ย์หญิง 63",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 164,
+    "title": "ซีรี่ย์หญิง 64",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 165,
+    "title": "ซีรี่ย์หญิง 65",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 166,
+    "title": "ซีรี่ย์หญิง 66",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "หญิง",
+    "onair": true
+  },
+  {
+    "id": 167,
+    "title": "ซีรี่ย์หญิง 67",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "ชาย",
+    "onair": true
+  },
+  {
+    "id": 168,
+    "title": "ซีรี่ย์หญิง 68",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 169,
+    "title": "ซีรี่ย์หญิง 69",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 170,
+    "title": "ซีรี่ย์หญิง 70",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "ชาย",
+    "onair": true
+  },
+  {
+    "id": 171,
+    "title": "ซีรี่ย์หญิง 71",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 172,
+    "title": "ซีรี่ย์หญิง 72",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 173,
+    "title": "ซีรี่ย์หญิง 73",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 174,
+    "title": "ซีรี่ย์หญิง 74",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 175,
+    "title": "ซีรี่ย์หญิง 75",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 176,
+    "title": "ซีรี่ย์หญิง 76",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 177,
+    "title": "ซีรี่ย์หญิง 77",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 178,
+    "title": "ซีรี่ย์หญิง 78",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 179,
+    "title": "ซีรี่ย์หญิง 79",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 180,
+    "title": "ซีรี่ย์หญิง 80",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 181,
+    "title": "ซีรี่ย์หญิง 81",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 182,
+    "title": "ซีรี่ย์หญิง 82",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 183,
+    "title": "ซีรี่ย์หญิง 83",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 184,
+    "title": "ซีรี่ย์หญิง 84",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 185,
+    "title": "ซีรี่ย์หญิง 85",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2020,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 186,
+    "title": "ซีรี่ย์หญิง 86",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 187,
+    "title": "ซีรี่ย์หญิง 87",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2018,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 188,
+    "title": "ซีรี่ย์หญิง 88",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "ชาย",
+    "onair": true
+  },
+  {
+    "id": 189,
+    "title": "ซีรี่ย์หญิง 89",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2025,
+    "gender": "ชาย",
+    "onair": true
+  },
+  {
+    "id": 190,
+    "title": "ซีรี่ย์หญิง 90",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 191,
+    "title": "ซีรี่ย์หญิง 91",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 192,
+    "title": "ซีรี่ย์หญิง 92",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 193,
+    "title": "ซีรี่ย์หญิง 93",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 194,
+    "title": "ซีรี่ย์หญิง 94",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2023,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 195,
+    "title": "ซีรี่ย์หญิง 95",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2021,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 196,
+    "title": "ซีรี่ย์หญิง 96",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2019,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 197,
+    "title": "ซีรี่ย์หญิง 97",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2024,
+    "gender": "ชาย",
+    "onair": false
+  },
+  {
+    "id": 198,
+    "title": "ซีรี่ย์หญิง 98",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "คู่",
+    "onair": false
+  },
+  {
+    "id": 199,
+    "title": "ซีรี่ย์หญิง 99",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2022,
+    "gender": "หญิง",
+    "onair": false
+  },
+  {
+    "id": 200,
+    "title": "ซีรี่ย์หญิง 100",
+    "poster_url": "https://pbs.twimg.com/media/GdT_iL0aoAMV2TC?format=jpg&name=4096x4096",
+    "year": 2017,
+    "gender": "ชาย",
+    "onair": false
+  }
+]

@@ -1,0 +1,258 @@
+body {
+    font-family: 'Anuphan';
+}
+
+.banner-text {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 20px 10vw;
+}
+
+.poster-text {
+  font-size: 24px;
+  font-weight: bold;
+  /* margin: 20px 5vw; */
+}
+
+/* ---------- Banner slider ---------- */
+.banner-ad {
+  position: relative;
+  overflow: hidden;
+  width: auto;
+  height: 40vh;
+  margin: 20px 10vw;
+  border-radius: 20px;
+  background: #000; /* กันวาบตอนโหลด */
+}
+
+.banner-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity .6s ease;
+}
+.banner-slide.active { opacity: 1; }
+
+/* ไล่แสง + caption */
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0,0,0,.5), rgba(0,0,0,0) 55%);
+  display: flex;
+  align-items: end;
+  padding: 14px 18px;
+  box-sizing: border-box;
+}
+.banner-caption {
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+  line-height: 1.2;
+  max-width: 75%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ปุ่มเลื่อน ใช้ mask แบบเดียวกับ pagination วิธี B */
+.banner-btn {
+  --icon-url: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.6);
+  background: rgba(0,0,0,.25);
+  backdrop-filter: blur(2px);
+  color: #fff; /* currentColor ของไอคอน */
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.banner-btn:hover {
+  background: #BFA2DB;
+  border-color: #fff;
+}
+.banner-btn::before {
+  content: "";
+  width: 20px; height: 20px;
+  background-color: currentColor;
+  -webkit-mask: var(--icon-url) no-repeat center / contain;
+          mask: var(--icon-url) no-repeat center / contain;
+  display: block;
+}
+.banner-btn.prev { left: 12px; --icon-url: url("./icons/chevron-left.svg"); }
+.banner-btn.next { right: 12px; --icon-url: url("./icons/chevron-right.svg"); }
+
+/* จุดบอกตำแหน่ง */
+.banner-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+}
+/* จุดบอกตำแหน่ง (reset ให้เป็นวงกลมเป๊ะ) */
+.banner-dots .dot {
+  width: 5px;
+  height: 5px;
+  aspect-ratio: 1 / 1;        /* ล็อกให้กว้าง=สูง */
+  border-radius: 50%;
+  background: rgba(255,255,255,.6);
+  border: none;
+  padding: 0;                  /* กันปุ่มมี padding เดิม */
+  -webkit-appearance: none;    /* reset สไตล์ปุ่ม */
+  appearance: none;
+  display: inline-block;       /* ไม่ให้ baseline ดันทรง */
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.banner-dots .dot.active {
+  background: #fff;            /* current เติมสีขาวเต็มวง */
+  box-shadow: 0 0 0 2px rgba(0,0,0,.15); /* วงขอบบางๆ ให้เด่น (ปรับได้) */
+  transform: scale(1.15);      /* ขยายให้เห็นชัด (ยังกลมอยู่) */
+}
+
+.poster-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 10vw;
+}
+
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.year-selecter {
+  font-family: "Anuphan";
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 15px;
+  padding: 3px 20px 3px 10px; /* padding-left & padding-right */
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  outline: none;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  width: 90px; 
+}
+
+.select-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 10px; /* ช่องว่างขวา */
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #000;
+  pointer-events: none;
+}
+
+.series-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(0px, 3vw, 30px);  
+  margin: 0 10vw;
+}
+
+.series-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.series-card img {
+  width: 100%;             /* กว้างเต็มคอลัมน์ของการ์ด */
+  aspect-ratio: 2 / 3;     /* บังคับกรอบเป็น 4:5 */
+  height: auto;            /* ให้ความสูงคำนวณจาก aspect-ratio */
+  object-fit: cover;       /* เติมเต็มกรอบ (ครอปเล็กน้อยถ้าไม่ 4:5 เป๊ะ) */
+  border-radius: 10px;
+  /* margin: 0 20px; */
+  display: block;          /* กันช่องว่าง inline */
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 0;
+  font-family: 'Anuphan';
+}
+
+.pagination button,
+.pagination span {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination button:hover {
+  border-color: #a285d1;
+  color: #a285d1;
+}
+
+.pagination .active {
+  background-color: #a285d1;
+  color: #fff;
+  border: none;
+}
+
+.pagination .dots {
+  border: none;
+  background: none;
+  cursor: default;
+}
+
+/* ========== ปุ่มลูกศรซ้ายขวา ใช้ mask ========== */
+.pagination button.nav {
+  --icon-url: none; /* จะ override ด้านล่าง */
+  color: #a285d1; /* สีของไอคอน (ใช้ currentColor) */
+  position: relative;
+  font-size: 0; /* ซ่อน text node เผื่อมี */
+}
+
+/* วาดไอคอน */
+.pagination button.nav::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
+  -webkit-mask: var(--icon-url) no-repeat center / contain;
+          mask: var(--icon-url) no-repeat center / contain;
+  display: block;
+}
+
+/* ไฟล์ SVG ของคุณ */
+.pagination button.prev { --icon-url: url("/icons/chevron-left.svg"); }
+.pagination button.next { --icon-url: url("/icons/chevron-right.svg"); }
+
+/* hover/disable */
+.pagination button.nav:hover { border-color: #a285d1; }
+.pagination button.nav:disabled { opacity: .5; cursor: default; }
