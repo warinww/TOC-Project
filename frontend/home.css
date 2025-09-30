@@ -167,10 +167,11 @@ body {
 
 .series-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: clamp(0px, 3vw, 30px);  
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* ปรับขนาดขั้นต่ำ 180px */
+  gap: clamp(10px, 3vw, 30px);  
   margin: 0 10vw;
 }
+
 
 .series-card {
   display: flex;
