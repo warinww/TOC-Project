@@ -19,8 +19,11 @@ headers = {
 }
 
 BASE_URL = "https://yflix.me/category/series/page/{}/"
-POSTER_FOLDER = r"C:\Users\User\Documents\kmitl_3D ToC\TOC-Project\frontend\posters"
-os.makedirs(POSTER_FOLDER, exist_ok=True)
+
+# แทนที่จะใช้ C:\Users\User ให้ใช้โฟลเดอร์ใน project ของคุณ
+POSTER_FOLDER = os.path.join(os.getcwd(), "posters")
+os.makedirs(POSTER_FOLDER, exist_ok=True)  # ตอนนี้สร้างใน project folder
+
 
 def scrape_page(page: int):
     """
