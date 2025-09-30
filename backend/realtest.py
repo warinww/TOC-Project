@@ -7,12 +7,13 @@ import html
 
 # Base URL of series list
 series_url = "https://yflix.me/category/series/page/{}/"
+# series_url = "https://yflix.me/category/casting/page/{}/"
 
 # CSV file
 series_csv_file = "yflix_series_details.csv"
 
 # Headers to mimic a browser
-headers = {
+series_headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                         "AppleWebKit/537.36 (KHTML, like Gecko) "
                         "Chrome/120.0.0.0 Safari/537.36",
@@ -28,10 +29,10 @@ with open(series_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
 
 
     # Loop through pages 1-17
-    for page in range(0, 1):
+    for page in range(2, 3):
         print(f"Scraping list page {page}...")
         url = series_url.format(page)
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=series_headers)
         if response.status_code != 200:
             print(f"Failed page {page}: {response.status_code}")
             continue
@@ -41,14 +42,13 @@ with open(series_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
 
         for link in series_links:
             print(f"Scraping details: {link}")
-            res = requests.get(link, headers=headers)
+            res = requests.get(link, headers=series_headers)
             if res.status_code != 200:
                 print(f"Failed to fetch {link}")
                 continue
 
             detail_soup = BeautifulSoup(res.text, "html.parser")
 
-            #title
             match = re.search(r'<meta\s+property=["\']og:title["\']\s+content=["\']([^"\']+)["\']',
                     res.text, re.DOTALL | re.IGNORECASE)
             if match:
@@ -58,7 +58,7 @@ with open(series_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
                 title = ""
                 print("No title found")
 
-            #modified
+
             modified_date = re.search(
                 r'<meta\s+property="article:modified_time"\s+content="(\d{4})-',
                 res.text
