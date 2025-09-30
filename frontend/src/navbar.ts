@@ -30,6 +30,15 @@ export function createNavbar() {
     searchBox.className = "searchBox";  
     const searchBar = document.createElement("input");
     searchBar.placeholder = "Search...";
+    searchBar.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {  // Enter pressed
+        const query = searchBar.value.trim();
+        if (query) {
+          // Navigate to search results page with query as URL param
+          // window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+        }
+      }
+    });
     const searchIcon = document.createElement("img");
     searchIcon.src = "./assets/icons/search.svg";
     const filterIcon = document.createElement("img");
