@@ -124,7 +124,7 @@ function buildBanner(items) {
 function showBanner(i) { var _a, _b; (_b = (_a = window).showBanner) === null || _b === void 0 ? void 0 : _b.call(_a, i); }
 function goBanner(step) { var _a, _b; (_b = (_a = window).goBanner) === null || _b === void 0 ? void 0 : _b.call(_a, step); }
 // ===== Fetch & init =====
-fetch("./thai_y_series.json")
+fetch("./data/thai_y_series.json")
     .then((res) => res.json())
     .then((data) => {
     // เติม onair ถ้ายังไม่มี (ถือว่า year === 2025 = onair)
