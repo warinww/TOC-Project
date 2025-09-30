@@ -13,7 +13,7 @@ body {
 .footerBox {
     display: flex;
     height: fit-content;
-    background-color: var(--color4);
+    /* background-color: var(--color4); */
     margin-top: auto;
     padding: 20px;
     justify-content: space-between;

@@ -68,7 +68,7 @@ def scrape_series(pages=1):
             # Poster
             poster_match = re.search(r'<meta\s+property=["\']og:image["\']\s+content=["\'](.*?)["\']', res.text)
             poster = poster_match.group(1).strip() if poster_match else ""
-
+            
             # Save series
             series_info = {
                 "title": title,
