@@ -96,14 +96,20 @@ with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
                 birth = ""
             print("Birth:", birth)
 
-            #ig and link
-            ig_match = re.search(r'<a href="([^"]+)">IG\s*:\s*([^<]+)</a>', res.text)
+            # หา IG + ลิงก์
+            ig_match = re.search(
+                r'<a[^>]*href="([^"]+)"[^>]*>\s*IG\s*:\s*([^<]+)</a>',
+                res.text,
+                re.IGNORECASE
+            )
+
             if ig_match:
-                ig_link = ig_match.group(1).strip()
-                ig_username = ig_match.group(2).strip()
+                ig_link = ig_match.group(1).strip()       # https://www.instagram.com/williamjkp
+                ig_username = ig_match.group(2).strip()   # williamjkp
             else:
                 ig_link = ""
                 ig_username = ""
+
             print("IG Username:", ig_username)
             print("IG Link:", ig_link)
 
@@ -134,7 +140,7 @@ with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
 
             all_images = ", ".join([url.strip() for url in image_matches])
             # Write to CSV
-            writer.writerow([all_images, title, description, full_name, nick_name, ig_username, ig_link, birth])
+            writer.writerow([all_images, title, description, full_name, nick_name, birth, ig_username, ig_link, ""])
 
             # Be polite, avoid hammering server
             time.sleep(1)
