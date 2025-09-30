@@ -7,7 +7,10 @@ from func_api import scrape_series_detail
 from fastapi.staticfiles import StaticFiles
 from crawl import scrape_page, series_dict
 
-POSTER_FOLDER = os.path.join(os.getcwd(), "posters")  # จะอยู่ใน backend/posters
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # project/
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+POSTER_FOLDER = os.path.join(FRONTEND_DIR, "posters")
+
 os.makedirs(POSTER_FOLDER, exist_ok=True)
 
 app = FastAPI(title="YFlix Series API")

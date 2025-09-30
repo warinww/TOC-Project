@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { createNavbar } from "./navbar.js"; // สมมติ navbar เป็น ES module ที่ส่งออกฟังก์ชันนี้
+import { createFooter } from "./footer.js";
 createNavbar();
 /** ====== ยูทิล ====== */
 function el(tag, className, text) {
@@ -22,18 +23,18 @@ function el(tag, className, text) {
 function renderNavigate() {
     const navigate = el("div", "navigate");
     navigate.setAttribute("role", "link");
-    navigate.setAttribute("aria-label", "กลับไปหน้าหลัก");
+    navigate.setAttribute("aria-label", "กลับไปหน้ารายละเอียด");
     navigate.tabIndex = 0;
     const icon = el("img", "navigate__icon");
     icon.src = "../assets/icons/back.svg";
     icon.alt = "";
-    const text = el("span", undefined, "กลับไปหน้าหลัก");
+    const text = el("span", undefined, "กลับไปหน้ารายละเอียด");
     navigate.append(icon, text);
-    navigate.addEventListener("click", () => (window.location.href = "index.html"));
+    navigate.addEventListener("click", () => history.back());
     navigate.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            window.location.href = "index.html";
+            history.back();
         }
     });
     document.body.appendChild(navigate);
@@ -156,4 +157,5 @@ function bootstrap() {
     });
 }
 bootstrap();
+createFooter();
 //# sourceMappingURL=cast.js.map
