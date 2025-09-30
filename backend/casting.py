@@ -136,8 +136,6 @@ with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
             else:
                 print("Description:", description)
 
-
-
             all_images = ", ".join([url.strip() for url in image_matches])
             # Write to CSV
             writer.writerow([all_images, title, description, full_name, nick_name, birth, ig_username, ig_link, ""])

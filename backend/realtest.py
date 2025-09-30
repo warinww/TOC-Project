@@ -28,7 +28,7 @@ with open(series_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
 
 
     # Loop through pages 1-17
-    for page in range(2, 3):
+    for page in range(0, 1):
         print(f"Scraping list page {page}...")
         url = series_url.format(page)
         response = requests.get(url, headers=headers)
