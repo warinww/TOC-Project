@@ -18,9 +18,10 @@ body {
 /* ---------- Banner slider ---------- */
 .banner-ad {
   position: relative;
+  z-index: 1;
   overflow: hidden;
   width: auto;
-  height: 40vh;
+  height: 65vh;
   margin: 20px 10vw;
   border-radius: 20px;
   background: #000; /* กันวาบตอนโหลด */
