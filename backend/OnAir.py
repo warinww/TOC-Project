@@ -47,3 +47,72 @@
 #     print(f"=== {day.upper()} ===")
 #     for title, info in titles.items():
 #         print(title, info)
+from bs4 import BeautifulSoup
+import requests
+import csv
+import time
+import re
+import html
+
+url = "https://yflix.me/casting/keng-harit/"
+# url="https://yflix.me/casting/lingling-kwong/"
+url = "https://yflix.me/casting/hearth-chindanai-2/"
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                  "AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/120.0.0.0 Safari/537.36",
+}
+
+html = requests.get(url, headers=headers).text
+soup = BeautifulSoup(html, "html.parser")
+block = soup.find(attrs={"data-td-block-uid": "tdi_77"})
+
+if block:
+    inner_div = block.find("div", class_="tdb-block-inner td-fix-index")
+    if inner_div:
+        p_tags = inner_div.find_all("p")
+
+        # --- จัดการ <p> ตัวแรก ---
+        description = ""
+        description_more_1 = ""
+        if len(p_tags) >= 1:
+            first_paragraph = p_tags[0].get_text("\n", strip=True)
+
+            # ตัดบรรทัดที่ไม่ต้องการออก
+            cleaned = re.sub(r'(ชื่อ-สกุล|ชื่อเล่น|เกิด)\s*:.*(?:\n)?', '', first_paragraph)
+            print(cleaned)
+            print("--------------------")
+
+            parts = cleaned.strip().splitlines()
+            for part in parts:
+                print(part)
+            print("--------------------")
+
+            if parts:
+                description = parts[0].strip()
+                description_more_1 = "\n".join(parts[1:]).strip()
+
+        # --- จัดการ <p> ตัวที่สอง ---
+        description_more_2 = ""
+        if len(p_tags) >= 2:
+            second_p = p_tags[1].get_text("\n", strip=True)
+            lines = second_p.splitlines()
+
+            capture = False
+            description_more_arr = []
+            for line in lines:
+                if line.startswith(("ชื่อ-สกุล :", "ชื่อเล่น :", "เกิด :")):
+                    capture = True
+                    continue
+                if capture:
+                    description_more_arr.append(line)
+
+            description_more_2 = "\n".join(description_more_arr).strip()
+
+        # --- Debug print ---
+        if not description:
+            print("No valid description found")
+        else:
+            print("Description:", description)
+            print("Description more 1:", description_more_1)
+            print("Description more 2:", description_more_2)
