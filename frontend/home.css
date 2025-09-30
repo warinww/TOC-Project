@@ -1,5 +1,6 @@
 body {
     font-family: 'Anuphan';
+    padding-bottom: 100px;
 }
 
 .banner-text {
@@ -17,9 +18,10 @@ body {
 /* ---------- Banner slider ---------- */
 .banner-ad {
   position: relative;
+  z-index: 1;
   overflow: hidden;
   width: auto;
-  height: 40vh;
+  height: 65vh;
   margin: 20px 10vw;
   border-radius: 20px;
   background: #000; /* กันวาบตอนโหลด */
@@ -85,8 +87,8 @@ body {
           mask: var(--icon-url) no-repeat center / contain;
   display: block;
 }
-.banner-btn.prev { left: 12px; --icon-url: url("./assets/icons/chevron-left.svg"); }
-.banner-btn.next { right: 12px; --icon-url: url("./assets/icons/chevron-right.svg"); }
+.banner-btn.prev { left: 12px; --icon-url: url("/assets/icons/chevron-left.svg"); }
+.banner-btn.next { right: 12px; --icon-url: url("/assets/icons/chevron-right.svg"); }
 
 /* จุดบอกตำแหน่ง */
 .banner-dots {
@@ -250,8 +252,8 @@ body {
 }
 
 /* ไฟล์ SVG ของคุณ */
-.pagination button.prev { --icon-url: url("/icons/chevron-left.svg"); }
-.pagination button.next { --icon-url: url("/icons/chevron-right.svg"); }
+.pagination button.prev { --icon-url: url("assets/icons/chevron-left.svg"); }
+.pagination button.next { --icon-url: url("assets/icons/chevron-right.svg"); }
 
 /* hover/disable */
 .pagination button.nav:hover { border-color: #a285d1; }

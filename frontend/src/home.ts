@@ -1,6 +1,8 @@
 import { createNavbar } from "./navbar.js";
+import { createFooter } from "./footer.js";
 
 createNavbar();
+createFooter();
 
 const onairing = document.createElement("p");
 onairing.textContent = "กำลังออนแอร์";
@@ -134,15 +136,17 @@ function buildBanner(items: Series[]) {
   banner.addEventListener("mouseenter", stopBannerAutoplay);
   banner.addEventListener("mouseleave", startBannerAutoplay);
 
-  function showBanner(i: number) {
+ function showBanner(i: number) {
     bannerIndex = (i + items.length) % items.length;
     slides.forEach((s, k) => s.classList.toggle("active", k === bannerIndex));
     dots.forEach((d, k) => d.classList.toggle("active", k === bannerIndex));
     banner.style.cursor = "pointer";
+
+    // คลิก banner -> ไป detail.html?id=<series_id>
     banner.onclick = () => {
-      window.location.href = `detail.html?id=${items[bannerIndex].id}`;
+        window.location.href = `detail.html?id=${items[bannerIndex].id}`;
     };
-  }
+}
 
   function goBanner(step: number) {
     showBanner(bannerIndex + step);
@@ -161,10 +165,21 @@ function showBanner(i: number) { (window as any).showBanner?.(i); }
 function goBanner(step: number) { (window as any).goBanner?.(step); }
 
 // ===== Fetch & init =====
-fetch("./data/thai_y_series.json")
-  .then((res) => res.json())
-  .then((data: Series[]) => {
-    // เติม onair ถ้ายังไม่มี (ถือว่า year === 2025 = onair)
+fetch("http://127.0.0.1:8000/") // เรียก FastAPI endpoint
+  .then(res => res.json())
+  .then((dataDict: Record<string, any>) => {
+    // แปลง dict เป็น array ของ Series
+    const data: Series[] = Object.entries(dataDict).map(([id, item]) => ({
+      id: parseInt(id),
+      title: item.title,
+      poster_url: item.poster,
+      year: parseInt(item.year),
+      gender: "",      // ถ้าไม่มีใน dict กำหนดเป็น empty
+      onair: item.onair, // ถือว่า 2025 = onair
+      ...item
+    }));
+
+    // เติม onair ถ้ายังไม่มี
     seriesData = data.map(it => ({
       ...it,
       onair: typeof it.onair === "boolean" ? it.onair : (it.year === 2025)
@@ -185,11 +200,17 @@ fetch("./data/thai_y_series.json")
       currentPage = 1;
       renderSeries(filteredData, currentPage);
 
-      // ถ้าอยากให้แบนเนอร์เปลี่ยนตามปีที่เลือกด้วย ให้เปิดสองบรรทัดนี้
+      // ถ้าอยากให้แบนเนอร์เปลี่ยนตามปีที่เลือกด้วย
       // bannerItems = filteredData.filter(s => s.onair === true);
       // buildBanner(bannerItems);
     });
+  })
+  .catch(err => {
+    console.error("Failed to fetch series from API", err);
+    banner.textContent = "ไม่สามารถโหลดรายการได้";
   });
+
+  
 
 function renderSeries(data: Series[], page = 1) {
   gridContainer.innerHTML = "";
@@ -209,12 +230,18 @@ function renderSeries(data: Series[], page = 1) {
       card.className = "series-card";
 
       const img = document.createElement("img");
-      img.src = series.poster_url;
+      img.src = `/posters/${series.id}.webp`;
+
       img.alt = series.title;
       img.loading = "lazy";
 
       const title = document.createElement("p");
       title.textContent = series.title;
+
+      card.style.cursor = "pointer";
+    card.onclick = () => {
+        window.location.href = `detail.html?id=${series.id}`;
+    };
 
       card.appendChild(img);
       card.appendChild(title);
