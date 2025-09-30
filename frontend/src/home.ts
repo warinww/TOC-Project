@@ -136,15 +136,17 @@ function buildBanner(items: Series[]) {
   banner.addEventListener("mouseenter", stopBannerAutoplay);
   banner.addEventListener("mouseleave", startBannerAutoplay);
 
-  function showBanner(i: number) {
+ function showBanner(i: number) {
     bannerIndex = (i + items.length) % items.length;
     slides.forEach((s, k) => s.classList.toggle("active", k === bannerIndex));
     dots.forEach((d, k) => d.classList.toggle("active", k === bannerIndex));
     banner.style.cursor = "pointer";
+
+    // คลิก banner -> ไป detail.html?id=<series_id>
     banner.onclick = () => {
-      window.location.href = `detail.html?id=${items[bannerIndex].id}`;
+        window.location.href = `detail.html?id=${items[bannerIndex].id}`;
     };
-  }
+}
 
   function goBanner(step: number) {
     showBanner(bannerIndex + step);
@@ -163,37 +165,42 @@ function showBanner(i: number) { (window as any).showBanner?.(i); }
 function goBanner(step: number) { (window as any).goBanner?.(step); }
 
 // ===== Fetch & init =====
-fetch("http://127.0.0.1:8000/series")
+fetch("http://127.0.0.1:8000/") // เรียก FastAPI endpoint
   .then(res => res.json())
   .then((dataDict: Record<string, any>) => {
     // แปลง dict เป็น array ของ Series
-    seriesData = Object.entries(dataDict).map(([id, item]) => ({
+    const data: Series[] = Object.entries(dataDict).map(([id, item]) => ({
       id: parseInt(id),
       title: item.title,
-      poster_url: item.poster,  // ใช้ poster เป็น poster_url
+      poster_url: item.poster,
       year: parseInt(item.year),
-      gender: "",               // ถ้าไม่มีใน dict
-      onair: !!item.onair,      // แปลงค่าให้เป็น true/false
-      ...item                    // เก็บ property เพิ่มเติมถ้าต้องการ
+      gender: "",      // ถ้าไม่มีใน dict กำหนดเป็น empty
+      onair: item.onair, // ถือว่า 2025 = onair
+      ...item
     }));
 
-    // banner: เฉพาะ onair
+    // เติม onair ถ้ายังไม่มี
+    seriesData = data.map(it => ({
+      ...it,
+      onair: typeof it.onair === "boolean" ? it.onair : (it.year === 2025)
+    }));
+
+    // แบนเนอร์: เฉพาะ onair
     bannerItems = seriesData.filter(s => s.onair === true);
     buildBanner(bannerItems);
 
-    // grid + pagination
+    // กริด + เพจ
     filteredData = seriesData;
     currentPage = 1;
     renderSeries(filteredData, currentPage);
 
-    // เปลี่ยนปี
     yearSelecter.addEventListener("change", (e) => {
       const selectedYear = parseInt((e.target as HTMLSelectElement).value);
-      filteredData = seriesData.filter(s => s.year === selectedYear);
+      filteredData = seriesData.filter((s) => s.year === selectedYear);
       currentPage = 1;
       renderSeries(filteredData, currentPage);
 
-      // ถ้าอยากให้แบนเนอร์เปลี่ยนตามปีที่เลือก
+      // ถ้าอยากให้แบนเนอร์เปลี่ยนตามปีที่เลือกด้วย
       // bannerItems = filteredData.filter(s => s.onair === true);
       // buildBanner(bannerItems);
     });
@@ -203,6 +210,7 @@ fetch("http://127.0.0.1:8000/series")
     banner.textContent = "ไม่สามารถโหลดรายการได้";
   });
 
+  
 
 function renderSeries(data: Series[], page = 1) {
   gridContainer.innerHTML = "";
@@ -217,33 +225,32 @@ function renderSeries(data: Series[], page = 1) {
     empty.textContent = "ไม่พบรายการ";
     gridContainer.appendChild(empty);
   } else {
-pageData.forEach((series: Series) => {
-  const card = document.createElement("div");
-  card.className = "series-card";
+    pageData.forEach((series: Series) => {
+      const card = document.createElement("div");
+      card.className = "series-card";
 
-  // 🔹 ใช้ div เป็น background-image แทน img
-  const imgDiv = document.createElement("div");
-  imgDiv.className = "series-poster"; // กำหนด CSS
-  imgDiv.style.backgroundImage = `url("${series.poster_url}")`;
-  imgDiv.style.backgroundSize = "cover";      // ครอบ div
-  imgDiv.style.backgroundPosition = "center"; // จัดกึ่งกลาง
-  imgDiv.style.width = "100%";
-  imgDiv.style.aspectRatio = "2 / 3";         // กำหนดสัดส่วน 4:5
-  imgDiv.style.borderRadius = "10px";
+      const img = document.createElement("img");
+      img.src = `/posters/${series.id}.webp`;
 
-  const title = document.createElement("p");
-  title.textContent = series.title;
+      img.alt = series.title;
+      img.loading = "lazy";
 
-  card.appendChild(imgDiv);
-  card.appendChild(title);
-  gridContainer.appendChild(card);
-});
+      const title = document.createElement("p");
+      title.textContent = series.title;
 
+      card.style.cursor = "pointer";
+    card.onclick = () => {
+        window.location.href = `detail.html?id=${series.id}`;
+    };
+
+      card.appendChild(img);
+      card.appendChild(title);
+      gridContainer.appendChild(card);
+    });
   }
 
   renderPagination(totalItems, page);
 }
-
 
 function renderPagination(totalItems: number, page: number) {
   const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
