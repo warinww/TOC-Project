@@ -89,7 +89,7 @@ with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
             print("Nickname:", nick_name)
 
             #birth
-            birth_match = re.search(r'เกิด\s*:\s*(.+?)(?:<br>|</p>)', res.text)
+            birth_match = re.search(r'เกิด(?:เมื่อ)?\s*:\s*(.+?)(?:<br>|</p>)', res.text)
             if birth_match:
                 birth = birth_match.group(1).strip()
             else:
