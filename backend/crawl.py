@@ -20,14 +20,14 @@ headers = {
 }
 
 BASE_URL = "https://yflix.me/category/series/page/{}/"
-POSTER_FOLDER = r"C:\toc-project\frontend\posters"
+POSTER_FOLDER = r"C:\Users\User\Documents\kmitl_3D ToC\TOC-Project\frontend\posters"
 os.makedirs(POSTER_FOLDER, exist_ok=True)
 
 def scrape_series():
     global series_id_counter, series_dict
 
     # fix 16 pages
-    for page in range(1, 17):
+    for page in range(1, 2):
         print(f"Scraping list page {page}...")
         url = BASE_URL.format(page)
         response = requests.get(url, headers=headers)

@@ -6,7 +6,8 @@ body {
 } */
 
 :host { 
-  display: block; box-sizing: border-box; --max-w: 1300px; --pad-x: 10vw; --gap: 5vw; }
+  display: block; box-sizing: border-box; --max-w: 1300px; --pad-x: 10vw; --gap: 5vw; padding: 80px 0 80px 0;
+}
 
 .container { 
   max-width: var(--max-w); 
