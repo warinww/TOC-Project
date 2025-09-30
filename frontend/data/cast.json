@@ -1,0 +1,21 @@
+{
+    "id": 1,
+  "title": "โทมัส",
+  "coverImage": "https://www.innnews.co.th/wp-content/uploads/2024/12/snapinsta-3.jpg",
+  "description": "ภูริช ชายหนุ่มหน้าตาดีตัดสินใจย้ายจากกรุงเทพไปอาศัยอยู่บนเกาะ เพื่อเริ่มต้นชีวิตใหม่พร้อมเพื่อนสนิท ...",
+  "gallery": [
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi815uJ9DcZ0_TXnyT3hxEaJoQ-nV8x6X0TQ&s",
+    "https://i.pinimg.com/736x/d1/d1/ae/d1d1ae06f346ee3fa9fa36b88e4fc146.jpg",
+    ""
+  ],
+  "maxImages": 3,
+  "works": [
+  { "id": 1, "name": "ละครเรื่อง A", "img": "https://upload.wikimedia.org/wikipedia/en/1/17/Example_movie_poster.jpg" },
+  { "id": 2, "name": "ซีรีส์เรื่อง B", "img": "https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SY679_.jpg" },
+  { "id": 3, "name": "ภาพยนตร์เรื่อง C", "img": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/xBHvZcjRiWyobQ9kxBhO6B2dtRI.jpg" },
+  { "id": 4, "name": "ละครเวทีเรื่อง D", "img": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/9O7gLzmreU0nGkIB6K3BsJbzvNv.jpg" },
+  { "id": 5, "name": "ละครเรื่อง E", "img": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg" },
+  { "id": 6, "name": "ภาพยนตร์เรื่อง F", "img": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/81d8oyEFgj7FlxJqSDXWr8JH8kV.jpg" }
+]
+
+}
