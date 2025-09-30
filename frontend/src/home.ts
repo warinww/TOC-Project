@@ -56,6 +56,7 @@ interface Series {
   year: number;
   gender: string;
   onair?: boolean;
+  url: string;
 }
 
 // ===== State =====
@@ -143,8 +144,8 @@ function buildBanner(items: Series[]) {
     dots.forEach((d, k) => d.classList.toggle("active", k === bannerIndex));
     banner.style.cursor = "pointer";
     banner.onclick = () => {
-      window.location.href = `detail.html?id=${items[bannerIndex].id}`;
-    };
+    window.location.href = `detail.html?url=${encodeURIComponent(items[bannerIndex].url)}`;
+  };
   }
   function goBanner(step: number) { showBanner(bannerIndex + step); }
 
@@ -165,6 +166,7 @@ fetch("http://127.0.0.1:8000/") // API root ที่คืน series_dict ท�
     // map dict -> array
     const data: Series[] = Object.entries(dataDict).map(([id, item]) => ({
       id: parseInt(id, 10),
+      url: item.url,
       title: item.title,
       poster_url: item.poster,        // backend ส่งมาเป็น .poster
       year: parseInt(item.year || "0", 10) || 0,
@@ -219,7 +221,8 @@ function renderSeries(data: Series[], page = 1) {
       const card = document.createElement("div");
       card.className = "series-card";
       card.style.cursor = "pointer";
-      card.onclick = () => window.location.href = `detail.html?id=${series.id}`;
+      card.onclick = () => {
+    window.location.href = `detail.html?url=${encodeURIComponent(series.url)}`;};
 
       const img = document.createElement("img");
       img.src = series.poster_url;
