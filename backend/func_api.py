@@ -178,5 +178,5 @@ def get_casting_by_URL(url: str) -> dict:
         "description_more_2": description_more_2,
         "series_links": series_links
     }
-data = get_casting_by_URL("https://yflix.me/casting/namping-napatsakorn/")
-print(data)
+# data = get_casting_by_URL("https://yflix.me/casting/namping-napatsakorn/")
+# print(data)
