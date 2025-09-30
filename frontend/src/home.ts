@@ -52,15 +52,15 @@ document.body.appendChild(paginationContainer);
 interface Series {
   id: number;
   title: string;
-  poster_url: string;
+  poster_url: string; // ใน backend ส่งมาชื่อ "poster" แต่เราจะ map เป็น poster_url ตอน parse
   year: number;
   gender: string;
   onair?: boolean;
 }
 
 // ===== State =====
-let seriesData: Series[] = [];
-let filteredData: Series[] = [];
+let seriesData: Series[] = [];     // ข้อมูลทั้งหมด (โหลดครั้งเดียว)
+let filteredData: Series[] = [];   // หลังกรอง (เช่นตามปี)
 let currentPage = 1;
 const itemsPerPage = 20;
 
@@ -125,10 +125,12 @@ function buildBanner(items: Series[]) {
   prev.className = "banner-btn prev";
   prev.setAttribute("aria-label", "Previous");
   prev.onclick = (ev) => { ev.stopPropagation(); goBanner(-1); };
+
   const next = document.createElement("button");
   next.className = "banner-btn next";
   next.setAttribute("aria-label", "Next");
   next.onclick = (ev) => { ev.stopPropagation(); goBanner(+1); };
+
   banner.appendChild(prev);
   banner.appendChild(next);
 
@@ -156,90 +158,99 @@ function buildBanner(items: Series[]) {
 function showBanner(i: number) { (window as any).showBanner?.(i); }
 function goBanner(step: number) { (window as any).goBanner?.(step); }
 
-// ===== Fetch & init =====
-function fetchPage(page: number) {
-  return fetch(`http://127.0.0.1:8000/?page=${page}`)
-    .then(res => res.json())
-    .then((dataDict: Record<string, any>) => {
-      const data: Series[] = Object.entries(dataDict).map(([id, item]) => ({
-        id: parseInt(id),
-        title: item.title,
-        poster_url: item.poster,
-        year: parseInt(item.year),
-        gender: item.gender ?? "",
-        onair: item.onair ?? (item.year === 2025),
-        ...item
-      }));
-      return data;
-    });
-}
+// ===== Fetch (โหลดครั้งเดียว) =====
+fetch("http://127.0.0.1:8000/") // API root ที่คืน series_dict ทั้งหมด
+  .then(res => res.json())
+  .then((dataDict: Record<string, any>) => {
+    // map dict -> array
+    const data: Series[] = Object.entries(dataDict).map(([id, item]) => ({
+      id: parseInt(id, 10),
+      title: item.title,
+      poster_url: item.poster,        // backend ส่งมาเป็น .poster
+      year: parseInt(item.year || "0", 10) || 0,
+      gender: item.gender ?? "",
+      onair: item.onair ?? (Number(item.year) === 2025),
+      ...item
+    }));
 
-// Load initial page
-fetchPage(1).then(data => {
-  seriesData = data;
-  bannerItems = seriesData.filter(s => s.onair);
-  buildBanner(bannerItems);
-  filteredData = seriesData;
+    seriesData = data;
+    filteredData = seriesData;
+
+    // Banner = เฉพาะ onair
+    bannerItems = seriesData.filter(s => !!s.onair);
+    buildBanner(bannerItems);
+
+    // เรนเดอร์หน้าที่ 1
+    currentPage = 1;
+    renderSeries(filteredData, currentPage);
+  })
+  .catch(err => {
+    console.error("Failed to fetch series", err);
+    banner.textContent = "ไม่สามารถโหลดรายการได้";
+  });
+
+// ===== Year filter =====
+yearSelecter.addEventListener("change", () => {
+  const selectedYear = parseInt((yearSelecter as HTMLSelectElement).value, 10);
+  filteredData = seriesData.filter(s => s.year === selectedYear);
   currentPage = 1;
   renderSeries(filteredData, currentPage);
 });
 
-// Year filter
-yearSelecter.addEventListener("change", async (e) => {
-  const selectedYear = parseInt((e.target as HTMLSelectElement).value);
-  // Refetch page 1 for the selected year
-  const data = await fetchPage(1);
-  filteredData = data.filter(s => s.year === selectedYear);
-  currentPage = 1;
-  renderSeries(filteredData, currentPage);
-});
-
-// ===== Grid + Pagination =====
-async function renderSeries(data: Series[], page = 1) {
+// ===== Grid + Pagination (หน้า 20 เรื่อง) =====
+function renderSeries(data: Series[], page = 1) {
   gridContainer.innerHTML = "";
-  const pageData = await fetchPage(page);
-  filteredData = pageData;
+
+  // คำนวณ slice ตามหน้า
+  const totalItems = data.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+  currentPage = Math.min(Math.max(1, page), totalPages);
+
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const pageData = data.slice(start, end);
+
   if (!pageData.length) {
     const empty = document.createElement("p");
     empty.textContent = "ไม่พบรายการ";
     gridContainer.appendChild(empty);
-    return;
+  } else {
+    pageData.forEach(series => {
+      const card = document.createElement("div");
+      card.className = "series-card";
+      card.style.cursor = "pointer";
+      card.onclick = () => window.location.href = `detail.html?id=${series.id}`;
+
+      const img = document.createElement("img");
+      img.src = series.poster_url;
+      img.alt = series.title;
+      img.loading = "lazy";
+
+      const title = document.createElement("p");
+      title.textContent = series.title;
+
+      card.appendChild(img);
+      card.appendChild(title);
+      gridContainer.appendChild(card);
+    });
   }
 
-  pageData.forEach(series => {
-    const card = document.createElement("div");
-    card.className = "series-card";
-    card.style.cursor = "pointer";
-    card.onclick = () => window.location.href = `detail.html?id=${series.id}`;
-
-    const img = document.createElement("img");
-    img.src = series.poster_url;
-    img.alt = series.title;
-    img.loading = "lazy";
-
-    const title = document.createElement("p");
-    title.textContent = series.title;
-
-    card.appendChild(img);
-    card.appendChild(title);
-    gridContainer.appendChild(card);
-  });
-
-  renderPagination(pageData.length, page);
+  renderPagination(totalItems, currentPage);
 }
 
 function renderPagination(totalItems: number, page: number) {
-  const totalPages = 17; // fixed
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
   currentPage = Math.min(Math.max(1, page), totalPages);
   paginationContainer.innerHTML = "";
 
+  // Prev
   const prevBtn = document.createElement("button");
   prevBtn.className = "nav prev";
   prevBtn.disabled = currentPage === 1;
   prevBtn.onclick = () => renderSeries(filteredData, currentPage - 1);
   paginationContainer.appendChild(prevBtn);
 
-  const maxVisible = 5; // ปุ่มรอบ current
+  // ปุ่มเลขหน้าแบบใส่ขอบรอบ current (… อัตโนมัติ)
   const pageButtons: number[] = [];
   pageButtons.push(1);
   for (let i = currentPage - 2; i <= currentPage + 2; i++) {
@@ -263,6 +274,7 @@ function renderPagination(totalItems: number, page: number) {
     last = p;
   }
 
+  // Next
   const nextBtn = document.createElement("button");
   nextBtn.className = "nav next";
   nextBtn.disabled = currentPage === totalPages;
