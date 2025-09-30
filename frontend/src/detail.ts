@@ -1,4 +1,5 @@
 import { createNavbar } from "./navbar.js";
+import { createFooter } from "./footer.js";
 createNavbar();
 
 const FALLBACK_IMG = 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg';
@@ -230,3 +231,5 @@ export class ShowDetail extends HTMLElement {
 if (!customElements.get('show-detail')) {
   customElements.define('show-detail', ShowDetail);
 }
+
+createFooter();
