@@ -4,8 +4,11 @@ function toggleTheme() {
 export function createNavbar() {
     const nav = document.createElement("nav");
     nav.className = "navbox";
+    const logodiv = document.createElement("div");
+    logodiv.classList = "logoDiv";
     const logo = document.createElement("img");
     logo.src = "./assets/icons/logo.svg";
+    logodiv.appendChild(logo);
     const searchBox = document.createElement("div");
     searchBox.className = "searchBox";
     const searchBar = document.createElement("input");
@@ -29,7 +32,7 @@ export function createNavbar() {
     changeThemeDiv.appendChild(lightMode);
     darkMode.addEventListener("click", toggleTheme);
     lightMode.addEventListener("click", toggleTheme);
-    nav.appendChild(logo);
+    nav.appendChild(logodiv);
     nav.appendChild(searchBox);
     nav.appendChild(changeThemeDiv);
     document.body.prepend(nav);

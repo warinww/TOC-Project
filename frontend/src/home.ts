@@ -1,6 +1,8 @@
 import { createNavbar } from "./navbar.js";
+import { createFooter } from "./footer.js";
 
 createNavbar();
+createFooter();
 
 const onairing = document.createElement("p");
 onairing.textContent = "กำลังออนแอร์";
@@ -161,35 +163,46 @@ function showBanner(i: number) { (window as any).showBanner?.(i); }
 function goBanner(step: number) { (window as any).goBanner?.(step); }
 
 // ===== Fetch & init =====
-fetch("./thai_y_series.json")
-  .then((res) => res.json())
-  .then((data: Series[]) => {
-    // เติม onair ถ้ายังไม่มี (ถือว่า year === 2025 = onair)
-    seriesData = data.map(it => ({
-      ...it,
-      onair: typeof it.onair === "boolean" ? it.onair : (it.year === 2025)
+fetch("http://127.0.0.1:8000/series")
+  .then(res => res.json())
+  .then((dataDict: Record<string, any>) => {
+    // แปลง dict เป็น array ของ Series
+    seriesData = Object.entries(dataDict).map(([id, item]) => ({
+      id: parseInt(id),
+      title: item.title,
+      poster_url: item.poster,  // ใช้ poster เป็น poster_url
+      year: parseInt(item.year),
+      gender: "",               // ถ้าไม่มีใน dict
+      onair: !!item.onair,      // แปลงค่าให้เป็น true/false
+      ...item                    // เก็บ property เพิ่มเติมถ้าต้องการ
     }));
 
-    // แบนเนอร์: เฉพาะ onair
+    // banner: เฉพาะ onair
     bannerItems = seriesData.filter(s => s.onair === true);
     buildBanner(bannerItems);
 
-    // กริด + เพจ
+    // grid + pagination
     filteredData = seriesData;
     currentPage = 1;
     renderSeries(filteredData, currentPage);
 
+    // เปลี่ยนปี
     yearSelecter.addEventListener("change", (e) => {
       const selectedYear = parseInt((e.target as HTMLSelectElement).value);
-      filteredData = seriesData.filter((s) => s.year === selectedYear);
+      filteredData = seriesData.filter(s => s.year === selectedYear);
       currentPage = 1;
       renderSeries(filteredData, currentPage);
 
-      // ถ้าอยากให้แบนเนอร์เปลี่ยนตามปีที่เลือกด้วย ให้เปิดสองบรรทัดนี้
+      // ถ้าอยากให้แบนเนอร์เปลี่ยนตามปีที่เลือก
       // bannerItems = filteredData.filter(s => s.onair === true);
       // buildBanner(bannerItems);
     });
+  })
+  .catch(err => {
+    console.error("Failed to fetch series from API", err);
+    banner.textContent = "ไม่สามารถโหลดรายการได้";
   });
+
 
 function renderSeries(data: Series[], page = 1) {
   gridContainer.innerHTML = "";
@@ -204,26 +217,33 @@ function renderSeries(data: Series[], page = 1) {
     empty.textContent = "ไม่พบรายการ";
     gridContainer.appendChild(empty);
   } else {
-    pageData.forEach((series: Series) => {
-      const card = document.createElement("div");
-      card.className = "series-card";
+pageData.forEach((series: Series) => {
+  const card = document.createElement("div");
+  card.className = "series-card";
 
-      const img = document.createElement("img");
-      img.src = series.poster_url;
-      img.alt = series.title;
-      img.loading = "lazy";
+  // 🔹 ใช้ div เป็น background-image แทน img
+  const imgDiv = document.createElement("div");
+  imgDiv.className = "series-poster"; // กำหนด CSS
+  imgDiv.style.backgroundImage = `url("${series.poster_url}")`;
+  imgDiv.style.backgroundSize = "cover";      // ครอบ div
+  imgDiv.style.backgroundPosition = "center"; // จัดกึ่งกลาง
+  imgDiv.style.width = "100%";
+  imgDiv.style.aspectRatio = "2 / 3";         // กำหนดสัดส่วน 4:5
+  imgDiv.style.borderRadius = "10px";
 
-      const title = document.createElement("p");
-      title.textContent = series.title;
+  const title = document.createElement("p");
+  title.textContent = series.title;
 
-      card.appendChild(img);
-      card.appendChild(title);
-      gridContainer.appendChild(card);
-    });
+  card.appendChild(imgDiv);
+  card.appendChild(title);
+  gridContainer.appendChild(card);
+});
+
   }
 
   renderPagination(totalItems, page);
 }
+
 
 function renderPagination(totalItems: number, page: number) {
   const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
