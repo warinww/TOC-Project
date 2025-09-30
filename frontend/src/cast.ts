@@ -1,4 +1,5 @@
 import { createNavbar } from "./navbar.js"; // สมมติ navbar เป็น ES module ที่ส่งออกฟังก์ชันนี้
+import { createFooter } from "./footer.js";
 createNavbar();
 
 /** ====== Types สำหรับ JSON ====== */
@@ -29,21 +30,21 @@ function el<K extends keyof HTMLElementTagNameMap>(
 function renderNavigate() {
   const navigate = el("div", "navigate");
   navigate.setAttribute("role", "link");
-  navigate.setAttribute("aria-label", "กลับไปหน้าหลัก");
+  navigate.setAttribute("aria-label", "กลับไปหน้ารายละเอียด");
   navigate.tabIndex = 0;
 
   const icon = el("img", "navigate__icon") as HTMLImageElement;
   icon.src = "../assets/icons/back.svg";
   icon.alt = "";
 
-  const text = el("span", undefined, "กลับไปหน้าหลัก");
+  const text = el("span", undefined, "กลับไปหน้ารายละเอียด");
 
   navigate.append(icon, text);
-  navigate.addEventListener("click", () => (window.location.href = "index.html"));
+  navigate.addEventListener("click", () => history.back());
   navigate.addEventListener("keydown", (e: KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      window.location.href = "index.html";
+      history.back();
     }
   });
 
@@ -180,3 +181,5 @@ async function bootstrap() {
   }
 }
 bootstrap();
+
+createFooter();

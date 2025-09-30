@@ -20,7 +20,7 @@ headers = {
 }
 
 BASE_URL = "https://yflix.me/category/series/page/{}/"
-POSTER_FOLDER = r"C:\toc-project\frontend\posters"
+POSTER_FOLDER = r"C:\Users\User\Documents\kmitl_3D ToC\TOC-Project\frontend\posters"
 os.makedirs(POSTER_FOLDER, exist_ok=True)
 
 def scrape_series():
