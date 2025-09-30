@@ -1,12 +1,17 @@
 # main.py
+import os
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from crawl import series_dict, scrape_series  # import จาก crawl.py
+from crawl import series_dict
 from func_api import scrape_series_detail
 from fastapi.staticfiles import StaticFiles
 from crawl import scrape_page, series_dict
 
-POSTER_FOLDER = r"D:\CE\D3\ToC\TOC-Project\frontend\posters"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # project/
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+POSTER_FOLDER = os.path.join(FRONTEND_DIR, "posters")
+
+os.makedirs(POSTER_FOLDER, exist_ok=True)
 
 app = FastAPI(title="YFlix Series API")
 
@@ -32,12 +37,6 @@ def get_series(page: int = Query(1, ge=1, le=17)):
     # ดึง series ของ page ที่ request
     page_series = {k: v for k, v in series_dict.items() if v.get("page") == page}
     return page_series
-
-
-@app.get("/scrape")
-def scrape_endpoint(pages: int = 1):
-    scrape_series(pages)
-    return {"message": f"Scraped {pages} pages", "total_series": len(series_dict)}
 
 @app.get("/series")
 def get_all_series():

@@ -117,7 +117,6 @@ function buildBanner(items) {
         slides.forEach((s, k) => s.classList.toggle("active", k === bannerIndex));
         dots.forEach((d, k) => d.classList.toggle("active", k === bannerIndex));
         banner.style.cursor = "pointer";
-        // คลิก banner -> ไป detail.html?id=<series_id>
         banner.onclick = () => {
             window.location.href = `detail.html?id=${items[bannerIndex].id}`;
         };
@@ -131,7 +130,6 @@ function buildBanner(items) {
 function showBanner(i) { var _a, _b; (_b = (_a = window).showBanner) === null || _b === void 0 ? void 0 : _b.call(_a, i); }
 function goBanner(step) { var _a, _b; (_b = (_a = window).goBanner) === null || _b === void 0 ? void 0 : _b.call(_a, step); }
 // ===== Fetch & init =====
-<<<<<<< HEAD
 function fetchPage(page) {
     return fetch(`http://127.0.0.1:8000/?page=${page}`)
         .then(res => res.json())
@@ -151,35 +149,6 @@ fetchPage(1).then(data => {
     filteredData = seriesData;
     currentPage = 1;
     renderSeries(filteredData, currentPage);
-=======
-fetch("http://127.0.0.1:8000/") // เรียก FastAPI endpoint
-    .then(res => res.json())
-    .then((dataDict) => {
-    // แปลง dict เป็น array ของ Series
-    const data = Object.entries(dataDict).map(([id, item]) => (Object.assign({ id: parseInt(id), title: item.title, poster_url: item.poster, year: parseInt(item.year), gender: "", onair: item.onair }, item)));
-    // เติม onair ถ้ายังไม่มี
-    seriesData = data.map(it => (Object.assign(Object.assign({}, it), { onair: typeof it.onair === "boolean" ? it.onair : (it.year === 2025) })));
-    // แบนเนอร์: เฉพาะ onair
-    bannerItems = seriesData.filter(s => s.onair === true);
-    buildBanner(bannerItems);
-    // กริด + เพจ
-    filteredData = seriesData;
-    currentPage = 1;
-    renderSeries(filteredData, currentPage);
-    yearSelecter.addEventListener("change", (e) => {
-        const selectedYear = parseInt(e.target.value);
-        filteredData = seriesData.filter((s) => s.year === selectedYear);
-        currentPage = 1;
-        renderSeries(filteredData, currentPage);
-        // ถ้าอยากให้แบนเนอร์เปลี่ยนตามปีที่เลือกด้วย
-        // bannerItems = filteredData.filter(s => s.onair === true);
-        // buildBanner(bannerItems);
-    });
-})
-    .catch(err => {
-    console.error("Failed to fetch series from API", err);
-    banner.textContent = "ไม่สามารถโหลดรายการได้";
->>>>>>> origin/main
 });
 // Year filter
 yearSelecter.addEventListener("change", (e) => __awaiter(void 0, void 0, void 0, function* () {
@@ -205,26 +174,14 @@ function renderSeries(data_1) {
         pageData.forEach(series => {
             const card = document.createElement("div");
             card.className = "series-card";
-<<<<<<< HEAD
             card.style.cursor = "pointer";
             card.onclick = () => window.location.href = `detail.html?id=${series.id}`;
             const img = document.createElement("img");
             img.src = series.poster_url;
-=======
-            const img = document.createElement("img");
-            img.src = `/posters/${series.id}.webp`;
->>>>>>> origin/main
             img.alt = series.title;
             img.loading = "lazy";
             const title = document.createElement("p");
             title.textContent = series.title;
-<<<<<<< HEAD
-=======
-            card.style.cursor = "pointer";
-            card.onclick = () => {
-                window.location.href = `detail.html?id=${series.id}`;
-            };
->>>>>>> origin/main
             card.appendChild(img);
             card.appendChild(title);
             gridContainer.appendChild(card);

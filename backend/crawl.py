@@ -19,8 +19,13 @@ headers = {
 }
 
 BASE_URL = "https://yflix.me/category/series/page/{}/"
-POSTER_FOLDER = r"C:\Users\User\Documents\kmitl_3D ToC\TOC-Project\frontend\posters"
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # project/
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+POSTER_FOLDER = os.path.join(FRONTEND_DIR, "posters")
+
 os.makedirs(POSTER_FOLDER, exist_ok=True)
+
 
 def scrape_page(page: int):
     """
