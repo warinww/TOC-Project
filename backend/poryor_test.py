@@ -6,8 +6,13 @@ from fastapi.staticfiles import StaticFiles
 from threading import Lock
 import time
 
-# จาก crawl.py (หรือ home_crawl.py ของคุณ)
-from home_crawl import POSTER_DIR, series_dict, scrape_page, scrape_all
+from home_crawl import (  # หรือ crawl.py ของคุณ
+    POSTER_DIR,
+    series_dict,
+    scrape_page,
+    scrape_all,
+    scrape_series_detail as crawl_series_detail,
+)
 
 app = FastAPI(title="Poryor Test API")
 
@@ -18,80 +23,52 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# เสิร์ฟไฟล์ภาพ
+# ให้ frontend โหลดรูปที่เราเซฟไว้ได้
 app.mount("/posters", StaticFiles(directory=str(POSTER_DIR)), name="posters")
 
-# -----------------------
-# In-process caches
-# -----------------------
+# ------- in-process cache -------
 _cache_lock = Lock()
-
-# เคยโหลด “ทั้งหมด” แล้วหรือยัง
 all_loaded: bool = False
 all_loaded_at: Optional[float] = None
-
-# แคชรายหน้า: page -> {id: series_info}
 page_cache: Dict[int, Dict[int, Dict[str, Any]]] = {}
-
-# แคช search: (query, page, scan_all) -> {id: series_info}
 search_cache: Dict[Tuple[str, Optional[int], bool], Dict[int, Dict[str, Any]]] = {}
 
-
-def _cache_set_loaded_all() -> None:
+def _set_all_loaded():
     global all_loaded, all_loaded_at
     all_loaded = True
     all_loaded_at = time.time()
 
-
-def _ensure_all_loaded() -> None:
-    """เรียก crawl ทั้งหมด แค่ครั้งแรก (ระหว่างอายุโปรเซส)"""
+def _ensure_all_loaded():
     with _cache_lock:
         global all_loaded
         if not all_loaded:
-            scrape_all()
-            _cache_set_loaded_all()
-
+            scrape_all()      # crawl ทุกหน้า (ฟังก์ชัน crawl ฝั่งคุณ handle no-dup ให้แล้ว)
+            _set_all_loaded()
 
 def _ensure_page_loaded(page: int) -> Dict[int, Dict[str, Any]]:
-    """โหลดหน้า page ถ้ายังไม่อยู่ใน cache → ใส่ page_cache และคืนข้อมูลหน้านั้น"""
     with _cache_lock:
         if page in page_cache:
             return page_cache[page]
-    # โหลดนอก critical section ได้ (แต่ปลอดภัยจะล็อกอีกครั้งตอนเขียน cache)
     data = scrape_page(page)
     with _cache_lock:
         page_cache[page] = data
     return data
 
+# ----------- routes (ไม่มี /series/{id} แล้ว) -----------
 
 @app.get("/")
 def list_all() -> Dict[int, Dict[str, Any]]:
-    """
-    ครั้งแรกของโปรเซสรัน จะ crawl ทั้งหมด (ไม่ซ้ำหน้าเดิมใน crawl layer ของคุณอยู่แล้ว)
-    ครั้งต่อ ๆ ไปดึงจาก series_dict (ในหน่วยความจำ)
-    """
     _ensure_all_loaded()
     return series_dict
 
-
 @app.get("/page")
 def list_by_page(page: int = Query(1, ge=1, le=17)) -> Dict[int, Dict[str, Any]]:
-    """
-    แคชผลตามหน้า: กดซ้ำหน้าเดิมจะไม่ crawl ซ้ำ
-    """
     return _ensure_page_loaded(page)
 
-
-@app.get("/series/{series_id}")
-def get_series(series_id: int):
-    """
-    ดึงเรื่องเดียวจาก series_dict (หลังจากอย่างน้อยเคยโหลดหน้า/โหลดทั้งหมดแล้ว)
-    """
-    # ให้ UX ดีขึ้น: ถ้ายังไม่เคยโหลดอะไรเลย ให้โหลดทั้งหมดครั้งแรก
-    if not all_loaded and not page_cache:
-        _ensure_all_loaded()
-    return series_dict.get(series_id, {"error": "Series not found"})
-
+@app.get("/series/detail")
+def series_detail(url: str = Query(..., min_length=10)) -> Dict[str, Any]:
+    # ดึงละเอียดด้วย URL จริงของเรื่อง
+    return crawl_series_detail(url)
 
 @app.get("/search")
 def search_series(
@@ -99,20 +76,12 @@ def search_series(
     page: Optional[int] = Query(None, ge=1, le=17),
     scan_all: bool = Query(True),
 ) -> Dict[int, Dict[str, Any]]:
-    """
-    - ถ้ามี page -> ค้นเฉพาะข้อมูลของหน้า (แคชรายหน้า)
-    - ถ้าไม่มี page:
-        - ถ้า scan_all=True -> ensure_all_loaded แล้วค้นทั้งก้อน
-        - ถ้า scan_all=False -> จะค้นเท่าที่โหลดลงมาแล้วใน series_dict ณ ตอนนั้น
-    - มีแคช search ตามคีย์ (query, page, scan_all)
-    """
-    qkey = (title.strip().lower(), page, bool(scan_all))
-
+    key = (title.strip().lower(), page, bool(scan_all))
     with _cache_lock:
-        if qkey in search_cache:
-            return search_cache[qkey]
+        if key in search_cache:
+            return search_cache[key]
 
-    query = title.strip().lower()
+    q = title.strip().lower()
     if page is not None:
         pool = _ensure_page_loaded(page).values()
     else:
@@ -120,25 +89,22 @@ def search_series(
             _ensure_all_loaded()
         pool = series_dict.values()
 
-    result = {s["id"]: s for s in pool if query in (s.get("title") or "").lower()}
-
+    result = {s["id"]: s for s in pool if q in (s.get("title") or "").lower()}
     with _cache_lock:
-        search_cache[qkey] = result
+        search_cache[key] = result
     return result
 
-
-# ---------- Cache utilities ----------
+# optional: debug cache
 @app.get("/cache/status")
 def cache_status():
     with _cache_lock:
         return {
             "all_loaded": all_loaded,
             "all_loaded_at": all_loaded_at,
-            "page_cache_pages": sorted(list(page_cache.keys())),
+            "page_cache_pages": sorted(page_cache.keys()),
             "search_cache_size": len(search_cache),
             "series_count": len(series_dict),
         }
-
 
 @app.post("/cache/clear")
 def cache_clear():
@@ -148,6 +114,4 @@ def cache_clear():
         all_loaded_at = None
         page_cache.clear()
         search_cache.clear()
-        # หมายเหตุ: series_dict ยังอยู่ (ข้อมูลที่ crawl มาแล้ว)
-        # ถ้าอยากล้างทั้งหมดจริง ๆ ให้ล้าง series_dict และ state ใน crawl.py ด้วย
-    return {"ok": True, "message": "cache cleared (in-process)"}
+    return {"ok": True, "message": "cache cleared"}
