@@ -1,7 +1,11 @@
+# crawl.py
+import os
 import requests
 from bs4 import BeautifulSoup
 import re
 import time
+from io import BytesIO
+from PIL import Image
 
 series_dict = {}
 series_id_counter = 1
@@ -16,10 +20,14 @@ headers = {
 }
 
 BASE_URL = "https://yflix.me/category/series/page/{}/"
+POSTER_FOLDER = r"C:\toc-project\frontend\posters"
+os.makedirs(POSTER_FOLDER, exist_ok=True)
 
-def scrape_series(pages=1):
+def scrape_series():
     global series_id_counter, series_dict
-    for page in range(1, pages + 1):
+
+    # fix 16 pages
+    for page in range(1, 17):
         print(f"Scraping list page {page}...")
         url = BASE_URL.format(page)
         response = requests.get(url, headers=headers)
@@ -37,39 +45,53 @@ def scrape_series(pages=1):
 
             detail_soup = BeautifulSoup(res.text, "html.parser")
 
-            # Title
+            # --- scrape title, year, castings, trailer, synopsis --- #
             match = re.search(r'<h1 class="tdb-title-text">(.*?)</h1>', res.text)
             title = match.group(1).strip() if match else ""
 
-            # Year
             modified_date = re.search(
                 r'<meta\s+property="article:modified_time"\s+content="(\d{4})-',
                 res.text
             )
             date = modified_date.group(1) if modified_date else ""
 
-            # Castings
             castings_matches = re.findall(
                 r'<h3 class="entry-title td-module-title">\s*<a href="(https://yflix.me/casting/.*?)/".*?>(.*?)</a>\s*</h3>',
                 res.text,
             )
             castings = ", ".join([name.strip() for url, name in castings_matches]) if castings_matches else ""
 
-            # Trailer
             trailer_match = re.search(r'<iframe[^>]*src="(https://www\.youtube\.com/[^"]+)"', res.text)
             trailer = trailer_match.group(1) if trailer_match else ""
 
-            # Synopsis
             synopsis_tags = detail_soup.select(
                 ".tdb_single_content .tdb-block-inner > *:not(.wp-block-quote):not(.alignwide):not(.alignfull.wp-block-cover.has-parallax):not(.td-a-ad)"
             )
             synopsis = "\n".join([s.get_text(strip=True) for s in synopsis_tags]) if synopsis_tags else ""
 
-            # Poster
             poster_match = re.search(r'<meta\s+property=["\']og:image["\']\s+content=["\'](.*?)["\']', res.text)
-            poster = poster_match.group(1).strip() if poster_match else ""
-            
-            # Save series
+            poster_url = poster_match.group(1).strip() if poster_match else ""
+
+            local_poster_path = ""
+            if poster_url:
+                try:
+                    r = requests.get(poster_url, headers=headers)
+                    if r.status_code == 200:
+                        ext = "webp"
+                        filename = f"{series_id_counter}.{ext}"
+                        full_path = os.path.join(POSTER_FOLDER, filename)
+
+                        # แปลงเป็น webp
+                        img = Image.open(BytesIO(r.content))
+                        img.save(full_path, "WEBP")
+
+                        # path สำหรับ frontend
+                        local_poster_path = f"/posters/{filename}"
+
+                except Exception as e:
+                    print(f"Failed to download poster: {e}")
+
+            # save series
             series_info = {
                 "title": title,
                 "year": date,
@@ -77,9 +99,10 @@ def scrape_series(pages=1):
                 "url": link,
                 "trailer": trailer,
                 "synopsis": synopsis,
-                "poster": poster
+                "poster": local_poster_path
             }
             series_dict[series_id_counter] = series_info
             series_id_counter += 1
             time.sleep(1)
+
     return series_dict
