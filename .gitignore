@@ -1,0 +1,3 @@
+# Ignore compiled JS and maps in dist folder
+dist/**/*.js
+dist/**/*.js.map
