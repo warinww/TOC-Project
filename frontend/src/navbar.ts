@@ -16,18 +16,18 @@ export function createNavbar() {
     searchBar.placeholder = "Search...";
 
     const params = new URLSearchParams(window.location.search);
-    const inp = params.get("inp");
-    if (inp) searchBar.value = inp;
+    const title = params.get("title");
+    if (title) searchBar.value = title;
 
     searchBar.addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          const query = searchBar.value.trim();
-          if (query) {
-            window.location.href = `search_result.html?title=${encodeURIComponent(query)}`;
-          }
+      if (event.key === "Enter") {
+        event.preventDefault();
+        const query = searchBar.value.trim();
+        if (query) {
+          window.location.href = `search_result.html?title=${encodeURIComponent(query)}&scan_all=true`;
         }
-      });
+      }
+    });
 
     const searchIcon = document.createElement("img");
     searchIcon.src = "./assets/icons/search.svg";

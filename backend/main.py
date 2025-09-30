@@ -13,6 +13,7 @@ POSTER_FOLDER = os.path.join(FRONTEND_DIR, "posters")
 
 os.makedirs(POSTER_FOLDER, exist_ok=True)
 
+
 app = FastAPI(title="YFlix Series API")
 
 app.add_middleware(
