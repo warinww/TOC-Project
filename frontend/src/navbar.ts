@@ -11,6 +11,7 @@ export function createNavbar() {
     const logo = document.createElement("img");
     logo.src = "./assets/icons/logo.svg";
 
+    // logodiv.appendChild(logo);
     logodiv.appendChild(logo);
 
     const searchBox = document.createElement("div");
