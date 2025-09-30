@@ -33,6 +33,18 @@ body {
   height: 178px; width: 100%; overflow: auto; margin-right: 0;
 }
 
+a.card {
+  color: #000000;
+  text-decoration: none;
+}
+
+a.card:visited,
+a.card:hover,
+a.card:active {
+  color: #000000;
+  text-decoration: none;
+}
+
 .h2.trailer { margin: 20px 0 22px 0; }
 .video { height: 355px; width: 100%; aspect-ratio: 16 / 9; display: block; border: none; border-radius: 15px; }
 
