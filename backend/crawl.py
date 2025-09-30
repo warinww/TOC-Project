@@ -27,7 +27,7 @@ def scrape_series():
     global series_id_counter, series_dict
 
     # fix 16 pages
-    for page in range(1, 17):
+    for page in range(1, 2):
         print(f"Scraping list page {page}...")
         url = BASE_URL.format(page)
         response = requests.get(url, headers=headers)
