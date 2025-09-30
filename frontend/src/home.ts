@@ -161,7 +161,7 @@ function showBanner(i: number) { (window as any).showBanner?.(i); }
 function goBanner(step: number) { (window as any).goBanner?.(step); }
 
 // ===== Fetch & init =====
-fetch("./thai_y_series.json")
+fetch("./data/thai_y_series.json")
   .then((res) => res.json())
   .then((data: Series[]) => {
     // เติม onair ถ้ายังไม่มี (ถือว่า year === 2025 = onair)
