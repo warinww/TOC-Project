@@ -25,6 +25,7 @@ with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
 
     for page in range(1, 2):
         print(f"Scraping list page {page}...")
+
         url = casting_url.format(page)
         response = requests.get(url, headers=headers)
         if response.status_code != 200:
@@ -89,21 +90,27 @@ with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
             print("Nickname:", nick_name)
 
             #birth
-            birth_match = re.search(r'เกิด\s*:\s*(.+?)(?:<br>|</p>)', res.text)
+            birth_match = re.search(r'เกิด(?:เมื่อ)?\s*:\s*(.+?)(?:<br>|</p>)', res.text)
             if birth_match:
                 birth = birth_match.group(1).strip()
             else:
                 birth = ""
             print("Birth:", birth)
+            
+            # หา IG + ลิงก์
+            ig_match = re.search(
+                r'<a[^>]*href="([^"]+)"[^>]*>\s*IG\s*:\s*([^<]+)</a>',
+                res.text,
+                re.IGNORECASE
+            )
 
-            #ig and link
-            ig_match = re.search(r'<a href="([^"]+)">IG\s*:\s*([^<]+)</a>', res.text)
             if ig_match:
-                ig_link = ig_match.group(1).strip()
-                ig_username = ig_match.group(2).strip()
+                ig_link = ig_match.group(1).strip()       # https://www.instagram.com/williamjkp
+                ig_username = ig_match.group(2).strip()   # williamjkp
             else:
                 ig_link = ""
                 ig_username = ""
+
             print("IG Username:", ig_username)
             print("IG Link:", ig_link)
             

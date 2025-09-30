@@ -6,7 +6,7 @@ export function createFooter() {
     const linkdiv = document.createElement("div");
     const sourcecode = document.createElement("a");
     sourcecode.textContent = "source code";
-    sourcecode.href = "";
+    sourcecode.href = "https://github.com/17punchisama/TOC-Project.git";
     const presentation = document.createElement("a");
     presentation.textContent = "นำเสนอ";
     presentation.href = "";

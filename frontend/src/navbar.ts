@@ -1,37 +1,48 @@
-function toggleTheme() {
-  document.body.classList.toggle("dark");
-}
-
 export function createNavbar() {
     const nav = document.createElement("nav");
     nav.className = "navbox";
 
-    // const homeLink = document.createElement("a");
-    // homeLink.href = "index.html";
-    // homeLink.textContent = "Home";
-    // homeLink.style.marginRight = "15px";
-    // homeLink.style.color = "white";
-
-    // const detailLink = document.createElement("a");
-    // detailLink.href = "detail.html";
-    // detailLink.textContent = "Detail";
-    // detailLink.style.color = "white";
-
+    const logodiv = document.createElement("div");
+    logodiv.classList = "logoDiv";
     const logo = document.createElement("img");
     logo.src = "./assets/icons/logo.svg";
-    // logo.style.height = "50%";
+
+    // logodiv.appendChild(logo);
+    logodiv.appendChild(logo);
 
     const searchBox = document.createElement("div");
     searchBox.className = "searchBox";  
     const searchBar = document.createElement("input");
     searchBar.placeholder = "Search...";
-    searchBar.className = "searchBar";
+
+    searchBar.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {  // Enter pressed
+        const query = searchBar.value.trim();
+        if (query) {
+          // fetch(`/series/${encodeURIComponent(query)}`, {
+          //   method: "POST",
+          // })
+          // .then(response => response.json())
+          // .then(data => {
+          //   console.log("Server response:", data);
+            window.location.href = `search_result.html?title=${encodeURIComponent(query)}`;
+          // })
+          // .catch(error => {
+          //   console.error("Error:", error);
+          // });
+        }
+      }
+    });
+    const params = new URLSearchParams(window.location.search);
+    const title = params.get("title");
+    if (title) {
+      searchBar.value = title;
+    }
+
     const searchIcon = document.createElement("img");
     searchIcon.src = "./assets/icons/search.svg";
-    searchIcon.className = "searchIcon";
     const filterIcon = document.createElement("img");
     filterIcon.src = "./assets/icons/filter.svg";
-    filterIcon.className = "searchIcon";
     searchBox.appendChild(searchIcon);
     searchBox.appendChild(searchBar);
     searchBox.appendChild(filterIcon);
@@ -47,12 +58,24 @@ export function createNavbar() {
     changeThemeDiv.appendChild(darkMode);
     changeThemeDiv.appendChild(lightMode);
 
-    darkMode.addEventListener("click", toggleTheme);
-    lightMode.addEventListener("click", toggleTheme);
+    darkMode.addEventListener("click", () => {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    });
 
-    // nav.appendChild(homeLink);
-    // nav.appendChild(detailLink);
-    nav.appendChild(logo);
+    lightMode.addEventListener("click", () => {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    });
+
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+
+    nav.appendChild(logodiv);
     nav.appendChild(searchBox);
     nav.appendChild(changeThemeDiv);
 

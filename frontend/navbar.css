@@ -1,4 +1,4 @@
-:root{
+:root {
   --color1: #FFF3DA;
   --color2: #F3F1F5;
   --color3: #F0D9FF;
@@ -8,14 +8,62 @@
   --dark2: #D597CE;
   --white: #FFFFFF;
   --black: #000000;
+
+  --bg: var(--color2);
+  --text: var(--black);
+  --nav-footer-bg: var(--color4);
+}
+
+:root.dark {
+  --bg: var(--dark1);
+  --text: var(--color2);
+  --nav-footer-bg: var(--dark2);
+}
+
+body {
+  margin: 0;
+  padding: 100px 0;
+  font-family: 'Anuphan', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+nav, footer {
+  background-color: var(--nav-footer-bg);
+  padding: 20px;
+  text-align: center;
+  transition: background-color 0.3s;
 }
 
 .navbox {
   display: flex;
-  background-color: var(--color4);
-  padding: 10px;
-  gap: 10px;
+  /* background-color: var(--color4); */
   align-items: center;
+  justify-content: space-between;
+  padding: 5px 10vw;
+  height: fit-content;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  box-sizing: border-box; 
+  z-index: 999;
+}
+
+.navbox img{
+  height: 48px;     
+  width: auto;     
+  object-fit: contain;
+}
+
+.logoDiv {
+  width: 106px;
+}
+
+.logoDiv img {
+  height: 70px;     
+  width: auto;     
+  object-fit: contain;
 }
 
 .searchBox {
@@ -24,21 +72,36 @@
   background-color: var(--white);
   padding: 10px;
   border-radius: 50px;
-  gap: 12px;
+  justify-content: space-between;
+  height: 48px;
+  width: 30vw;
+  box-sizing: border-box; 
 }
 
-.searchBar {
+.searchBox img {
+  height: 80%;
+}
+
+.searchBox input {
+  height: 80%;
   border: none;
+  outline: none;
   border-radius: 50px;
-  width: 50vw;
+  width: 80%;
   background-color: var(--white);
   color: var(--color5);
+  box-sizing: border-box; 
 }
 
-.searchIcon {
-  height: 20px;
+.changeThemeDiv {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 60px;
+  width: auto;
+  cursor: pointer;
 }
 
 .colorMode {
-  height: 50px;
+  height: 80%;
 }
