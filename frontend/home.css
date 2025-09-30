@@ -85,8 +85,8 @@ body {
           mask: var(--icon-url) no-repeat center / contain;
   display: block;
 }
-.banner-btn.prev { left: 12px; --icon-url: url("./icons/chevron-left.svg"); }
-.banner-btn.next { right: 12px; --icon-url: url("./icons/chevron-right.svg"); }
+.banner-btn.prev { left: 12px; --icon-url: url("./assets/icons/chevron-left.svg"); }
+.banner-btn.next { right: 12px; --icon-url: url("./assets/icons/chevron-right.svg"); }
 
 /* จุดบอกตำแหน่ง */
 .banner-dots {
