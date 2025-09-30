@@ -1,5 +1,17 @@
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) {
+  document.body.classList.add(savedTheme);
+}
+
 function toggleTheme() {
   document.body.classList.toggle("dark");
+
+  // Save the current theme
+  if (document.body.classList.contains("dark")) {
+    localStorage.setItem("theme", "dark");
+  } else {
+    localStorage.setItem("theme", "light");
+  }
 }
 
 export function createNavbar() {
