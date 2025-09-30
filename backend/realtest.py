@@ -5,6 +5,29 @@ import time
 import re
 import html
 
+def extract_balanced_div_block(html, start_id):
+    pattern = rf'<div[^>]+id="{start_id}"[^>]*>'
+    match = re.search(pattern, html)
+    if not match:
+        return None
+
+    start_pos = match.start()
+    remaining_html = html[start_pos:]
+
+    open_divs = 0
+    end_pos = 0
+    for match in re.finditer(r'</?div\b', remaining_html):
+        if match.group() == '<div':
+            open_divs += 1
+        else:
+            open_divs -= 1
+        if open_divs == 0:
+            end_pos = match.end()
+            break
+
+    return remaining_html[:end_pos] if end_pos > 0 else None
+
+
 # Base URL of series list
 series_url = "https://yflix.me/category/series/page/{}/"
 # series_url = "https://yflix.me/category/casting/page/{}/"
@@ -37,8 +60,18 @@ with open(series_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
             print(f"Failed page {page}: {response.status_code}")
             continue
 
-        soup = BeautifulSoup(response.text, "html.parser")
-        series_links = [a.get("href") for a in soup.select(".tdi_45 .td-module-title a")]
+        section_html = extract_balanced_div_block(response.text, "tdi_45")
+
+        if section_html:
+            series_links = re.findall(
+            r'<h3 class="entry-title td-module-title">\s*<a href="(https://yflix\.me/series/[^"]+)"',
+                section_html
+            )
+            # print(f"✅ Found {len(series_links)} series links")
+        else:
+            # print("❌ Failed to extract section")
+            series_links = []
+
 
         for link in series_links:
             print(f"Scraping details: {link}")
@@ -47,7 +80,6 @@ with open(series_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
                 print(f"Failed to fetch {link}")
                 continue
 
-            detail_soup = BeautifulSoup(res.text, "html.parser")
 
             match = re.search(r'<meta\s+property=["\']og:title["\']\s+content=["\']([^"\']+)["\']',
                     res.text, re.DOTALL | re.IGNORECASE)
@@ -93,15 +125,30 @@ with open(series_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
             trailer = trailer_match.group(1) if trailer_match else ""
 
             # Synopsis
-            content_div = detail_soup.find("div", class_="tdb_single_content")
+            content_div = extract_balanced_div_block(res.text, "tdi_71")
+
             if content_div:
-                paragraphs = [p.get_text(" ", strip=True) for p in content_div.find_all("p")]
+                
+                paragraphs =  re.findall(r'<p[^>]*>(.*?)</p>', content_div, re.DOTALL)
                 synopsis = " ".join(paragraphs)
                 synopsis = html.unescape(synopsis)
+                # แทน <br>, <p>, </p> ด้วย \n
+                synopsis = re.sub(r'</?p\s*/?>|<br\s*/?>', '\n', synopsis, flags=re.IGNORECASE)
+
+                synopsis = re.sub(r'<[^>]+>', ' ', synopsis, flags=re.IGNORECASE)
+
+                # ล้างช่องว่าง/บรรทัดว่างเกิน
+                synopsis = re.sub(r'\n\s*\n+', '\n', synopsis)
+                synopsis = re.sub(r'[ \t]+', ' ', synopsis)
+                synopsis = synopsis.strip()
+
+                
+                
                 coming_soon = bool(re.search(r"เร็ว\s*ๆ\s*นี้", synopsis))
             else:
                 synopsis = ""
                 coming_soon = False
+                print("No synopsis found")
 
             # Poster
             poster_match = re.search(r'<meta\s+property=["\']og:image["\']\s+content=["\'](.*?)["\']', res.text)
