@@ -1,7 +1,19 @@
-function toggleTheme() {
-    document.body.classList.toggle("dark");
-}
 export function createNavbar() {
+    function toggleTheme() {
+        document.documentElement.classList.toggle("dark");
+        // Save theme in localStorage for persistence
+        if (document.documentElement.classList.contains("dark")) {
+            localStorage.setItem("theme", "dark");
+        }
+        else {
+            localStorage.setItem("theme", "light");
+        }
+    }
+    // Apply saved theme on page load
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+    }
     const nav = document.createElement("nav");
     nav.className = "navbox";
     const logodiv = document.createElement("div");

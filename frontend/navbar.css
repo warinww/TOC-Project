@@ -1,4 +1,4 @@
-:root{
+:root {
   --color1: #FFF3DA;
   --color2: #F3F1F5;
   --color3: #F0D9FF;
@@ -8,27 +8,31 @@
   --dark2: #D597CE;
   --white: #FFFFFF;
   --black: #000000;
+
+  --bg: var(--color2);
+  --text: var(--black);
   --nav-footer-bg: var(--color4);
 }
 
-nav, footer {
-  background-color: var(--nav-footer-bg);
+:root.dark {
+  --bg: var(--dark1);
+  --text: var(--color2);
+  --nav-footer-bg: var(--dark2);
 }
 
 body {
   margin: 0;
-  width: 100vw;
-  padding-top: 100px;
-  font-family: 'Anuphan';
-  overflow-x: hidden;
+  font-family: 'Anuphan', sans-serif;
   background-color: var(--bg);
-  color: var(--black);
+  color: var(--text);
+  transition: background-color 0.3s, color 0.3s;
 }
 
-body.dark {
-  background-color: var(--dark1);
-  color: var(--color2);
-  --nav-footer-bg: var(--dark2);
+nav, footer {
+  background-color: var(--nav-footer-bg);
+  padding: 20px;
+  text-align: center;
+  transition: background-color 0.3s;
 }
 
 .navbox {
