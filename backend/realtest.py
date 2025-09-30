@@ -6,14 +6,14 @@ import re
 import html
 
 # Base URL of series list
-base_url = "https://yflix.me/category/series/page/{}/"
-# base_url = "https://yflix.me/category/casting/page/{}/"
+series_url = "https://yflix.me/category/series/page/{}/"
+# series_url = "https://yflix.me/category/casting/page/{}/"
 
 # CSV file
-csv_file = "yflix_series_details.csv"
+series_csv_file = "yflix_series_details.csv"
 
 # Headers to mimic a browser
-headers = {
+series_headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                         "AppleWebKit/537.36 (KHTML, like Gecko) "
                         "Chrome/120.0.0.0 Safari/537.36",
@@ -23,18 +23,16 @@ headers = {
         }
 
 # Open CSV file for writing
-with open(csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
+with open(series_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
     writer = csv.writer(file)
     writer.writerow(["title", "date", "castings", "url_castings", "trailer", "synopsis",  "poster", "coming_soon"])
-
-
 
 
     # Loop through pages 1-17
     for page in range(2, 3):
         print(f"Scraping list page {page}...")
-        url = base_url.format(page)
-        response = requests.get(url, headers=headers)
+        url = series_url.format(page)
+        response = requests.get(url, headers=series_headers)
         if response.status_code != 200:
             print(f"Failed page {page}: {response.status_code}")
             continue
@@ -44,7 +42,7 @@ with open(csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
 
         for link in series_links:
             print(f"Scraping details: {link}")
-            res = requests.get(link, headers=headers)
+            res = requests.get(link, headers=series_headers)
             if res.status_code != 200:
                 print(f"Failed to fetch {link}")
                 continue
@@ -95,21 +93,6 @@ with open(csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
             trailer = trailer_match.group(1) if trailer_match else ""
 
             # Synopsis
-            # findall ดึง meta og:description ทั้งหมด 
-            # synopsis_match = re.findall(r'<meta\s+property=["\']og:description["\']\s+content=["\'](.*?)["\']', res.text, re.DOTALL)
-
-            # if synopsis_match:
-            #     synopsis = " ".join(synopsis_match)
-            #     synopsis = html.unescape(synopsis)  # แปลง HTML entities
-            #     coming_soon = bool(re.search(r"เร็ว\s*ๆ\s*นี้", synopsis))
-            #     # synopsis = synopsis_match.group(1).strip()
-            #     # synopsis = html.unescape(synopsis)
-            #     # coming_soon = "เร็วๆ นี้" in synopsis or "เร็วๆนี้" in synopsis
-            # else:
-            #     synopsis = ""
-            #     coming_soon = False
-
-
             content_div = detail_soup.find("div", class_="tdb_single_content")
             if content_div:
                 paragraphs = [p.get_text(" ", strip=True) for p in content_div.find_all("p")]
@@ -119,12 +102,6 @@ with open(csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
             else:
                 synopsis = ""
                 coming_soon = False
-
-            # Coming soon จาก <p>
-            # paragraphs = detail_soup.find_all("p")
-            # all_text = " ".join(p.get_text(strip=True) for p in paragraphs)
-            # coming_soon = bool(re.search(r"เร็ว\s*ๆ\s*นี้", all_text))
-
 
             # Poster
             poster_match = re.search(r'<meta\s+property=["\']og:image["\']\s+content=["\'](.*?)["\']', res.text)
@@ -140,4 +117,4 @@ with open(csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
             # Be polite, avoid hammering server
             time.sleep(1)
 
-print(f"Done! All details saved to {csv_file}")
+print(f"Done! All details saved to {series_csv_file}")
