@@ -15,17 +15,18 @@ headers = {
             "Referer": "https://yflix.me/",
         }
 
-caseing_url = "https://yflix.me/category/casting/page/{}/"
+casting_url = "https://yflix.me/category/casting/page/{}/"
 
 casting_csv_file = "yflix_casting_details.csv"
 
 with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
     writer = csv.writer(file)
-    writer.writerow(["all_images" ,"title", "description", "full_name", "nick_name", "birth", "ig_username","ig_link", "work"])
+    writer.writerow(["all_images" ,"title", "description", "description_more_1", "description_more_2", "full_name", "nick_name", "birth", "ig_username","ig_link", "work"])
 
     for page in range(1, 2):
         print(f"Scraping list page {page}...")
-        url = caseing_url.format(page)
+
+        url = casting_url.format(page)
         response = requests.get(url, headers=headers)
         if response.status_code != 200:
             print(f"Failed page {page}: {response.status_code}")
@@ -41,7 +42,7 @@ with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
                 print(f"Failed to fetch {link}")
                 continue
 
-            drtail_soup = BeautifulSoup(res.text, "html.parser")
+            detail_soup = BeautifulSoup(res.text, "html.parser")
 
             #all_image
             image_matches = re.findall(
@@ -95,7 +96,7 @@ with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
             else:
                 birth = ""
             print("Birth:", birth)
-
+            
             # หา IG + ลิงก์
             ig_match = re.search(
                 r'<a[^>]*href="([^"]+)"[^>]*>\s*IG\s*:\s*([^<]+)</a>',
@@ -112,33 +113,64 @@ with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
 
             print("IG Username:", ig_username)
             print("IG Link:", ig_link)
+            
+            # description
+            description = ""
+            description_more_1 = ""
+            description_more_2 = ""
+            block = detail_soup.find(attrs={"data-td-block-uid": "tdi_77"})
 
-            # Description
-            desc_match = re.search(
-                r'<meta\s+property=["\']og:description["\']\s+content=["\']([^"\']+)["\']',
-                res.text,
-                re.IGNORECASE
-            )
-            description = desc_match.group(1).strip() if desc_match else ""
+            if block:
+                inner_div = block.find("div", class_="tdb-block-inner td-fix-index")
+                if inner_div:
+                    p_tags = inner_div.find_all("p")
 
-            # กรอง description ให้ตัดข้อความที่เป็นเพียงชื่อ/ชื่อเล่น/วันเกิด/IG
-            if any(tag in description for tag in ["ชื่อ-สกุล", "ชื่อเล่น", "เกิด", "IG"]):
-                description = ""  # ถ้ามีคำพวกนี้ ละทิ้ง description
+                    # --- <p> ตัวแรก ---
+                    if len(p_tags) >= 1:
+                        first_paragraph = p_tags[0].get_text("\n", strip=True)
+                        cleaned = re.sub(r'(ชื่อ-สกุล|ชื่อเล่น|เกิด)\s*:.*(?:\n)?', '', first_paragraph)
+                        parts = cleaned.strip().splitlines()
 
-            # หรือถ้าต้องการลบชื่อ, ชื่อเล่น, วันเกิดจริง ๆ จาก description
-            for text_to_remove in [full_name, nick_name, birth]:
-                if text_to_remove:
-                    description = description.replace(text_to_remove, "").strip()
+                        if parts:
+                            description = parts[0].strip()
+                            description_more_1 = "\n".join(parts[1:]).strip()
 
-            # ตรวจสอบอีกครั้งว่ามีข้อความจริงหรือไม่
-            if not description:
-                print("No valid description found")
-            else:
-                print("Description:", description)
+                    # --- <p> ตัวที่สอง ---
+                    if len(p_tags) >= 2:
+                        second_p = p_tags[1].get_text("\n", strip=True)
+                        lines = second_p.splitlines()
+
+                        capture = False
+                        description_more_arr = []
+                        for line in lines:
+                            if line.startswith(("ชื่อ-สกุล :", "ชื่อเล่น :", "เกิด :")):
+                                capture = True
+                                continue
+                            if capture:
+                                description_more_arr.append(line)
+
+                        description_more_2 = "\n".join(description_more_arr).strip()
+
+                    # --- Debug print ---
+                    if not description:
+                        print("No valid description found")
+                    else:
+                        print("Description:", description)
+                        print("Description more 1:", description_more_1)
+                        print("Description more 2:", description_more_2)
+
+
+            series_links = re.findall(r'href="(https://yflix\.me/series/[^"]+)"', res.text)
+            series_links = list(set(series_links))
+
+            for link in series_links:
+                print("series_match:", link)
+
+
 
             all_images = ", ".join([url.strip() for url in image_matches])
             # Write to CSV
-            writer.writerow([all_images, title, description, full_name, nick_name, birth, ig_username, ig_link, ""])
+            writer.writerow([all_images, title, description, description_more_1, description_more_2, full_name, nick_name, birth, ig_username, ig_link, series_links])
 
             # Be polite, avoid hammering server
             time.sleep(1)
