@@ -1,4 +1,4 @@
-:root{
+:root {
   --color1: #FFF3DA;
   --color2: #F3F1F5;
   --color3: #F0D9FF;
@@ -9,39 +9,59 @@
   --white: #FFFFFF;
   --black: #000000;
 
-  /* --bg: var(--color2);
-  --accent: var(--color4); */
+  --bg: var(--color2);
+  --text: var(--black);
+  --nav-footer-bg: var(--color4);
+}
+
+:root.dark {
+  --bg: var(--dark1);
+  --text: var(--color2);
+  --nav-footer-bg: var(--dark2);
 }
 
 body {
   margin: 0;
-  width: 100vw;
-  padding-top: 80px;
-  font-family: 'Anuphan';
-  overflow-x: hidden;
+  padding: 100px 0;
+  font-family: 'Anuphan', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
 }
 
-/* body.dark {
-  --bg: var(--dark1);
-  --accent: var(--dark1);
-} */
+nav, footer {
+  background-color: var(--nav-footer-bg);
+  padding: 20px;
+  text-align: center;
+  transition: background-color 0.3s;
+}
 
 .navbox {
   display: flex;
-  background-color: var(--color4);
+  /* background-color: var(--color4); */
   align-items: center;
   justify-content: space-between;
-  padding: 10px 10vw;
+  padding: 5px 10vw;
   height: fit-content;
   width: 100%;
   top: 0;
   left: 0;
   position: fixed;
   box-sizing: border-box; 
+  z-index: 999;
 }
 
 .navbox img{
   height: 48px;     
+  width: auto;     
+  object-fit: contain;
+}
+
+.logoDiv {
+  width: 106px;
+}
+
+.logoDiv img {
+  height: 70px;     
   width: auto;     
   object-fit: contain;
 }
@@ -52,7 +72,7 @@ body {
   background-color: var(--white);
   padding: 10px;
   border-radius: 50px;
-  gap: 12px;
+  justify-content: space-between;
   height: 48px;
   width: 30vw;
   box-sizing: border-box; 
@@ -76,8 +96,9 @@ body {
 .changeThemeDiv {
   display: flex;
   align-items: center;
-  gap: 10%;
+  gap: 10px;
   height: 60px;
+  width: auto;
   cursor: pointer;
 }
 

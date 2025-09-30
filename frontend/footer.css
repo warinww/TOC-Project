@@ -1,0 +1,48 @@
+* {
+    font-family: 'Anuphan';
+}
+
+body {
+    margin: 0;
+    padding-bottom: 100px;
+    width: 100vw;
+    font-family: 'Anuphan';
+    overflow-x: hidden;
+}
+
+.footerBox {
+    display: flex;
+    height: fit-content;
+    /* background-color: var(--color4); */
+    margin-top: auto;
+    padding: 20px;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    box-sizing: border-box; 
+    z-index: 999;
+}
+
+.footerBox button {
+    padding: 5px 15px;
+    border-radius: 40px;
+    border: 2px solid var(--color5);
+    background-color: var(--color1);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.footerBox div {
+    display: flex;
+    gap: 5vw;
+    box-sizing: border-box;
+}
+
+.footerBox div a {
+    color: var(--color2);
+    font-weight: 500;
+    text-decoration: none;
+}

@@ -7,10 +7,10 @@
   "trailer": "https://www.youtube.com/embed/dytvU-Z-H1k?list=RD8ONLsKcc294&index=5",
   "backHref": "index.html",
   "cast": [
-    { "id": 1, "first": "โทมัส",  "last": "ธีร์ทัศน์", "img": "https://media.themoviedb.org/t/p/w500/6dSRJ5klTAikfYiEvtkU319mFT5.jpg" },
-    { "id": 2, "first": "ก้อง",    "last": "ก้องภพ", "img": "https://www.siamzone.com/ig/media/1565596302/3557408200246425073-1.jpg" },
-    { "id": 3, "first": "อู่อู๋", "last": "ธนภูมิ", "img": "" },
-    { "id": 4, "first": "เชฟ",   "last": "วรพงษ์", "img": "" },
-    { "id": 5, "first": "ป๋อ",   "last": "ศุภการ", "img": "" }
+    { "id": 1, "first": "โทมัส",  "last": "ธีร์ทัศน์ จึงมณีรัตน์", "img": "https://media.themoviedb.org/t/p/w500/6dSRJ5klTAikfYiEvtkU319mFT5.jpg" },
+    { "id": 2, "first": "ก้อง",    "last": "ก้องภพ จิโรจน์มนตรี", "img": "https://www.siamzone.com/ig/media/1565596302/3557408200246425073-1.jpg" },
+    { "id": 3, "first": "อู่อู๋", "last": "ธนภูมิ เศรษฐสิทธิกุล", "img": "" },
+    { "id": 4, "first": "เชฟ",   "last": "วรพงษ์ วาเลาะ", "img": "" },
+    { "id": 5, "first": "ป๋อ",   "last": "ศุภการ จิรโชติกุล", "img": "" }
   ]
 }

@@ -7,13 +7,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@100..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./detail.css">
+  <link rel="stylesheet" href="./navbar.css">
+  <link rel="stylesheet" href="./footer.css">
 </head>
 <body>
   <body>
-  <!-- โหลดคอมโพเนนต์ (ไฟล์ .js ที่คอมไพล์จาก .ts) -->
+
   <script type="module" src="./dist/detail.js"></script>
 
-  <!-- ดึงข้อมูลจากไฟล์ JSON -->
-  <show-detail data-src="./detail.json"></show-detail>
+  <!-- <show-detail data-src="./data/detail.json"></show-detail> -->
+   <show-detail data-src="http://127.0.0.1:8000/series"></show-detail>
 </body>
 </html>
