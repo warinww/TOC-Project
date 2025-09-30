@@ -1,10 +1,10 @@
 import { createNavbar } from "./navbar.js";
-// import { createFooter } from "./footer.js";
+import { createFooter } from "./footer.js";
 
 createNavbar()
-// createFooter()
+createFooter()
 
-const gobackbt = document.createElement("button");
+const gobackbt = document.createElement("div");
 gobackbt.className = "goBackBt";
 gobackbt.addEventListener("click", () => {
     history.back();

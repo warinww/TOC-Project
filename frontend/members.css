@@ -7,11 +7,10 @@ body {
     width: 100vw;
     font-family: 'Anuphan';
     overflow-x: hidden;
-    background-color: var(--color2);
 }
 
 .goBackBt {
-    background-color:  var(--color2);
+    background-color:  transparent;
     border: none;
     width: fit-content;
     cursor: pointer;

@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from crawl import scrape_page, series_dict
 
-POSTER_FOLDER = r"C:\toc-project\frontend\posters"
+POSTER_FOLDER = r"D:\CE\D3\ToC\TOC-Project\frontend\posters"
 
 app = FastAPI(title="YFlix Series API")
 
