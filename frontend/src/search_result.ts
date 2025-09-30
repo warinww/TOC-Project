@@ -4,6 +4,15 @@ import { createNavbar } from "./navbar.js";
 createNavbar();
 createFooter();
 
+const p = document.createElement("p");
+p.className = "poster-text";
+
+const div = document.createElement("div");
+div.className = "series-grid";
+
+document.body.appendChild(p);
+document.body.appendChild(div);
+
 // frontend/search_result.ts
 interface Series {
   id: number;
@@ -11,18 +20,18 @@ interface Series {
   poster: string;    // backend ใส่ key "poster" เป็น /posters/{id}.webp
 }
 
-function getQueryParam(title: string) {
-  return new URLSearchParams(window.location.search).get(title);
+function getQueryParam(name: string) {
+  return new URLSearchParams(window.location.search).get(name);
 }
 
 const grid = document.querySelector(".series-grid") as HTMLDivElement;
 const heading = document.querySelector(".poster-text") as HTMLParagraphElement;
 
 async function runSearch() {
-  const inp = getQueryParam("inp") || "";
-  heading.textContent = `ผลการค้นหา: "${inp}"`;
+  const title = getQueryParam("title") || "";
+  heading.textContent = `ผลการค้นหา: "${title}"`;
 
-  const res = await fetch(`http://127.0.0.1:8000/search?title=${encodeURIComponent(inp)}&scan_all=true`);
+  const res = await fetch(`http://127.0.0.1:8000/search?title=${encodeURIComponent(title)}&scan_all=true`);
   const dataDict: Record<string, Series> = await res.json();
 
   const items: Series[] = Object.values(dataDict);
@@ -55,4 +64,6 @@ async function runSearch() {
   });
 }
 
-runSearch();
+document.addEventListener("DOMContentLoaded", () => {
+    runSearch();
+});
