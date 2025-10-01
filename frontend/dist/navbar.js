@@ -3,7 +3,6 @@ export function createNavbar() {
     nav.className = "navbox";
     const logodiv = document.createElement("div");
     logodiv.classList = "logoDiv";
-    logodiv.onclick = () => (window.location.href = "index.html");
     const logo = document.createElement("img");
     logo.src = "./assets/icons/logo.svg";
     // logodiv.appendChild(logo);
@@ -13,15 +12,15 @@ export function createNavbar() {
     const searchBar = document.createElement("input");
     searchBar.placeholder = "Search...";
     const params = new URLSearchParams(window.location.search);
-    const title = params.get("title");
-    if (title)
-        searchBar.value = title;
+    const inp = params.get("inp");
+    if (inp)
+        searchBar.value = inp;
     searchBar.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
             event.preventDefault();
             const query = searchBar.value.trim();
             if (query) {
-                window.location.href = `search_result.html?title=${encodeURIComponent(query)}&scan_all=true`;
+                window.location.href = `search_result.html?title=${encodeURIComponent(query)}`;
             }
         }
     });

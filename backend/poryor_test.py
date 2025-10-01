@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from threading import Lock
 import time
+from home_crawl import get_casting_by_URL
 from fastapi.responses import FileResponse, Response
 import requests
 
@@ -143,3 +144,8 @@ def cache_clear():
         page_cache.clear()
         search_cache.clear()
     return {"ok": True, "message": "cache cleared"}
+
+@app.get("/casting")
+def get_cating_detail_by_url(url: str):
+    print("URL received:", url)
+    return get_casting_by_URL(url)

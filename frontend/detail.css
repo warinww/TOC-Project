@@ -34,14 +34,14 @@ body {
 }
 
 a.card {
-  color: #000000;
+  color: inherit; 
   text-decoration: none;
 }
 
 a.card:visited,
 a.card:hover,
 a.card:active {
-  color: #000000;
+  color: inherit; 
   text-decoration: none;
 }
 

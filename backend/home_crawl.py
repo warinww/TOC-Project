@@ -285,3 +285,111 @@ def info_onair_series():
                 onair_dict[series_id] = info
     return onair_dict
 
+def get_casting_by_URL(url: str) -> dict:
+    global _next_id, _next_cast_id
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                      "AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/120.0.0.0 Safari/537.36",
+    }
+    res = requests.get(url, headers=headers)
+    if res.status_code != 200:
+        return {"error": f"Failed to fetch {url}", "status": res.status_code}
+    soup = BeautifulSoup(res.text, "html.parser")
+
+    # All images
+    image_matches = re.findall(
+        r'<meta\s+[^>]*property=["\']og:image["\'][^>]*content=["\']([^"\']+)["\'][^>]*>',
+        res.text,
+        re.IGNORECASE
+    )
+    all_images = list({url.strip() for url in image_matches}) if image_matches else []
+
+
+    # Title
+    title_match = re.search(
+        r'<meta\s+[^>]*property=["\']og:title["\'][^>]*content=["\']([^"\']+)["\'][^>]*>',
+        res.text,
+        re.IGNORECASE
+    )
+    title = title_match.group(1).strip() if title_match else ""
+
+    # Full name
+    full_name_match = re.search(r'ชื่อ-สกุล\s*:\s*(.+?)(?:<br>|</p>)', res.text)
+    full_name = full_name_match.group(1).strip() if full_name_match else ""
+
+    # Nickname
+    nick_match = re.search(r'ชื่อเล่น\s*:\s*(.+?)(?:<br>|</p>)', res.text)
+    nick_name = nick_match.group(1).strip() if nick_match else ""
+
+    # Birth
+    birth_match = re.search(r'เกิด(?:เมื่อ)?\s*:\s*(.+?)(?:<br>|</p>)', res.text)
+    birth = birth_match.group(1).strip() if birth_match else ""
+
+    # IG
+    ig_match = re.search(
+        r'<a[^>]*href="([^"]+)"[^>]*>\s*IG\s*:\s*([^<]+)</a>',
+        res.text,
+        re.IGNORECASE
+    )
+    ig_link = ig_match.group(1).strip() if ig_match else ""
+    ig_username = ig_match.group(2).strip() if ig_match else ""
+
+    # Description
+    description = ""
+    block = soup.find(attrs={"data-td-block-uid": "tdi_77"})
+
+    p_tags = re.findall(r'<p[^>]*>(.*?)</p>', str(block), re.DOTALL)
+
+    paragraph = ""
+    for i in range(len(p_tags)):
+        new_paragraph = re.sub(r'<br\s*/?>', '\n', p_tags[i], flags=re.IGNORECASE)
+        paragraph = paragraph + "\n" + new_paragraph
+    cleaned = re.sub(r'(ชื่อ-สกุล|ชื่อเล่น|เกิด(?:เมื่อ)?)\s*:.*(?:\n)?', '', paragraph)
+    lines = [line.strip() for line in cleaned.splitlines() if line.strip()]
+
+    with_colon = [line for line in lines if ":" in line]
+    no_colon = [line for line in lines if ":" not in line]
+    sorted_lines = with_colon + no_colon
+    description = "\n".join(sorted_lines)
+
+    # Series links
+    pattern = re.compile(
+        r'<div\s+class="td_module_flex[^"]*">.*?'
+        r'<a\s+href="(?P<href>https://yflix\.me/series/[^"]+)"[^>]*'
+        r'title="(?P<title>[^"]+)"[^>]*>.*?'
+        r'<span[^>]*data-img-url="(?P<img>[^"]+)"',
+        re.DOTALL | re.IGNORECASE
+    )
+
+    series_items = []
+
+    for m in pattern.finditer(res.text):
+        stitle = html.unescape(m.group("title"))
+        series_items.append({
+            "title": stitle,
+            "img": m.group("img"),
+            "url": m.group("href")
+        })
+
+
+    # print(all_images, title)
+    # Return JSON-ready dict
+    return {
+        "all_images": all_images,
+        "title": title,
+        "full_name": full_name,
+        "nick_name": nick_name,
+        "birth": birth,
+        "ig_username": ig_username,
+        "ig_link": ig_link,
+        "description": description,
+        "series_links": series_items
+    }
+
+# print(get_casting_by_URL("https://yflix.me/casting/%e0%b8%a7%e0%b8%ad%e0%b8%a3%e0%b9%8c-%e0%b8%a7%e0%b8%99%e0%b8%a3%e0%b8%b1%e0%b8%99%e0%b8%95%e0%b9%8c-%e0%b8%a3%e0%b8%b1%e0%b8%a8%e0%b8%a1%e0%b8%b5%e0%b8%a3%e0%b8%b1%e0%b8%95%e0%b8%99%e0%b9%8c/"))
+        
+# def find_cast_id_by_url(url):
+#     for series in series_dict:
+#         if series["title"] == name:
+#             return series
