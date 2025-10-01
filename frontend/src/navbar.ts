@@ -36,7 +36,7 @@ export function createNavbar() {
     filterIcon.src = "./assets/icons/filter.svg";
     searchBox.appendChild(searchIcon);
     searchBox.appendChild(searchBar);
-    searchBox.appendChild(filterIcon);
+    // searchBox.appendChild(filterIcon);
     
     const changeThemeDiv = document.createElement("div");
     changeThemeDiv.className = "changeThemeDiv";
