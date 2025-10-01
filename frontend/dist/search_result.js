@@ -7,20 +7,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { createFooter } from "./footer.js";
 import { createNavbar } from "./navbar.js";
 createNavbar();
-createFooter();
-function getQueryParam(title) {
-    return new URLSearchParams(window.location.search).get(title);
+const p = document.createElement("p");
+p.className = "poster-text";
+const div = document.createElement("div");
+div.className = "series-grid";
+document.body.appendChild(p);
+document.body.appendChild(div);
+function getQueryParam(name) {
+    return new URLSearchParams(window.location.search).get(name);
 }
 const grid = document.querySelector(".series-grid");
 const heading = document.querySelector(".poster-text");
 function runSearch() {
     return __awaiter(this, void 0, void 0, function* () {
-        const inp = getQueryParam("inp") || "";
-        heading.textContent = `ผลการค้นหา: "${inp}"`;
-        const res = yield fetch(`http://127.0.0.1:8000/search?title=${encodeURIComponent(inp)}&scan_all=true`);
+        const title = getQueryParam("title") || "";
+        const res = yield fetch(`http://127.0.0.1:8000/search?title=${encodeURIComponent(title)}&scan_all=true`);
         const dataDict = yield res.json();
         const items = Object.values(dataDict);
         grid.innerHTML = "";
@@ -30,13 +33,15 @@ function runSearch() {
             grid.appendChild(p);
             return;
         }
+        heading.textContent = `ผลการค้นหา: "${title}" ทั้งหมด ${items.length} รายการ`;
         items.forEach(s => {
             const card = document.createElement("div");
             card.className = "series-card";
             card.style.cursor = "pointer";
-            card.onclick = () => (window.location.href = `detail.html?id=${s.id}`);
+            card.onclick = () => (window.location.href = `detail.html?url=${encodeURIComponent(s.url)}`);
             const img = document.createElement("img");
-            img.src = s.poster; // เช่น /posters/123.webp
+            img.src = "http://127.0.0.1:8000/image-proxy?url=" +
+                encodeURIComponent(s.poster);
             img.alt = s.title;
             img.loading = "lazy";
             const titleEl = document.createElement("p");
@@ -47,5 +52,7 @@ function runSearch() {
         });
     });
 }
-runSearch();
+document.addEventListener("DOMContentLoaded", () => {
+    runSearch();
+});
 //# sourceMappingURL=search_result.js.map
