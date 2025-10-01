@@ -4,6 +4,7 @@ export function createNavbar() {
 
     const logodiv = document.createElement("div");
     logodiv.classList = "logoDiv";
+    logodiv.onclick = () => (window.location.href = "index.html");
     const logo = document.createElement("img");
     logo.src = "./assets/icons/logo.svg";
 
@@ -15,29 +16,19 @@ export function createNavbar() {
     const searchBar = document.createElement("input");
     searchBar.placeholder = "Search...";
 
+    const params = new URLSearchParams(window.location.search);
+    const title = params.get("title");
+    if (title) searchBar.value = title;
+
     searchBar.addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {  // Enter pressed
+      if (event.key === "Enter") {
+        event.preventDefault();
         const query = searchBar.value.trim();
         if (query) {
-          // fetch(`/series/${encodeURIComponent(query)}`, {
-          //   method: "POST",
-          // })
-          // .then(response => response.json())
-          // .then(data => {
-          //   console.log("Server response:", data);
-            window.location.href = `search_result.html?title=${encodeURIComponent(query)}`;
-          // })
-          // .catch(error => {
-          //   console.error("Error:", error);
-          // });
+          window.location.href = `search_result.html?title=${encodeURIComponent(query)}&scan_all=true`;
         }
       }
     });
-    const params = new URLSearchParams(window.location.search);
-    const title = params.get("title");
-    if (title) {
-      searchBar.value = title;
-    }
 
     const searchIcon = document.createElement("img");
     searchIcon.src = "./assets/icons/search.svg";
@@ -45,7 +36,7 @@ export function createNavbar() {
     filterIcon.src = "./assets/icons/filter.svg";
     searchBox.appendChild(searchIcon);
     searchBox.appendChild(searchBar);
-    searchBox.appendChild(filterIcon);
+    // searchBox.appendChild(filterIcon);
     
     const changeThemeDiv = document.createElement("div");
     changeThemeDiv.className = "changeThemeDiv";

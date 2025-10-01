@@ -11,29 +11,19 @@ export function createNavbar() {
     searchBox.className = "searchBox";
     const searchBar = document.createElement("input");
     searchBar.placeholder = "Search...";
+    const params = new URLSearchParams(window.location.search);
+    const inp = params.get("inp");
+    if (inp)
+        searchBar.value = inp;
     searchBar.addEventListener("keydown", function (event) {
-        if (event.key === "Enter") { // Enter pressed
+        if (event.key === "Enter") {
+            event.preventDefault();
             const query = searchBar.value.trim();
             if (query) {
-                // fetch(`/series/${encodeURIComponent(query)}`, {
-                //   method: "POST",
-                // })
-                // .then(response => response.json())
-                // .then(data => {
-                //   console.log("Server response:", data);
                 window.location.href = `search_result.html?title=${encodeURIComponent(query)}`;
-                // })
-                // .catch(error => {
-                //   console.error("Error:", error);
-                // });
             }
         }
     });
-    const params = new URLSearchParams(window.location.search);
-    const title = params.get("title");
-    if (title) {
-        searchBar.value = title;
-    }
     const searchIcon = document.createElement("img");
     searchIcon.src = "./assets/icons/search.svg";
     const filterIcon = document.createElement("img");

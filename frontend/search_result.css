@@ -1,0 +1,112 @@
+:root {
+  --card-bg: #f8f8f9;
+  --accent: #0066ff;
+  --card-shadow: 0 6px 18px rgba(17,17,17,0.06);
+  --gap: 16px;
+  --radius: 12px;
+  --img-aspect: 16 / 9;
+}
+
+.poster-text {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px 20px;
+  padding: 0 16px;
+  font-size: 1.125rem; 
+  font-weight: 600;
+}
+
+/* Grid container */
+/* .series-grid {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 48px;
+  padding: 0 16px;
+  display: grid;
+  gap: var(--gap);
+
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+} */
+
+/* Card */
+.series-card {
+  /* background: #fff; */
+  border-radius: 16px;
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); */
+  overflow: hidden;
+  text-align: center;
+  padding: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.series-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* รูปโปสเตอร์ */
+/* .series-card img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+} */
+
+/* ชื่อเรื่อง */
+/* .series-card p {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #222;
+  line-height: 1.4;
+  text-align: center;
+  word-wrap: break-word;
+} */
+
+
+/* Empty-state paragraph inside grid */
+/* .series-grid > p {
+  grid-column: 1 / -1;
+  margin: 40px auto;
+  text-align: center;
+  font-size: 1rem;
+} */
+
+
+/* .series-grid {
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+  gap: clamp(10px, 3vw, 30px);  
+  margin: 0 10vw;
+} */
+
+.series-grid {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 48px;
+  padding: 0 16px;
+  display: grid;
+  gap: clamp(10px, 3vw, 30px);  
+
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+.series-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.series-card img {
+  width: 100%;             /* กว้างเต็มคอลัมน์ของการ์ด */
+  aspect-ratio: 2 / 3;     /* บังคับกรอบเป็น 4:5 */
+  height: auto;            /* ให้ความสูงคำนวณจาก aspect-ratio */
+  object-fit: cover;       /* เติมเต็มกรอบ (ครอปเล็กน้อยถ้าไม่ 4:5 เป๊ะ) */
+  border-radius: 10px;
+  /* margin: 0 20px; */
+  display: block;          /* กันช่องว่าง inline */
+}

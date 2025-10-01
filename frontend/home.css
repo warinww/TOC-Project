@@ -15,29 +15,44 @@ body {
   /* margin: 20px 5vw; */
 }
 
-/* ---------- Banner slider ---------- */
+/* Banner container */
 .banner-ad {
   position: relative;
   z-index: 1;
   overflow: hidden;
-  width: auto;
-  height: 65vh;
-  margin: 20px 10vw;
+  width: 80vw;       /* หรือ 100% ตามต้องการ */
+  height: 60vh;      /* ปรับให้ไม่สูงเกินไป */
+  margin: 20px auto;
   border-radius: 20px;
-  background: #000; /* กันวาบตอนโหลด */
+  background: #000;  /* กันวาบตอนโหลด */
 }
 
+/* Slide */
 .banner-slide {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
   opacity: 0;
   transition: opacity .6s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.banner-slide.active { opacity: 1; }
 
-/* ไล่แสง + caption */
+/* ให้ img fill container และ maintain aspect ratio */
+.banner-slide img.banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* cover -> รูปเต็ม container */
+  border-radius: 20px;
+}
+
+/* แสดง slide ที่ active */
+.banner-slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+/* Overlay + caption (เดิม) */
 .banner-overlay {
   position: absolute;
   inset: 0;
@@ -52,12 +67,12 @@ body {
   font-weight: 600;
   font-size: 18px;
   text-shadow: 0 1px 2px rgba(0,0,0,.6);
-  line-height: 1.2;
   max-width: 75%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 
 /* ปุ่มเลื่อน ใช้ mask แบบเดียวกับ pagination วิธี B */
 .banner-btn {
@@ -178,6 +193,16 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
+
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.series-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .series-card img {
