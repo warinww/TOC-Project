@@ -86,9 +86,15 @@ body {
 }
 .description {
   height: 250px;
-  width: 100%;
+  max-width: 99%;
   overflow-y: auto;
+  overflow-x: hidden;        /* กันสกอร์ลแนวนอน */
   margin: 0 0 16px 0;
+
+  white-space: pre-wrap;     /* คง \n และยอมตัดบรรทัดอัตโนมัติ */
+  overflow-wrap: anywhere;   /* ตัดคำ/URL ยาวๆ ได้ */
+  word-break: break-word;    /* fallback เบราเซอร์เก่า */
+  line-height: 1.6;          /* อ่านง่ายขึ้น */
 }
 
 /* แกลเลอรี */
@@ -129,6 +135,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-decoration: none;
+  color: inherit;
 }
 .work-card__img {
   width: 140px;

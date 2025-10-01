@@ -4,18 +4,26 @@ import { createFooter } from "./footer.js";
 createNavbar();
 
 const DEFAULT_COLLECTION_URL = "http://127.0.0.1:8000/series/detail";
-const FALLBACK_IMG =
-  "https://www.serieslike.com/img/shop_01.png";
+const FALLBACK_IMG = "https://www.serieslike.com/img/shop_01.png";
 
+/* ---------------- Utils ---------------- */
 function toNumId(v: unknown): number | undefined {
   const n = typeof v === "number" ? v : typeof v === "string" ? Number(v) : NaN;
   return Number.isFinite(n) ? Math.trunc(n) : undefined;
 }
 
+/** join base + (id segment) โดย encode เฉพาะ id */
 function joinUrl(base: string, id: string): string {
   const b = base.endsWith("/") ? base.slice(0, -1) : base;
   const i = id.startsWith("/") ? id.slice(1) : id;
   return `${b}/${encodeURIComponent(i)}`;
+}
+
+/** join base + path (ไม่ encode /) */
+function joinBasePath(base: string, path: string): string {
+  const b = base.endsWith("/") ? base.slice(0, -1) : base;
+  const p = path.startsWith("/") ? path.slice(1) : path;
+  return `${b}/${p}`;
 }
 
 function getQueryParams(): { id?: string; url?: string } {
@@ -26,6 +34,73 @@ function getQueryParams(): { id?: string; url?: string } {
     return { id, url };
   } catch {
     return {};
+  }
+}
+
+/** อ่านค่า api override จาก query ปัจจุบัน */
+function getApiOverride(): string | undefined {
+  try {
+    const v = new URLSearchParams(location.search).get("api");
+    return v ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** แปลง URL ที่อาจเป็น relative ให้เป็น absolute อิงจาก document.baseURI */
+function toAbsoluteURL(maybeUrl: string): string {
+  try {
+    return new URL(maybeUrl, document.baseURI).toString();
+  } catch {
+    return maybeUrl;
+  }
+}
+
+/** แปลง URL ที่อาจเป็น relative ให้เป็น absolute อิงจาก base ที่ระบุ */
+function toAbsoluteFrom(base: string, maybeUrl?: string): string {
+  if (!maybeUrl) return "";
+  try {
+    return new URL(maybeUrl, base).toString();
+  } catch {
+    return maybeUrl;
+  }
+}
+
+/** สร้างลิงก์ไปหน้า cast: ให้ url มาก่อน ถ้าไม่มีค่อยใช้ id; แนบ ?api= ถ้ามี */
+function buildCastLink(href?: string, id?: number | null): string {
+  const api = getApiOverride();
+  const base = "cast.html";
+  let qs = "";
+  if (href) {
+    qs = `url=${encodeURIComponent(href)}`;
+  } else if (id != null && Number.isFinite(id)) {
+    qs = `id=${encodeURIComponent(String(id))}`;
+  } else {
+    return "#";
+  }
+  if (api) qs += `&api=${encodeURIComponent(api)}`;
+  return `${base}?${qs}`;
+}
+
+/**
+ * ทำ URL สำหรับรูป/ลิงก์ที่เป็น asset ฝั่งเว็บ (เช่น casts/xxx.jpg) ให้ผูกกับ document.baseURI
+ * - ถ้าเป็น absolute อยู่แล้ว คืนค่าเดิม
+ * - ถ้าตรง pattern โฟลเดอร์ในเว็บ (casts/, /casts/) → ใช้ document.baseURI
+ * - กรณีอื่น ๆ พยายามผูกกับ document ก่อน
+ */
+function toAbsPreferDoc(maybeUrl?: string): string {
+  if (!maybeUrl) return "";
+  try {
+    const u = String(maybeUrl).trim();
+    if (!u) return "";
+    if (/^[a-z]+:\/\//i.test(u)) return u; // already absolute
+    if (/^(?:\.\/)?casts\//i.test(u) || /^\/casts\//i.test(u)) {
+      return new URL(u, document.baseURI).toString();
+    }
+    // default: prefer document
+    return new URL(u, document.baseURI).toString();
+  } catch {
+    return maybeUrl!;
   }
 }
 
@@ -101,22 +176,27 @@ async function cachePutBlob(key: string, blob: Blob, contentType?: string) {
 }
 
 /**
- * ลำดับการหา src ของโปสเตอร์:
- * 1) ./posters/{id}.webp
+ * ลำดับการหา src ของโปสเตอร์ (อัปเดต):
+ * 1) ./posters/{id}.webp/.jpg/.png/.jpeg (ลองตามลำดับ)
  * 2) blob ใน CacheStorage (/cached-posters/{id})
- * 3) ใช้ remoteUrl → ดาวน์โหลด + แคช → ObjectURL
+ * 3) ใช้ remoteUrl (รองรับ absolute/relative) → ดาวน์โหลด + แคช → ObjectURL
  * 4) FALLBACK_IMG
  */
 async function resolvePosterSrc(
   id: string,
   remoteUrl?: string
 ): Promise<{ src: string; revokeLater?: string }> {
-  const localPath = new URL(`./${encodeURIComponent(id)}.webp`, postersBaseURL()).toString();
+  const exts = ["webp", "jpg", "png", "jpeg"];
 
-  if (await imageExists(localPath)) {
-    return { src: localPath };
+  // 1) ลองหาไฟล์โลคอลตาม id หลายสกุล
+  for (const ext of exts) {
+    const localPath = new URL(`./${encodeURIComponent(id)}.${ext}`, postersBaseURL()).toString();
+    if (await imageExists(localPath)) {
+      return { src: localPath };
+    }
   }
 
+  // 2) ลอง cache blob โดยใช้ key ตาม id
   const cacheKey = `/cached-posters/${encodeURIComponent(id)}`;
   const cachedBlob = await cacheMatchBlob(cacheKey);
   if (cachedBlob) {
@@ -124,9 +204,11 @@ async function resolvePosterSrc(
     return { src: url, revokeLater: url };
   }
 
+  // 3) ถ้ามี remoteUrl ให้โหลด/แคช
   if (remoteUrl) {
     try {
-      const r = await fetch(remoteUrl, { cache: "force-cache" });
+      const absUrl = toAbsoluteURL(remoteUrl);
+      const r = await fetch(absUrl, { cache: "force-cache" });
       if (r.ok) {
         const blob = await r.blob();
         await cachePutBlob(cacheKey, blob, r.headers.get("Content-Type") || undefined);
@@ -136,6 +218,7 @@ async function resolvePosterSrc(
     } catch {}
   }
 
+  // 4) สุดท้ายใช้รูปสำรอง
   return { src: FALLBACK_IMG };
 }
 
@@ -230,11 +313,23 @@ export class ShowDetail extends HTMLElement {
   }
 
   /** โหมดโหลดข้อมูล:
-   * - ถ้ามี ?url=... → เรียก {data-src}?url=<encoded>
-   * - ถ้าไม่มีก็ใช้ ?id=... หรือ attribute show-id → เรียก {data-src}/{id}
+   * - ถ้ามี ?url=... → เรียก {collectionUrl}?url=<encoded>
+   * - ถ้าไม่มีก็ใช้ ?id=... หรือ attribute show-id → เรียก {collectionUrl}/{id}
+   * - รองรับ ?api=... เป็น base (เช่น http://127.0.0.1:8000 → /series/detail)
    */
   private async loadData(): Promise<void> {
-    const collectionUrl = this.getAttribute("data-src")?.trim() || DEFAULT_COLLECTION_URL;
+    const attrSrc = this.getAttribute("data-src")?.trim();
+    const apiOverride = getApiOverride();
+
+    // เลือก collectionUrl ตามลำดับ: attribute → ?api= → default
+    let collectionUrl =
+      attrSrc ||
+      (apiOverride
+        ? (/\/series\/detail(\/|$)/.test(apiOverride)
+            ? apiOverride
+            : joinBasePath(apiOverride, "series/detail"))
+        : DEFAULT_COLLECTION_URL);
+
     const attrId = this.getAttribute("show-id")?.trim();
     const { id: qId, url: qUrl } = getQueryParams();
 
@@ -264,11 +359,18 @@ export class ShowDetail extends HTMLElement {
 
       const raw = (await res.json()) as any;
 
-      // โปสเตอร์จาก API (รองรับหลายชื่อฟิลด์)
-      const posterRemote = raw?.image ?? raw?.poster ?? raw?.poster_url ?? undefined;
+      // base ของ response (ใช้ทำ absolute สำหรับรูป/ลิงก์ที่เป็น relative ของ API)
+      const responseBase = (res as Response).url || collectionUrl;
 
-      // sid สำหรับหาภาพโลคอล/แคช
-      const sidForPoster = (attrId || qId || raw?.id || "").toString();
+      // โปสเตอร์จาก API (รองรับหลายชื่อฟิลด์) → ทำ absolute (ฝั่ง API)
+      const posterRemoteRaw = raw?.image ?? raw?.poster ?? raw?.poster_url ?? undefined;
+      const posterRemote = posterRemoteRaw
+        ? toAbsoluteFrom(responseBase, posterRemoteRaw)
+        : undefined;
+
+      // sid สำหรับหาภาพโลคอล/แคช — ให้ raw.id มาก่อน (เพิ่ม id มาแล้ว)
+      const sidForPoster = (raw?.id ?? attrId ?? qId ?? "").toString();
+
       const { src: posterSrc, revokeLater } = await resolvePosterSrc(sidForPoster, posterRemote);
       if (revokeLater) this._objectUrls.push(revokeLater);
 
@@ -280,14 +382,14 @@ export class ShowDetail extends HTMLElement {
         image: posterSrc,
         description: raw?.description ?? raw?.synopsis ?? raw?.overview ?? "",
         trailer: raw?.trailer ?? raw?.trailer_url ?? "",
-        backHref: this.getAttribute("back-href") || "index.html",
+        backHref: (this.getAttribute("back-href") as string) || "javascript:history.back()",
         cast: Array.isArray(raw?.cast)
           ? raw.cast.map((v: any) => ({
               id: toNumId(v?.id),
               first: String(v?.first ?? v?.firstname ?? "").trim(),
               last: String(v?.last ?? v?.lastname ?? "").trim(),
-              img: v?.img ?? v?.image ?? v?.photo ?? "",
-              href: v?.href ?? v?.url ?? "",
+              img: toAbsPreferDoc(v?.img ?? v?.image ?? v?.photo ?? ""),
+              href: toAbsPreferDoc(v?.href ?? v?.url ?? ""),
             }))
           : Array.isArray(raw?.castings)
           ? raw.castings.map((item: any, idx: number) => {
@@ -295,13 +397,13 @@ export class ShowDetail extends HTMLElement {
               const name = String(item?.name ?? "").trim();
               const parts = name.split(/\s+/);
               const first = parts[0] ?? "";
-              const last  = parts[1] ?? "";
+              const last = parts[1] ?? "";
               return {
                 id: toNumId(item?.id) ?? idx + 1,
                 first,
                 last,
-                img: item?.image ?? "",
-                href: item?.url ?? "",
+                img: toAbsPreferDoc(item?.image ?? ""),
+                href: toAbsPreferDoc(item?.url ?? ""),
               } as CastItem;
             })
           : [],
@@ -357,8 +459,8 @@ export class ShowDetail extends HTMLElement {
               id: toNumId(v?.id),
               first: String(v?.first || ""),
               last: String(v?.last || ""),
-              img: v?.img || "",
-              href: v?.href || "",
+              img: toAbsPreferDoc(v?.img || ""),
+              href: toAbsPreferDoc(v?.href || ""),
             }))
           : [];
       } catch {
@@ -376,25 +478,25 @@ export class ShowDetail extends HTMLElement {
     const sanitizedYear = rawYear.replace(/[()]/g, "");
     const year = sanitizedYear && /\d/.test(sanitizedYear) ? ` (${sanitizedYear})` : "";
 
-    const poster = this.getAttribute("image") || "https://www.serieslike.com/img/shop_01.png";
+    const poster = this.getAttribute("image") || FALLBACK_IMG;
     const desc = this.getAttribute("description") || (this._dataLoaded ? "" : "ไม่มีเรื่องย่อ");
     const trailer = this.getAttribute("trailer") || "";
-    const backHref = this.getAttribute("back-href") || "index.html";
+    const backHref = this.getAttribute("back-href") || "javascript:history.back()";
     const showId = this.getAttribute("show-id") || "";
 
-    // ===== Cast cards (click -> cast.html?url=...) =====
+    // ===== Cast cards (click -> cast.html?url=... หรือ ?id=...) =====
     const castHtml = (this._cast || [])
       .map(({ id, first = "", last = "", img = "", href = "" }: CastItem) => {
         const safeImg = img || FALLBACK_IMG;
         const alt = `${first} ${last}`.trim();
-        const targetHref = href ? `cast.html?url=${encodeURIComponent(href)}` : "#";
+        const targetHref = buildCastLink(href || undefined, id ?? null);
 
         const cardInner = `
           <img src="${safeImg}" alt="${alt}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'"/>
           <p>${first}<br>${last}</p>
         `;
 
-        return href
+        return targetHref !== "#"
           ? `
           <a class="card" part="card" data-cast-id="${id ?? ""}"
              href="${targetHref}" aria-label="${alt}">
@@ -424,7 +526,7 @@ export class ShowDetail extends HTMLElement {
       <div class="nav-row">
         <a class="navigate" href="${backHref}" aria-label="กลับไปหน้าหลัก">
           <img src="../assets/icons/back.svg" alt="">
-          <span aria-hidden="true">กลับไปหน้าหลัก</span>
+          <span aria-hidden="true">ย้อนกลับ</span>
         </a>
       </div>
 

@@ -6,6 +6,7 @@ from crawl import series_dict
 from func_api import scrape_series_detail
 from fastapi.staticfiles import StaticFiles
 from crawl import scrape_page, series_dict
+from home_crawl import get_casting_by_URL
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # project/
 FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
@@ -52,3 +53,8 @@ def get_detail_by_url(url: str):
 @app.get("/series/{series_id}")
 def get_series_by_id(series_id: int):
     return series_dict.get(series_id, {"error": "Series not found"})
+
+@app.get("/casting")
+def get_cating_detail_by_url(url: str):
+    print("URL received:", url)
+    return get_casting_by_URL(url)
