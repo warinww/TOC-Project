@@ -46,84 +46,9 @@ cast_dict: Dict[int, Dict[str, Any]] = {}       # id -> cast info
 cast_url_to_id: Dict[str, int] = {}             # cast URL -> id
 _next_cast_id = 1
 
+series_det_dict: Dict[int, Dict[str, Any]] = {}      # id -> series info
+
 # ===================== Helpers =====================
-def extract_balanced_div_block(html, start_id):
-    pattern = rf'<div[^>]+id="{start_id}"[^>]*>'
-    match = re.search(pattern, html)
-    if not match:
-        return None
-
-    start_pos = match.start()
-    remaining_html = html[start_pos:]
-
-    open_divs = 0
-    end_pos = 0
-    for match in re.finditer(r'</?div\b', remaining_html):
-        if match.group() == '<div':
-            open_divs += 1
-        else:
-            open_divs -= 1
-        if open_divs == 0:
-            end_pos = match.end()
-            break
-
-    return remaining_html[:end_pos] if end_pos > 0 else None
-
-
-
-def normalize_img_url(url: str) -> str:
-    """ตัด suffix -WxH เพื่อขอไฟล์ full-size"""
-    return re.sub(r"-\d+x\d+(\.\w+)$", r"\1", url)
-
-def save_poster_by_id(img_url: str, sid: int) -> str:
-    """ดาวน์โหลด poster ซีรีส์ ลง frontend/posters/<id>.jpg"""
-    if not img_url:
-        return ""
-    ext = Path(urllib.parse.urlparse(img_url).path).suffix.lower()
-    if ext not in [".jpg", ".jpeg", ".png", ".gif", ".webp"]:
-        ext = ".jpg"
-    filename = f"{sid}{ext}"
-    abs_path = POSTER_DIR / filename
-    public = f"{PUBLIC_PREFIX}/{filename}"
-    abs_path.parent.mkdir(parents=True, exist_ok=True)
-    if abs_path.exists():
-        return public
-    try:
-        with requests.get(img_url, stream=True, headers=HEADERS, timeout=30) as r:
-            r.raise_for_status()
-            with open(abs_path, "wb") as f:
-                for chunk in r.iter_content(8192):
-                    if chunk:
-                        f.write(chunk)
-    except Exception as e:
-        print(f"  x Failed to download poster {img_url}: {e}")
-        return ""
-    return public
-
-def save_cast_by_id(img_url: str, cast_id: int) -> str:
-    """ดาวน์โหลด cast image ลง frontend/casts/<id>.jpg"""
-    if not img_url:
-        return ""
-    ext = Path(urllib.parse.urlparse(img_url).path).suffix.lower()
-    if ext not in [".jpg", ".jpeg", ".png", ".gif", ".webp"]:
-        ext = ".jpg"
-    filename = f"{cast_id}{ext}"
-    abs_path = CAST_DIR / filename
-    public = f"{CAST_PUBLIC_PREFIX}/{filename}"
-    abs_path.parent.mkdir(parents=True, exist_ok=True)
-    if abs_path.exists():
-        return public
-    try:
-        with requests.get(img_url, stream=True, headers=HEADERS, timeout=30) as r:
-            r.raise_for_status()
-            with open(abs_path, "wb") as f:
-                for chunk in r.iter_content(8192):
-                    if chunk:
-                        f.write(chunk)
-    except Exception as e:
-        print(f"  x Failed to download cast image {img_url}: {e}")
-        return ""
-    return public
 
 def save_series_to_csv_immediately(title: str):
     """บันทึกชื่อเรื่องลงในไฟล์ CSV ทันทีหลังจาก scrape ข้อมูล"""
@@ -145,8 +70,7 @@ def save_series_to_csv_immediately(title: str):
 
 # ===================== Scrape Functions =====================
 def _upsert_series(sid: int, *, title: str, href: str, poster_url: str) -> Dict[str, Any]:
-    poster_public = save_poster_by_id(normalize_img_url(poster_url), sid)
-    info = {"id": sid, "title": title, "url": href, "poster": poster_public}
+    info = {"id": sid, "title": title, "url": href, "poster": poster_url}
     series_dict[sid] = info
     return info
 
@@ -234,7 +158,7 @@ def scrape_series_detail(url: str) -> dict:
     # poster
     poster_match = re.search(r'<meta\s+property=["\']og:image["\']\s+content=["\'](.*?)["\']', res.text)
     poster_url = poster_match.group(1).strip() if poster_match else ""
-    poster_public = save_poster_by_id(normalize_img_url(poster_url), sid)
+    # poster_public = save_poster_by_id(normalize_img_url(poster_url), sid)
 
     # castings
     castings_divs = detail_soup.select("#tdi_67 .td_module_flex")
@@ -263,10 +187,9 @@ def scrape_series_detail(url: str) -> dict:
             _next_cast_id += 1
             cast_url_to_id[cast_url] = cast_id
 
-        cast_img_public = save_cast_by_id(cast_img_url, cast_id)
-        cast_dict[cast_id] = {"id": cast_id, "name": cast_name, "url": cast_url, "image": cast_img_public}
+        cast_dict[cast_id] = {"id": cast_id, "name": cast_name, "url": cast_url, "image": cast_img_url}
 
-        castings.append({"id": cast_id, "name": cast_name, "url": cast_url, "image": cast_img_public})
+        castings.append({"id": cast_id, "name": cast_name, "url": cast_url, "image": cast_img_url})
 
     # trailer
     trailer_match = re.search(r'<iframe[^>]*src="(https://www\.youtube\.com/[^"]+)"', res.text)
@@ -289,7 +212,7 @@ def scrape_series_detail(url: str) -> dict:
         "castings": castings,
         "trailer": trailer,
         "synopsis": synopsis,
-        "poster": poster_public,
+        "poster": poster_url,
         "coming_soon": coming_soon,
         "source_url": url
     }
@@ -340,3 +263,4 @@ def info_onair_series():
                 }
                 onair_dict[series_id] = info
     return onair_dict
+

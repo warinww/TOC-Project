@@ -93,7 +93,13 @@ function buildBanner(items: Series[]) {
   items.forEach(it => {
     const slide = document.createElement("div");
     slide.className = "banner-slide";
-    slide.style.backgroundImage = `url("${it.poster_url}")`;
+
+    // ใช้ img แทน background-image
+    const img = document.createElement("img");
+    img.src = "http://127.0.0.1:8000/image-proxy?url=" + encodeURIComponent(it.poster_url);
+    img.alt = it.title;
+    img.className = "banner-img"; // ถ้าต้องใช้ style
+    slide.appendChild(img);
 
     const overlay = document.createElement("div");
     overlay.className = "banner-overlay";
@@ -108,7 +114,7 @@ function buildBanner(items: Series[]) {
     slides.push(slide);
   });
 
-  // Dots
+  // Dots และ navigation code เหมือนเดิม
   const dotsWrap = document.createElement("div");
   dotsWrap.className = "banner-dots";
   const dots: HTMLButtonElement[] = items.map((_, i) => {
@@ -120,7 +126,6 @@ function buildBanner(items: Series[]) {
   });
   banner.appendChild(dotsWrap);
 
-  // Nav
   const prev = document.createElement("button");
   prev.className = "banner-btn prev";
   prev.setAttribute("aria-label", "Previous");
@@ -234,7 +239,8 @@ function renderSeries(data: Series[], page = 1) {
       };
 
       const img = document.createElement("img");
-      img.src = series.poster_url;
+      img.src =  "http://127.0.0.1:8000/image-proxy?url=" +
+      encodeURIComponent(series.poster_url);
       img.alt = series.title;
       img.loading = "lazy";
 
