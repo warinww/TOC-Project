@@ -301,16 +301,15 @@ def info_onair_series():
     onair_list = scrape_OnAir()
     print(onair_list)
     onair_dict = {}
-    for onair_series in onair_list :
-        for series_id in series_dict:
-            if onair_series == series_dict[series_id]["url"] :
+    for onair_series in onair_list:
+        for series_id, series_info in series_dict.items():
+            url = series_info.get("url", "")
+            if url and onair_series == url:
                 info = {
-                    "id": series_dict[series_id]["id"],
-                    "title": series_dict[series_id]["title"],
-                    "url":series_dict[series_id]["url"],
-                    "poster":series_dict[series_id]["poster"]
+                    "id": series_info.get("id", series_id),
+                    "title": series_info.get("title", ""),
+                    "url": url,
+                    "poster": series_info.get("poster", "")
                 }
-                onair_dict[series_dict[series_id]["id"]] = info
-
-        
+                onair_dict[series_id] = info
     return onair_dict
