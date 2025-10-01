@@ -41,6 +41,30 @@ cast_url_to_id: Dict[str, int] = {}             # cast URL -> id
 _next_cast_id = 1
 
 # ===================== Helpers =====================
+def extract_balanced_div_block(html, start_id):
+    pattern = rf'<div[^>]+id="{start_id}"[^>]*>'
+    match = re.search(pattern, html)
+    if not match:
+        return None
+
+    start_pos = match.start()
+    remaining_html = html[start_pos:]
+
+    open_divs = 0
+    end_pos = 0
+    for match in re.finditer(r'</?div\b', remaining_html):
+        if match.group() == '<div':
+            open_divs += 1
+        else:
+            open_divs -= 1
+        if open_divs == 0:
+            end_pos = match.end()
+            break
+
+    return remaining_html[:end_pos] if end_pos > 0 else None
+
+
+
 def normalize_img_url(url: str) -> str:
     """ตัด suffix -WxH เพื่อขอไฟล์ full-size"""
     return re.sub(r"-\d+x\d+(\.\w+)$", r"\1", url)
@@ -106,30 +130,43 @@ def scrape_page(page: int) -> Dict[int, Dict[str, Any]]:
     """Crawl หน้า series list"""
     global _next_id
     print(f"[CRAWL] page {page}")
-    html_content = requests.get(BASE_URL.format(page), headers=HEADERS, timeout=30).text
-    soup = BeautifulSoup(html_content, "html.parser")
-    block = soup.find("div", id="tdi_45")
-    if not block:
-        print(f"  ! ไม่พบ block id='tdi_45' หน้า {page}")
+    res = requests.get(BASE_URL.format(page), headers=HEADERS, timeout=30)
+    if res.status_code != 200:
+        print(f"❌ Failed to fetch page {page}: status {res.status_code}")
         return {}
+
+    section_html = extract_balanced_div_block(res.text, "tdi_45")
+    if not section_html:
+        print(f"❌ No section found for id='tdi_45' on page {page}")
+        return {}
+
+    # หา series entries
+    series_entries = re.findall(
+        r'<div class="td-module-thumb">\s*<a href="(?P<url>https://yflix\.me/series/[^"]+)"[^>]*title="(?P<title>[^"]+)".*?data-img-url="(?P<poster>[^"]+)"',
+        section_html,
+        re.DOTALL
+    )
+    print(f"🥩 Found {len(series_entries)} series entries")
     page_data: Dict[int, Dict[str, Any]] = {}
-    for thumb in block.find_all("div", class_="td-module-thumb"):
-        a_tag = thumb.find("a")
-        img_span = thumb.find("span", class_="entry-thumb")
-        if not (a_tag and img_span):
-            continue
-        title = (a_tag.get("title") or "").strip()
-        href = a_tag.get("href") or ""
-        poster_url = img_span.get("data-img-url") or ""
-        if not poster_url or not href:
-            continue
-        if href in url_to_id:
-            sid = url_to_id[href]
+
+    for url, title, poster_url in series_entries:
+        title = html.unescape(title.strip())
+        poster_url = poster_url.strip()
+
+        # ตรวจสอบว่าซีรีส์นี้เคยมีอยู่หรือยัง
+        if url in url_to_id:
+            sid = url_to_id[url]
         else:
             sid = _next_id
+            url_to_id[url] = sid
             _next_id += 1
-            url_to_id[href] = sid
-        info = _upsert_series(sid, title=title, href=href, poster_url=poster_url)
+
+        print(f"🟢 Title: {title}")
+        print(f"🔗 URL: {url}")
+        print(f"🖼️ Poster: {poster_url}")
+        print(f"#️⃣ Index: {sid}")
+
+        info = _upsert_series(sid, title=title, href=url, poster_url=poster_url)
         page_data[sid] = info
     print(f"  ✓ page {page} -> {len(page_data)} รายการ")
     return page_data
@@ -262,6 +299,7 @@ def scrape_OnAir():
 
 def info_onair_series():
     onair_list = scrape_OnAir()
+    print(onair_list)
     onair_dict = {}
     for onair_series in onair_list :
         for series_id in series_dict:
