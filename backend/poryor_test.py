@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from threading import Lock
 import time
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 
 from home_crawl import (  # หรือ crawl.py ของคุณ
     POSTER_DIR,
