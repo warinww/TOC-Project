@@ -59,12 +59,17 @@ export function createNavbar() {
       localStorage.setItem("theme", "light");
     });
 
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
+    function applySavedTheme() {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     }
+
+    window.addEventListener("DOMContentLoaded", applySavedTheme);
+    window.addEventListener("pageshow", applySavedTheme);
 
     nav.appendChild(logodiv);
     nav.appendChild(searchBox);
