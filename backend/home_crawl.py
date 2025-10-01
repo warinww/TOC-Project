@@ -303,35 +303,8 @@ def get_casting_by_URL(url: str) -> dict:
         res.text,
         re.IGNORECASE
     )
-    all_images = [url.strip() for url in image_matches] if image_matches else []
+    all_images = list({url.strip() for url in image_matches}) if image_matches else []
 
-    # for url in all_images:
-    #     image_pattern = re.compile(
-    #         rf'<[^>]+src=["\']{re.escape(url)}["\'][^>]*fetchpriority=["\']high["\'][^>]*>',
-    #         re.IGNORECASE
-    #     )
-    #     if image_pattern.search(res.text):
-    #         image_0 = url
-    #         break
-
-    # if image_0:
-    #     all_images.remove(image_0)
-    #     all_images.insert(0, image_0)
-
-    # # check ถ้ามี cast_id แล้วใช้ id เดิม
-    # if url in cast_url_to_id:
-    #     cast_id = cast_url_to_id[url]
-    # else:
-    #     cast_id = _next_cast_id
-    #     _next_cast_id += 1
-    #     cast_url_to_id[url] = cast_id
-
-    # path_casting_image = []
-    # for idx, img_url in enumerate(all_images):
-    #     if idx == 0:
-    #         path_casting_image.append(save_cast_by_id(img_url, cast_id))       # first image, no index
-    #     else:
-    #         path_casting_image.append(save_cast_by_id(img_url, cast_id, idx))  # other images with index
 
     # Title
     title_match = re.search(
@@ -395,15 +368,15 @@ def get_casting_by_URL(url: str) -> dict:
         stitle = html.unescape(m.group("title"))
         series_items.append({
             "title": stitle,
-            # "img": find_poster_by_name(title),
+            "img": m.group("img"),
             "url": m.group("href")
         })
 
 
-    print(all_images, title)
+    # print(all_images, title)
     # Return JSON-ready dict
     return {
-        # "all_images": path_casting_image,
+        "all_images": all_images,
         "title": title,
         "full_name": full_name,
         "nick_name": nick_name,

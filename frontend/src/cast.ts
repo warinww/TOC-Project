@@ -87,32 +87,86 @@ function buildMergedDescription(raw: RawCastData): string {
   if (raw.description_more_2?.trim()) lines.push(raw.description_more_2.trim());
   return lines.join("\n");
 }
-function transformToPageData(raw: RawCastData, linkBase: string): PageData {
-  const galleryRaw = Array.isArray(raw.all_images) ? raw.all_images.filter(Boolean) : [];
-  const gallery = dedupe(galleryRaw.map(u => toAbsoluteFrom(linkBase, u)));
 
+/** ====== Proxy helpers ====== */
+/** join base + path (ไม่ encode /) */
+function joinBasePath(base: string, path: string): string {
+  const b = base.endsWith("/") ? base.slice(0, -1) : base;
+  const p = path.startsWith("/") ? path.slice(1) : path;
+  return `${b}/${p}`;
+}
+/** origin ของ API สำหรับ proxy (ใช้ ?api= ถ้ามี มิฉะนั้นใช้ CASTING_API_BASE) */
+function getApiOrigin(): string {
+  const api = getApiOverride() || CASTING_API_BASE;
+  try { return new URL(api, document.baseURI).origin; } catch { return ""; }
+}
+/** สร้าง URL proxy สำหรับรูปภาพ */
+function viaImageProxy(absUrl: string): string {
+  const origin = getApiOrigin();
+  if (!origin) return absUrl;
+  // ถ้าเป็น proxy อยู่แล้ว ไม่ต้องซ้อนทับ
+  try {
+    const u = new URL(absUrl, document.baseURI);
+    if (u.pathname.endsWith("/image-proxy")) return absUrl;
+  } catch {}
+  return joinBasePath(origin, "image-proxy") + "?url=" + encodeURIComponent(absUrl);
+}
+/** แปลงเป็น absolute แล้วห่อ proxy (ยกเว้น blob:/data:) */
+function proxifyImageFrom(base: string, maybeUrl?: string): string {
+  if (!maybeUrl) return "";
+  const raw = String(maybeUrl).trim();
+  if (!raw) return "";
+  if (/^(blob:|data:)/i.test(raw)) return raw;
+  try {
+    const abs = new URL(raw, base).toString();
+    if (/^[a-z]+:\/\//i.test(abs)) return viaImageProxy(abs);
+    return abs;
+  } catch {
+    return raw;
+  }
+}
+
+/** ====== Transform ====== */
+function transformToPageData(raw: RawCastData, linkBase: string): PageData {
+  // แปลง all_images -> absolute + proxy แล้วตัดซ้ำ (คงลำดับ)
+  const galleryRaw = Array.isArray(raw.all_images) ? raw.all_images.filter(Boolean) : [];
+  const imagesAbs = dedupe(galleryRaw.map(u => proxifyImageFrom(linkBase, u)));
+
+  // ชื่อเรื่อง
   const title =
     (raw.title && raw.title.trim()) ||
     [raw.nick_name, raw.full_name].filter(Boolean).join(" ") ||
     "โปรไฟล์นักแสดง";
 
-  const coverImage = gallery[0] || FALLBACK_IMG;
+  // เอาภาพที่ 1 เป็น cover; gallery ใช้ภาพที่ 2–4
+  const coverImage = imagesAbs[0] || FALLBACK_IMG;
+  const gallery = imagesAbs.slice(1, 4); // ภาพที่ 2,3,4 (ถ้ามี)
+
   const description = buildMergedDescription(raw);
 
+  // ผลงาน
   const works: Work[] = [];
   if (Array.isArray(raw.series_links)) {
     const seen = new Set<string>();
     raw.series_links.forEach((item: RawSeriesLink, idx: number) => {
       if (!item) return;
       const name = String(item.title ?? item.name ?? "").trim();
+
       const seriesUrlAbs = item.url ? toAbsoluteFrom(linkBase, item.url) : "";
-      const imgAbs = (item.img || item.image)
-        ? toAbsoluteFrom(linkBase, String(item.img ?? item.image))
-        : "";
+
+      // เลือกรูปผลงาน แล้วทำ absolute+proxy
+      const chosenImg = (typeof item.img === "string" && item.img.trim())
+        ? item.img.trim()
+        : (typeof item.image === "string" && item.image.trim())
+          ? item.image.trim()
+          : "";
+      const imgAbs = chosenImg ? proxifyImageFrom(linkBase, chosenImg) : "";
+
       if (!name && !imgAbs && !seriesUrlAbs) return;
       const key = `${name}|${imgAbs}|${seriesUrlAbs}`;
       if (seen.has(key)) return;
       seen.add(key);
+
       const href = seriesUrlAbs ? buildShowHref(seriesUrlAbs) : undefined;
       works.push({
         id: idx + 1,
@@ -126,10 +180,10 @@ function transformToPageData(raw: RawCastData, linkBase: string): PageData {
   return {
     id: 1,
     title,
-    coverImage,
+    coverImage,       // ไปแสดงใน image-wrap
     description,
-    gallery,
-    maxImages: 3,
+    gallery,          // แสดงรูปที่ 2–4
+    maxImages: Math.min(3, gallery.length), // safety
     works,
   };
 }
@@ -164,9 +218,10 @@ function renderPage(data: PageData) {
   const content = el("div", "content");
   page.appendChild(content);
 
+  // Cover
   const imageWrap = el("div", "image-wrap");
   const cover = el("img") as HTMLImageElement;
-  cover.src = data.coverImage;
+  cover.src = data.coverImage; // proxified in transformToPageData
   cover.alt = data.title;
   cover.loading = "eager";
   cover.decoding = "async";
@@ -174,6 +229,7 @@ function renderPage(data: PageData) {
   imageWrap.appendChild(cover);
   content.appendChild(imageWrap);
 
+  // Info
   const info = el("div", "info");
   content.appendChild(info);
   info.appendChild(el("p", "section-head", "ข้อมูล"));
@@ -181,35 +237,28 @@ function renderPage(data: PageData) {
   desc.textContent = data.description;
   info.appendChild(desc);
 
+  // Gallery (แสดงทันที ไม่ต้องรอโหลดสำเร็จ)
   const gallery = el("div", "gallery");
   info.appendChild(gallery);
 
-  const MAX_IMAGES = Math.max(0, data.maxImages ?? 0) || 3;
-  let appended = 0, finished = 0;
-  const urls = data.gallery ?? [];
+  const urls = (data.gallery ?? []).filter(u => typeof u === "string" && u.trim());
+  const MAX_IMAGES = Math.min(urls.length, data.maxImages ?? 3, 3);
 
-  function maybeShowOrRemove() {
-    if (finished === urls.length) {
-      if (appended === 0) gallery.remove();
-      else (gallery as HTMLElement).style.display = "grid";
-    }
+  if (MAX_IMAGES > 0) {
+    (gallery as HTMLElement).style.display = "grid";
+  } else {
+    gallery.remove();
   }
-  function tryAdd(src: string, alt: string) {
-    if (!src || !src.trim()) { finished++; maybeShowOrRemove(); return; }
-    const probe = new Image();
-    probe.decoding = "async"; probe.loading = "lazy"; probe.src = src;
-    probe.addEventListener("load", () => {
-      if (appended >= MAX_IMAGES) { finished++; maybeShowOrRemove(); return; }
-      const img = el("img") as HTMLImageElement;
-      img.src = src; img.alt = alt; img.loading = "lazy";
-      gallery.appendChild(img);
-      appended++; finished++;
-      if (appended === 1) (gallery as HTMLElement).style.display = "grid";
-      maybeShowOrRemove();
-    });
-    probe.addEventListener("error", () => { finished++; maybeShowOrRemove(); });
-  }
-  urls.forEach((src, i) => tryAdd(src, `รูปเพิ่มเติม ${i + 1}`));
+
+  urls.slice(0, MAX_IMAGES).forEach((src, i) => {
+    const img = el("img") as HTMLImageElement;
+    img.src = src;
+    img.alt = `รูปเพิ่มเติม ${i + 1}`;
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.addEventListener("error", () => { img.src = FALLBACK_IMG; });
+    gallery.appendChild(img);
+  });
 
   // ====== ผลงาน: แสดงเฉพาะเมื่อมี ======
   const works = (data.works ?? []).filter(
@@ -231,7 +280,7 @@ function renderPage(data: PageData) {
       a.setAttribute("aria-label", name);
 
       const img = el("img", "work-card__img") as HTMLImageElement;
-      img.src = imgUrl && imgUrl.trim() ? imgUrl : FALLBACK_IMG;
+      img.src = imgUrl && imgUrl.trim() ? imgUrl : FALLBACK_IMG; // already proxified
       img.alt = name;
 
       const p = el("p", "work-card__name");
@@ -253,9 +302,13 @@ async function bootstrap() {
 
     let target = CASTING_API_BASE;
     if (qUrl) {
-      const u = new URL(CASTING_API_BASE); u.searchParams.set("url", qUrl); target = u.toString();
+      const u = new URL(CASTING_API_BASE);
+      u.searchParams.set("url", qUrl);
+      target = u.toString();
     } else if (qId) {
-      const u = new URL(CASTING_API_BASE); u.searchParams.set("id", qId);  target = u.toString();
+      const u = new URL(CASTING_API_BASE);
+      u.searchParams.set("id", qId);
+      target = u.toString();
     }
 
     const res = await fetch(target, { cache: "no-store" });

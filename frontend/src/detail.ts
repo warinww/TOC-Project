@@ -104,6 +104,52 @@ function toAbsPreferDoc(maybeUrl?: string): string {
   }
 }
 
+/** ========== Proxy helpers ========== */
+/** คืน origin ของ API (ใช้ ?api= ถ้ามี, ไม่งั้นอนุมานจาก DEFAULT_COLLECTION_URL) */
+function getApiBase(): string {
+  const apiOverride = getApiOverride();
+  try {
+    if (apiOverride) {
+      const u = new URL(apiOverride, document.baseURI);
+      return u.origin; // e.g. http://127.0.0.1:8000
+    }
+  } catch {}
+  try {
+    const d = new URL(DEFAULT_COLLECTION_URL, document.baseURI);
+    return d.origin;
+  } catch {
+    return "";
+  }
+}
+
+/** สร้าง URL proxy สำหรับรูปภาพ */
+function viaImageProxy(absUrl: string): string {
+  const base = getApiBase(); // เช่น http://127.0.0.1:8000
+  if (!base) return absUrl;
+  return joinBasePath(base, "image-proxy") + "?url=" + encodeURIComponent(absUrl);
+}
+
+/** ถ้ารูปไม่ได้เป็น local/blob/data → ห่อด้วย proxy */
+function proxifyImageIfNeeded(maybeUrl?: string): string {
+  if (!maybeUrl) return "";
+  const u = String(maybeUrl).trim();
+  if (!u) return "";
+  if (/^(?:blob:|data:)/i.test(u)) return u; // keep blob/data
+  if (/^(?:\.\/)?casts\//i.test(u) || /^\/casts\//i.test(u)) {
+    // asset ในเว็บ
+    return new URL(u, document.baseURI).toString();
+  }
+  try {
+    const abs = new URL(u, document.baseURI).toString();
+    if (/^[a-z]+:\/\//i.test(abs)) {
+      return viaImageProxy(abs);
+    }
+    return abs;
+  } catch {
+    return u;
+  }
+}
+
 /* ---------------- Types ---------------- */
 export interface CastItem {
   id?: number;
@@ -179,7 +225,7 @@ async function cachePutBlob(key: string, blob: Blob, contentType?: string) {
  * ลำดับการหา src ของโปสเตอร์ (อัปเดต):
  * 1) ./posters/{id}.webp/.jpg/.png/.jpeg (ลองตามลำดับ)
  * 2) blob ใน CacheStorage (/cached-posters/{id})
- * 3) ใช้ remoteUrl (รองรับ absolute/relative) → ดาวน์โหลด + แคช → ObjectURL
+ * 3) ใช้ remoteUrl → คืน URL proxy โดยไม่ดาวน์โหลดเอง
  * 4) FALLBACK_IMG
  */
 async function resolvePosterSrc(
@@ -204,17 +250,11 @@ async function resolvePosterSrc(
     return { src: url, revokeLater: url };
   }
 
-  // 3) ถ้ามี remoteUrl ให้โหลด/แคช
+  // 3) ถ้ามี remoteUrl → ส่งผ่าน proxy แทนการ fetch เป็น blob เอง
   if (remoteUrl) {
     try {
       const absUrl = toAbsoluteURL(remoteUrl);
-      const r = await fetch(absUrl, { cache: "force-cache" });
-      if (r.ok) {
-        const blob = await r.blob();
-        await cachePutBlob(cacheKey, blob, r.headers.get("Content-Type") || undefined);
-        const url = URL.createObjectURL(blob);
-        return { src: url, revokeLater: url };
-      }
+      return { src: viaImageProxy(absUrl) };
     } catch {}
   }
 
@@ -388,7 +428,7 @@ export class ShowDetail extends HTMLElement {
               id: toNumId(v?.id),
               first: String(v?.first ?? v?.firstname ?? "").trim(),
               last: String(v?.last ?? v?.lastname ?? "").trim(),
-              img: toAbsPreferDoc(v?.img ?? v?.image ?? v?.photo ?? ""),
+              img: proxifyImageIfNeeded(v?.img ?? v?.image ?? v?.photo ?? ""),
               href: toAbsPreferDoc(v?.href ?? v?.url ?? ""),
             }))
           : Array.isArray(raw?.castings)
@@ -402,7 +442,7 @@ export class ShowDetail extends HTMLElement {
                 id: toNumId(item?.id) ?? idx + 1,
                 first,
                 last,
-                img: toAbsPreferDoc(item?.image ?? ""),
+                img: proxifyImageIfNeeded(item?.image ?? ""),
                 href: toAbsPreferDoc(item?.url ?? ""),
               } as CastItem;
             })
@@ -459,7 +499,7 @@ export class ShowDetail extends HTMLElement {
               id: toNumId(v?.id),
               first: String(v?.first || ""),
               last: String(v?.last || ""),
-              img: toAbsPreferDoc(v?.img || ""),
+              img: proxifyImageIfNeeded(v?.img || ""),
               href: toAbsPreferDoc(v?.href || ""),
             }))
           : [];
@@ -487,7 +527,7 @@ export class ShowDetail extends HTMLElement {
     // ===== Cast cards (click -> cast.html?url=... หรือ ?id=...) =====
     const castHtml = (this._cast || [])
       .map(({ id, first = "", last = "", img = "", href = "" }: CastItem) => {
-        const safeImg = img || FALLBACK_IMG;
+        const safeImg = proxifyImageIfNeeded(img) || FALLBACK_IMG;
         const alt = `${first} ${last}`.trim();
         const targetHref = buildCastLink(href || undefined, id ?? null);
 
