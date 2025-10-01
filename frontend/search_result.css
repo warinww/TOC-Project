@@ -74,11 +74,24 @@
 } */
 
 
-.series-grid {
+/* .series-grid {
+  width: 100%;
+  max-width: 1200px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* ปรับขนาดขั้นต่ำ 180px */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
   gap: clamp(10px, 3vw, 30px);  
   margin: 0 10vw;
+} */
+
+.series-grid {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 48px;
+  padding: 0 16px;
+  display: grid;
+  gap: clamp(10px, 3vw, 30px);  
+
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 }
 
 .series-card {
