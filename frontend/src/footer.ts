@@ -6,6 +6,7 @@ export function createFooter() {
     exportcsv.textContent = "export .csv";
 
     exportcsv.addEventListener("click", async () => {
+
         const response = await fetch("http://localhost:8000/static/data.csv");
         const blob = await response.blob();
 
