@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from threading import Lock
 import time
+import requests
+from fastapi.responses import Response
 
 from home_crawl import (  # หรือ crawl.py ของคุณ
     POSTER_DIR,
@@ -61,6 +63,21 @@ def _ensure_page_loaded(page: int) -> Dict[int, Dict[str, Any]]:
 def list_all() -> Dict[int, Dict[str, Any]]:
     _ensure_all_loaded()
     return series_dict
+
+@app.get("/image-proxy")
+def image_proxy(url: str):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Referer": "https://yflix.me/"
+    }
+
+    r = requests.get(url, headers=headers, stream=True)
+
+    if r.status_code != 200:
+        return Response(content=r.text, status_code=r.status_code)
+
+    return Response(content=r.content, media_type=r.headers.get("Content-Type", "image/jpeg"))
 
 @app.get("/api/series/OnAir")
 def get_series_on_air():
@@ -121,4 +138,3 @@ def cache_clear():
         page_cache.clear()
         search_cache.clear()
     return {"ok": True, "message": "cache cleared"}
-
