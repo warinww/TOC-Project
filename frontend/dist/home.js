@@ -7,7 +7,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-// frontend/main.ts
 import { createNavbar } from "./navbar.js";
 import { createFooter } from "./footer.js";
 createNavbar();
@@ -47,8 +46,8 @@ paginationContainer.className = "pagination";
 paginationContainer.id = "pagination";
 document.body.appendChild(paginationContainer);
 // ===== State =====
-let seriesData = [];
-let filteredData = [];
+let seriesData = []; // ข้อมูลทั้งหมด
+let filteredData = []; // หลังกรอง
 let currentPage = 1;
 const itemsPerPage = 20;
 // Banner state
@@ -118,7 +117,7 @@ function buildBanner(items) {
         dots.forEach((d, k) => d.classList.toggle("active", k === bannerIndex));
         banner.style.cursor = "pointer";
         banner.onclick = () => {
-            window.location.href = `detail.html?id=${items[bannerIndex].id}`;
+            window.location.href = `detail.html?url=${encodeURIComponent(items[bannerIndex].url)}`;
         };
     }
     function goBanner(step) { showBanner(bannerIndex + step); }
@@ -129,53 +128,82 @@ function buildBanner(items) {
 }
 function showBanner(i) { var _a, _b; (_b = (_a = window).showBanner) === null || _b === void 0 ? void 0 : _b.call(_a, i); }
 function goBanner(step) { var _a, _b; (_b = (_a = window).goBanner) === null || _b === void 0 ? void 0 : _b.call(_a, step); }
-// ===== Fetch & init =====
-function fetchPage(page) {
-    return fetch(`http://127.0.0.1:8000/?page=${page}`)
-        .then(res => res.json())
-        .then((dataDict) => {
-        const data = Object.entries(dataDict).map(([id, item]) => {
-            var _a, _b;
-            return (Object.assign({ id: parseInt(id), title: item.title, poster_url: item.poster, year: parseInt(item.year), gender: (_a = item.gender) !== null && _a !== void 0 ? _a : "", onair: (_b = item.onair) !== null && _b !== void 0 ? _b : (item.year === 2025) }, item));
-        });
-        return data;
+// ===== Fetch series & onair =====
+function loadSeries() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            // 1. Fetch all series
+            const resAll = yield fetch("http://127.0.0.1:8000/");
+            const dataDict = yield resAll.json();
+            seriesData = Object.entries(dataDict).map(([id, item]) => {
+                var _a, _b;
+                return ({
+                    id: parseInt(id, 10),
+                    url: item.url,
+                    title: item.title,
+                    poster_url: item.poster,
+                    year: parseInt(item.year || "0", 10) || 0,
+                    gender: (_a = item.gender) !== null && _a !== void 0 ? _a : "",
+                    onair: (_b = item.onair) !== null && _b !== void 0 ? _b : false
+                });
+            });
+            filteredData = seriesData;
+            // 2. Fetch onair series
+            const resOnAir = yield fetch("http://127.0.0.1:8000/api/series/OnAir");
+            const onairDict = yield resOnAir.json();
+            bannerItems = Object.values(onairDict).map(item => {
+                var _a;
+                return ({
+                    id: item.id,
+                    url: item.url,
+                    title: item.title,
+                    poster_url: item.poster,
+                    year: parseInt(item.year || "0", 10) || 0,
+                    gender: (_a = item.gender) !== null && _a !== void 0 ? _a : "",
+                    onair: true
+                });
+            });
+            buildBanner(bannerItems);
+            // Render page 1
+            currentPage = 1;
+            renderSeries(filteredData, currentPage);
+        }
+        catch (err) {
+            console.error("Failed to fetch series", err);
+            banner.textContent = "ไม่สามารถโหลดรายการได้";
+        }
     });
 }
-// Load initial page
-fetchPage(1).then(data => {
-    seriesData = data;
-    bannerItems = seriesData.filter(s => s.onair);
-    buildBanner(bannerItems);
-    filteredData = seriesData;
+loadSeries();
+// ===== Year filter =====
+yearSelecter.addEventListener("change", () => {
+    const selectedYear = parseInt(yearSelecter.value, 10);
+    filteredData = seriesData.filter(s => s.year === selectedYear);
     currentPage = 1;
     renderSeries(filteredData, currentPage);
 });
-// Year filter
-yearSelecter.addEventListener("change", (e) => __awaiter(void 0, void 0, void 0, function* () {
-    const selectedYear = parseInt(e.target.value);
-    // Refetch page 1 for the selected year
-    const data = yield fetchPage(1);
-    filteredData = data.filter(s => s.year === selectedYear);
-    currentPage = 1;
-    renderSeries(filteredData, currentPage);
-}));
 // ===== Grid + Pagination =====
-function renderSeries(data_1) {
-    return __awaiter(this, arguments, void 0, function* (data, page = 1) {
-        gridContainer.innerHTML = "";
-        const pageData = yield fetchPage(page);
-        filteredData = pageData;
-        if (!pageData.length) {
-            const empty = document.createElement("p");
-            empty.textContent = "ไม่พบรายการ";
-            gridContainer.appendChild(empty);
-            return;
-        }
+function renderSeries(data, page = 1) {
+    gridContainer.innerHTML = "";
+    const totalItems = data.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+    currentPage = Math.min(Math.max(1, page), totalPages);
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageData = data.slice(start, end);
+    if (!pageData.length) {
+        const empty = document.createElement("p");
+        empty.textContent = "ไม่พบรายการ";
+        gridContainer.appendChild(empty);
+    }
+    else {
         pageData.forEach(series => {
             const card = document.createElement("div");
             card.className = "series-card";
             card.style.cursor = "pointer";
-            card.onclick = () => window.location.href = `detail.html?id=${series.id}`;
+            card.onclick = () => {
+                window.location.href = `detail.html?url=${encodeURIComponent(series.url)}`;
+            };
             const img = document.createElement("img");
             img.src = series.poster_url;
             img.alt = series.title;
@@ -186,19 +214,20 @@ function renderSeries(data_1) {
             card.appendChild(title);
             gridContainer.appendChild(card);
         });
-        renderPagination(pageData.length, page);
-    });
+    }
+    renderPagination(totalItems, currentPage);
 }
 function renderPagination(totalItems, page) {
-    const totalPages = 17; // fixed
+    const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
     currentPage = Math.min(Math.max(1, page), totalPages);
     paginationContainer.innerHTML = "";
+    // Prev
     const prevBtn = document.createElement("button");
     prevBtn.className = "nav prev";
     prevBtn.disabled = currentPage === 1;
     prevBtn.onclick = () => renderSeries(filteredData, currentPage - 1);
     paginationContainer.appendChild(prevBtn);
-    const maxVisible = 5; // ปุ่มรอบ current
+    // Page buttons
     const pageButtons = [];
     pageButtons.push(1);
     for (let i = currentPage - 2; i <= currentPage + 2; i++) {
@@ -223,6 +252,7 @@ function renderPagination(totalItems, page) {
         paginationContainer.appendChild(btn);
         last = p;
     }
+    // Next
     const nextBtn = document.createElement("button");
     nextBtn.className = "nav next";
     nextBtn.disabled = currentPage === totalPages;
