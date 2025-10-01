@@ -178,6 +178,16 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
+
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.series-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .series-card img {
