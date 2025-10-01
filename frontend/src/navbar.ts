@@ -4,6 +4,7 @@ export function createNavbar() {
 
     const logodiv = document.createElement("div");
     logodiv.classList = "logoDiv";
+    logodiv.onclick = () => (window.location.href = "index.html");
     const logo = document.createElement("img");
     logo.src = "./assets/icons/logo.svg";
 

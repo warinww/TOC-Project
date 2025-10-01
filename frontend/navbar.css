@@ -58,6 +58,7 @@ nav, footer {
 
 .logoDiv {
   width: 106px;
+  cursor: pointer;
 }
 
 .logoDiv img {
