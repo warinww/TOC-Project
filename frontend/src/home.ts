@@ -14,29 +14,12 @@ const banner = document.createElement("div");
 banner.className = "banner-ad";
 document.body.appendChild(banner);
 
-const posterContainer = document.createElement("div");
-posterContainer.className = "poster-container";
 
 const posterText = document.createElement("p");
 posterText.textContent = "ซีรี่ย์วายทั้งหมด";
 posterText.className = "poster-text";
 
-const yearSelecter = document.createElement("select");
-yearSelecter.className = "year-selecter";
-for (let year = 2025; year >= 2017; year--) {
-  const option = document.createElement("option");
-  option.value = year.toString();
-  option.textContent = year.toString();
-  yearSelecter.appendChild(option);
-}
-
-const selectWrapper = document.createElement("div");
-selectWrapper.className = "select-wrapper";
-selectWrapper.appendChild(yearSelecter);
-
-posterContainer.appendChild(posterText);
-posterContainer.appendChild(selectWrapper);
-document.body.appendChild(posterContainer);
+document.body.appendChild(posterText);
 
 const gridContainer = document.createElement("div");
 gridContainer.className = "series-grid";
@@ -208,14 +191,6 @@ async function loadSeries() {
 }
 
 loadSeries();
-
-// ===== Year filter =====
-yearSelecter.addEventListener("change", () => {
-  const selectedYear = parseInt((yearSelecter as HTMLSelectElement).value, 10);
-  filteredData = seriesData.filter(s => s.year === selectedYear);
-  currentPage = 1;
-  renderSeries(filteredData, currentPage);
-});
 
 // ===== Grid + Pagination =====
 function renderSeries(data: Series[], page = 1) {

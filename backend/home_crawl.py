@@ -29,6 +29,7 @@ HEADERS = {
 
 BASE_URL = "https://yflix.me/category/series/page/{}/"
 
+
 # ===================== Global Storage =====================
 series_dict: Dict[int, Dict[str, Any]] = {}      # id -> series info
 url_to_id: Dict[str, int] = {}                  # series URL -> id
@@ -102,16 +103,22 @@ def scrape_page(page: int) -> Dict[int, Dict[str, Any]]:
         return {}
 
     # หา series entries
+
     series_entries = re.findall(
-        r'<div class="td-module-thumb">\s*<a href="(?P<url>https://yflix\.me/series/[^"]+)"[^>]*title="(?P<title>[^"]+)".*?data-img-url="(?P<poster>[^"]+)"',
-        section_html,
-        re.DOTALL
-    )
+    r'<div class="td-module-thumb">\s*'
+    r'<a href="(?P<url>https://yflix\.me/series/[^"]+)"'
+    r'[^>]*title="(?P<title>[\w\u0E00-\u0E7F\u201C\u201D\u2013\u2018\u2019\u2026\u0027\u0060'
+    r'\u200B\uFEFF\u200D\u2060\u200C\u00A0\u2728\u2009\s()\[\]\{\}\-\'"&\.,!\?…#%:\|\@\/;]+)"'
+    r'.*?data-img-url="(?P<poster>[^"]+)"',
+    section_html, re.DOTALL
+)
+
     print(f"🥩 Found {len(series_entries)} series entries")
     page_data: Dict[int, Dict[str, Any]] = {}
 
     for url, title, poster_url in series_entries:
-        title = html.unescape(title.strip())
+        title = html.unescape(title)
+        # title = title.strip()
         poster_url = poster_url.strip()
 
         # ตรวจสอบว่าซีรีส์นี้เคยมีอยู่หรือยัง
@@ -174,35 +181,24 @@ def scrape_series_detail(url: str) -> dict:
     # poster_public = save_poster_by_id(normalize_img_url(poster_url), sid)
 
     # castings
-    castings_divs = detail_soup.select("#tdi_67 .td_module_flex")
-    castings = []
-    for div in castings_divs:
-        a_tag = div.select_one(".td-module-thumb a")
-        if not a_tag:
-            continue
-        cast_url = a_tag.get("href")
-        name_tag = div.select_one(".td-module-title a")
-        cast_name = name_tag.get_text(strip=True) if name_tag else ""
+    casting_matches = re.findall(
+        r'<a\s+[^>]*href=["\'](https://yflix\.me/casting/[^"\']+)["\'][^>]*title=["\']([^"\']+)["\'][^>]*>.*?<span[^>]*data-img-url=["\']([^"\']+)["\']',
+         res.text,
+        re.DOTALL | re.IGNORECASE
+    )
 
-        img_span = div.select_one(".entry-thumb")
-        if img_span and img_span.get("data-img-url"):
-            cast_img_url = img_span["data-img-url"]
-        else:
-            style = img_span.get("style", "") if img_span else ""
-            m = re.search(r'url\(&quot;(.*?)&quot;\)', style)
-            cast_img_url = m.group(1) if m else ""
-
-        # check ถ้ามี cast_id แล้วใช้ id เดิม
-        if cast_url in cast_url_to_id:
-            cast_id = cast_url_to_id[cast_url]
+    castings_raw = []
+    for href, title, img_url in casting_matches:
+        if href in cast_url_to_id:
+            cast_id = cast_url_to_id[href]
         else:
             cast_id = _next_cast_id
             _next_cast_id += 1
-            cast_url_to_id[cast_url] = cast_id
+            cast_url_to_id[href] = cast_id
 
-        cast_dict[cast_id] = {"id": cast_id, "name": cast_name, "url": cast_url, "image": cast_img_url}
-
-        castings.append({"id": cast_id, "name": cast_name, "url": cast_url, "image": cast_img_url})
+        cast_dict[cast_id] = {"id": cast_id, "name": title, "url": href, "image": img_url}
+        castings_raw.append({"id": cast_id, "name": title, "url": href, "image": img_url})
+    castings = castings_raw[:-1]
 
     # trailer
     trailer_match = re.search(r'<iframe[^>]*src="(https://www\.youtube\.com/[^"]+)"', res.text)
@@ -227,7 +223,7 @@ def scrape_series_detail(url: str) -> dict:
         "synopsis": synopsis,
         "poster": poster_url,
         "coming_soon": coming_soon,
-        "source_url": url
+        "url": url
     }
     series_dict[sid] = info
     return info
@@ -381,6 +377,7 @@ def get_casting_by_URL(url: str) -> dict:
 
 # print(get_casting_by_URL("https://yflix.me/casting/%e0%b8%a7%e0%b8%ad%e0%b8%a3%e0%b9%8c-%e0%b8%a7%e0%b8%99%e0%b8%a3%e0%b8%b1%e0%b8%99%e0%b8%95%e0%b9%8c-%e0%b8%a3%e0%b8%b1%e0%b8%a8%e0%b8%a1%e0%b8%b5%e0%b8%a3%e0%b8%b1%e0%b8%95%e0%b8%99%e0%b9%8c/"))
         
+print(scrape_series_detail("https://yflix.me/series/police-in-love/"))
 # def find_cast_id_by_url(url):
 #     for series in series_dict:
 #         if series["title"] == name:

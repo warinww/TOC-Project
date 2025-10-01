@@ -12,7 +12,7 @@ body {
 .poster-text {
   font-size: 24px;
   font-weight: bold;
-  /* margin: 20px 5vw; */
+  margin: 25px 10vw;
 }
 
 /* Banner container */
@@ -36,6 +36,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 0;
 }
 
 /* ให้ img fill container และ maintain aspect ratio */
@@ -44,6 +45,7 @@ body {
   height: 100%;
   object-fit: cover;  /* cover -> รูปเต็ม container */
   border-radius: 20px;
+  z-index: 0;
 }
 
 /* แสดง slide ที่ active */
@@ -61,6 +63,8 @@ body {
   align-items: end;
   padding: 14px 18px;
   box-sizing: border-box;
+  z-index: 1;                /* ⬅️ เหนือรูป */
+  pointer-events: none;      /* ⬅️ อย่าบังการคลิกปุ่ม/สไลด์ */
 }
 .banner-caption {
   color: #fff;
@@ -89,6 +93,7 @@ body {
   color: #fff; /* currentColor ของไอคอน */
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
+  z-index: 3;  
 }
 .banner-btn:hover {
   background: #BFA2DB;
@@ -113,6 +118,7 @@ body {
   transform: translateX(-50%);
   display: flex;
   gap: 6px;
+  z-index: 2;  
 }
 /* จุดบอกตำแหน่ง (reset ให้เป็นวงกลมเป๊ะ) */
 .banner-dots .dot {
@@ -134,13 +140,6 @@ body {
   background: #fff;            /* current เติมสีขาวเต็มวง */
   box-shadow: 0 0 0 2px rgba(0,0,0,.15); /* วงขอบบางๆ ให้เด่น (ปรับได้) */
   transform: scale(1.15);      /* ขยายให้เห็นชัด (ยังกลมอยู่) */
-}
-
-.poster-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 20px 10vw;
 }
 
 .select-wrapper {
