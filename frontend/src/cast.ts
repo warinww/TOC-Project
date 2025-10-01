@@ -332,4 +332,4 @@ async function bootstrap() {
 }
 bootstrap();
 
-createFooter();
+

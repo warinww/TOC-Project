@@ -2,7 +2,7 @@ import { createFooter } from "./footer.js";
 import { createNavbar } from "./navbar.js";
 
 createNavbar();
-createFooter();
+
 
 const p = document.createElement("p");
 p.className = "poster-text";

@@ -602,4 +602,4 @@ if (!customElements.get("show-detail")) {
   customElements.define("show-detail", ShowDetail);
 }
 
-createFooter();
+
