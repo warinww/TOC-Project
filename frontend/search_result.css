@@ -10,29 +10,29 @@
 .poster-text {
   width: 100%;
   max-width: 1200px;
-  margin: 20px auto 8px;
+  margin: 20px 20px;
   padding: 0 16px;
-  font-size: 1.125rem; /* 18px */
+  font-size: 1.125rem; 
   font-weight: 600;
 }
 
 /* Grid container */
-.series-grid {
+/* .series-grid {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto 48px;
   padding: 0 16px;
   display: grid;
   gap: var(--gap);
-  /* responsive columns: min 160px, expand to fill */
+
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-}
+} */
 
 /* Card */
 .series-card {
-  background: #fff;
+  /* background: #fff; */
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); */
   overflow: hidden;
   text-align: center;
   padding: 12px;
@@ -45,16 +45,16 @@
 }
 
 /* รูปโปสเตอร์ */
-.series-card img {
+/* .series-card img {
   width: 100%;
   border-radius: 12px;
   object-fit: cover;
   display: block;
   margin: 0 auto;
-}
+} */
 
 /* ชื่อเรื่อง */
-.series-card p {
+/* .series-card p {
   margin-top: 8px;
   font-size: 0.95rem;
   font-weight: 500;
@@ -62,13 +62,51 @@
   line-height: 1.4;
   text-align: center;
   word-wrap: break-word;
-}
+} */
 
 
 /* Empty-state paragraph inside grid */
-.series-grid > p {
+/* .series-grid > p {
   grid-column: 1 / -1;
   margin: 40px auto;
   text-align: center;
   font-size: 1rem;
+} */
+
+
+/* .series-grid {
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+  gap: clamp(10px, 3vw, 30px);  
+  margin: 0 10vw;
+} */
+
+.series-grid {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 48px;
+  padding: 0 16px;
+  display: grid;
+  gap: clamp(10px, 3vw, 30px);  
+
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+.series-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.series-card img {
+  width: 100%;             /* กว้างเต็มคอลัมน์ของการ์ด */
+  aspect-ratio: 2 / 3;     /* บังคับกรอบเป็น 4:5 */
+  height: auto;            /* ให้ความสูงคำนวณจาก aspect-ratio */
+  object-fit: cover;       /* เติมเต็มกรอบ (ครอปเล็กน้อยถ้าไม่ 4:5 เป๊ะ) */
+  border-radius: 10px;
+  /* margin: 0 20px; */
+  display: block;          /* กันช่องว่าง inline */
 }

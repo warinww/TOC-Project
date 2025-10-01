@@ -5,6 +5,20 @@ export function createFooter() {
     const exportcsv = document.createElement("button");
     exportcsv.textContent = "export .csv";
 
+    exportcsv.addEventListener("click", async () => {
+
+        const response = await fetch("http://localhost:8000/download-csv");
+        const blob = await response.blob();
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "series_titles.csv";
+        link.click();
+
+        URL.revokeObjectURL(url);
+    });
+
     const linkdiv = document.createElement("div");  
     const sourcecode = document.createElement("a");
     sourcecode.textContent = "source code";    
@@ -17,7 +31,7 @@ export function createFooter() {
     members.href = "members.html";
     const ref = document.createElement("a");
     ref.textContent = "อ้างอิง";   
-    ref.href = "";
+    ref.href = "https://yflix.me/";
     linkdiv.appendChild(sourcecode);
     linkdiv.appendChild(presentation);
     linkdiv.appendChild(members);

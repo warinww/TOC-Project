@@ -6,6 +6,7 @@ import requests
 import html
 from bs4 import BeautifulSoup
 from typing import Dict, Any
+import csv
 
 # ===================== Directories =====================
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -17,6 +18,11 @@ PUBLIC_PREFIX = "/posters"
 CAST_DIR = BASE_DIR / "frontend" / "casts"
 CAST_DIR.mkdir(parents=True, exist_ok=True)
 CAST_PUBLIC_PREFIX = "/casts"
+
+filecsvname = "series_titles.csv"
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+CSV_FILE_PATH = BASE_DIR / "backend" / filecsvname
 
 # ===================== Headers =====================
 HEADERS = {
@@ -41,6 +47,30 @@ cast_url_to_id: Dict[str, int] = {}             # cast URL -> id
 _next_cast_id = 1
 
 # ===================== Helpers =====================
+def extract_balanced_div_block(html, start_id):
+    pattern = rf'<div[^>]+id="{start_id}"[^>]*>'
+    match = re.search(pattern, html)
+    if not match:
+        return None
+
+    start_pos = match.start()
+    remaining_html = html[start_pos:]
+
+    open_divs = 0
+    end_pos = 0
+    for match in re.finditer(r'</?div\b', remaining_html):
+        if match.group() == '<div':
+            open_divs += 1
+        else:
+            open_divs -= 1
+        if open_divs == 0:
+            end_pos = match.end()
+            break
+
+    return remaining_html[:end_pos] if end_pos > 0 else None
+
+
+
 def normalize_img_url(url: str) -> str:
     """ตัด suffix -WxH เพื่อขอไฟล์ full-size"""
     return re.sub(r"-\d+x\d+(\.\w+)$", r"\1", url)
@@ -95,6 +125,24 @@ def save_cast_by_id(img_url: str, cast_id: int) -> str:
         return ""
     return public
 
+def save_series_to_csv_immediately(title: str):
+    """บันทึกชื่อเรื่องลงในไฟล์ CSV ทันทีหลังจาก scrape ข้อมูล"""
+    # ตรวจสอบว่าไฟล์ CSV มีอยู่แล้วหรือไม่
+    file_exists = CSV_FILE_PATH.exists()
+
+    with open(CSV_FILE_PATH, mode='a', newline='', encoding='utf-8-sig') as file:
+        fieldnames = ['title']
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+        # ถ้าเป็นการเขียนครั้งแรก จะเขียน header
+        if not file_exists:
+            writer.writeheader()
+
+        # เขียนชื่อเรื่องลงในไฟล์
+        writer.writerow({'title': title})
+
+    print(f"Title '{title}' saved to CSV.")
+
 # ===================== Scrape Functions =====================
 def _upsert_series(sid: int, *, title: str, href: str, poster_url: str) -> Dict[str, Any]:
     poster_public = save_poster_by_id(normalize_img_url(poster_url), sid)
@@ -106,31 +154,47 @@ def scrape_page(page: int) -> Dict[int, Dict[str, Any]]:
     """Crawl หน้า series list"""
     global _next_id
     print(f"[CRAWL] page {page}")
-    html_content = requests.get(BASE_URL.format(page), headers=HEADERS, timeout=30).text
-    soup = BeautifulSoup(html_content, "html.parser")
-    block = soup.find("div", id="tdi_45")
-    if not block:
-        print(f"  ! ไม่พบ block id='tdi_45' หน้า {page}")
+    res = requests.get(BASE_URL.format(page), headers=HEADERS, timeout=30)
+    if res.status_code != 200:
+        print(f"❌ Failed to fetch page {page}: status {res.status_code}")
         return {}
+
+    section_html = extract_balanced_div_block(res.text, "tdi_45")
+    if not section_html:
+        print(f"❌ No section found for id='tdi_45' on page {page}")
+        return {}
+
+    # หา series entries
+    series_entries = re.findall(
+        r'<div class="td-module-thumb">\s*<a href="(?P<url>https://yflix\.me/series/[^"]+)"[^>]*title="(?P<title>[^"]+)".*?data-img-url="(?P<poster>[^"]+)"',
+        section_html,
+        re.DOTALL
+    )
+    print(f"🥩 Found {len(series_entries)} series entries")
     page_data: Dict[int, Dict[str, Any]] = {}
-    for thumb in block.find_all("div", class_="td-module-thumb"):
-        a_tag = thumb.find("a")
-        img_span = thumb.find("span", class_="entry-thumb")
-        if not (a_tag and img_span):
-            continue
-        title = (a_tag.get("title") or "").strip()
-        href = a_tag.get("href") or ""
-        poster_url = img_span.get("data-img-url") or ""
-        if not poster_url or not href:
-            continue
-        if href in url_to_id:
-            sid = url_to_id[href]
+
+    for url, title, poster_url in series_entries:
+        title = html.unescape(title.strip())
+        poster_url = poster_url.strip()
+
+        # ตรวจสอบว่าซีรีส์นี้เคยมีอยู่หรือยัง
+        if url in url_to_id:
+            sid = url_to_id[url]
         else:
             sid = _next_id
+            url_to_id[url] = sid
             _next_id += 1
-            url_to_id[href] = sid
-        info = _upsert_series(sid, title=title, href=href, poster_url=poster_url)
+
+        print(f"🟢 Title: {title}")
+        print(f"🔗 URL: {url}")
+        print(f"🖼️ Poster: {poster_url}")
+        print(f"#️⃣ Index: {sid}")
+
+        info = _upsert_series(sid, title=title, href=url, poster_url=poster_url)
         page_data[sid] = info
+
+        save_series_to_csv_immediately(title)
+
     print(f"  ✓ page {page} -> {len(page_data)} รายการ")
     return page_data
 
@@ -231,6 +295,51 @@ def scrape_series_detail(url: str) -> dict:
     }
     series_dict[sid] = info
     return info
+
+def scrape_OnAir():
+    url = f"https://yflix.me/category/series/page/2/"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                      "AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/120.0.0.0 Safari/537.36",
+    }
+
+    html = requests.get(url, headers=headers).text
+    soup = BeautifulSoup(html, "html.parser")
+
+    block = soup.find("div", id="tdi_40")
+    if not block:
+        return {"error": f"Block with id='tdi_40' not found on page 2."}
+
+    results = []
+    pattern = re.compile(
+        r'<div\s+class=["\']td-module-thumb["\'][^>]*>.*?<a\s+href=["\']([^"\']+)["\']',
+        re.DOTALL
+    )
+
+    matches = pattern.findall(str(block))
+
+    results = []
+    for href in matches:
+        results.append(href)
+    return results
+
+def info_onair_series():
+    onair_list = scrape_OnAir()
+    print(onair_list)
+    onair_dict = {}
+    for onair_series in onair_list:
+        for series_id, series_info in series_dict.items():
+            url = series_info.get("url", "")
+            if url and onair_series == url:
+                info = {
+                    "id": series_info.get("id", series_id),
+                    "title": series_info.get("title", ""),
+                    "url": url,
+                    "poster": series_info.get("poster", "")
+                }
+                onair_dict[series_id] = info
+    return onair_dict
 
 def get_casting_by_URL(url: str) -> dict:
     global _next_id, _next_cast_id

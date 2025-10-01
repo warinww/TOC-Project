@@ -1,18 +1,23 @@
 # backend/poryor_test.py
 from typing import Dict, Any, Optional, Tuple
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query 
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from threading import Lock
 import time
 from home_crawl import get_casting_by_URL
+from fastapi.responses import FileResponse
+
 
 from home_crawl import (  # หรือ crawl.py ของคุณ
     POSTER_DIR,
+    CSV_FILE_PATH,
+    filecsvname,
     series_dict,
     scrape_page,
     scrape_all,
     scrape_series_detail as crawl_series_detail,
+    info_onair_series
 )
 
 app = FastAPI(title="Poryor Test API")
@@ -61,6 +66,15 @@ def _ensure_page_loaded(page: int) -> Dict[int, Dict[str, Any]]:
 def list_all() -> Dict[int, Dict[str, Any]]:
     _ensure_all_loaded()
     return series_dict
+
+@app.get("/download-csv")
+def download_csv():
+    return FileResponse(CSV_FILE_PATH, filename=filecsvname, media_type="text/csv")
+
+@app.get("/api/series/OnAir")
+def get_series_on_air():
+    _ensure_all_loaded()
+    return info_onair_series()
 
 @app.get("/page")
 def list_by_page(page: int = Query(1, ge=1, le=17)) -> Dict[int, Dict[str, Any]]:

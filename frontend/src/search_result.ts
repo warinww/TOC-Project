@@ -18,6 +18,7 @@ interface Series {
   id: number;
   title: string;
   poster: string;    // backend ใส่ key "poster" เป็น /posters/{id}.webp
+  url: string;
 }
 
 function getQueryParam(name: string) {
@@ -29,7 +30,6 @@ const heading = document.querySelector(".poster-text") as HTMLParagraphElement;
 
 async function runSearch() {
   const title = getQueryParam("title") || "";
-  heading.textContent = `ผลการค้นหา: "${title}"`;
 
   const res = await fetch(`http://127.0.0.1:8000/search?title=${encodeURIComponent(title)}&scan_all=true`);
   const dataDict: Record<string, Series> = await res.json();
@@ -44,11 +44,13 @@ async function runSearch() {
     return;
   }
 
+  heading.textContent = `ผลการค้นหา: "${title}" ทั้งหมด ${items.length} รายการ`;
+
   items.forEach(s => {
     const card = document.createElement("div");
     card.className = "series-card";
     card.style.cursor = "pointer";
-    card.onclick = () => (window.location.href = `detail.html?id=${s.id}`);
+    card.onclick = () => (window.location.href = `detail.html?url=${encodeURIComponent(s.url)}`);
 
     const img = document.createElement("img");
     img.src = s.poster; // เช่น /posters/123.webp
