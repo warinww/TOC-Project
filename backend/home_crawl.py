@@ -49,6 +49,27 @@ _next_cast_id = 1
 series_det_dict: Dict[int, Dict[str, Any]] = {}      # id -> series info
 
 # ===================== Helpers =====================
+def extract_balanced_div_block(html, start_id):
+    pattern = rf'<div[^>]+id="{start_id}"[^>]*>'
+    match = re.search(pattern, html)
+    if not match:
+        return None
+
+    start_pos = match.start()
+    remaining_html = html[start_pos:]
+
+    open_divs = 0
+    end_pos = 0
+    for match in re.finditer(r'</?div\b', remaining_html):
+        if match.group() == '<div':
+            open_divs += 1
+        else:
+            open_divs -= 1
+        if open_divs == 0:
+            end_pos = match.end()
+            break
+
+    return remaining_html[:end_pos] if end_pos > 0 else None
 
 def save_series_to_csv_immediately(title: str):
     """บันทึกชื่อเรื่องลงในไฟล์ CSV ทันทีหลังจาก scrape ข้อมูล"""

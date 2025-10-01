@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from threading import Lock
 import time
 from fastapi.responses import FileResponse, Response
+import requests
 
 from home_crawl import (  # หรือ crawl.py ของคุณ
     POSTER_DIR,
