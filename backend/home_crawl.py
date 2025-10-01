@@ -11,14 +11,6 @@ import csv
 # ===================== Directories =====================
 BASE_DIR = Path(__file__).resolve().parents[1]
 
-POSTER_DIR = BASE_DIR / "frontend" / "posters"
-POSTER_DIR.mkdir(parents=True, exist_ok=True)
-PUBLIC_PREFIX = "/posters"
-
-CAST_DIR = BASE_DIR / "frontend" / "casts"
-CAST_DIR.mkdir(parents=True, exist_ok=True)
-CAST_PUBLIC_PREFIX = "/casts"
-
 filecsvname = "series_titles.csv"
 
 BASE_DIR = Path(__file__).resolve().parents[1]
