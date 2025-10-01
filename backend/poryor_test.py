@@ -70,6 +70,20 @@ def list_all() -> Dict[int, Dict[str, Any]]:
 @app.get("/download-csv")
 def download_csv():
     return FileResponse(CSV_FILE_PATH, filename=filecsvname, media_type="text/csv")
+@app.get("/image-proxy")
+def image_proxy(url: str):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Referer": "https://yflix.me/"
+    }
+
+    r = requests.get(url, headers=headers, stream=True)
+
+    if r.status_code != 200:
+        return Response(content=r.text, status_code=r.status_code)
+
+    return Response(content=r.content, media_type=r.headers.get("Content-Type", "image/jpeg"))
 
 @app.get("/api/series/OnAir")
 def get_series_on_air():
