@@ -4,6 +4,9 @@ import csv
 import time
 import re
 import html
+from urllib.parse import unquote, urlparse
+from pythainlp.transliterate import romanize
+
 
 # Headers to mimic a browser
 headers = {
@@ -21,9 +24,9 @@ casting_csv_file = "yflix_casting_details.csv"
 
 with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
     writer = csv.writer(file)
-    writer.writerow(["all_images" ,"title", "description", "full_name", "nick_name", "birth", "ig_username","ig_link", "work"])
+    writer.writerow(["all_images" ,"href"])
 
-    for page in range(1, 2):
+    for page in range(4, 5):
         print(f"Scraping list page {page}...")
 
         url = casting_url.format(page)
@@ -36,143 +39,71 @@ with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
         casting_links = [a.get("href") for a in soup.select(".tdi_45 .td-module-title a")]
 
         for link in casting_links:
-            print(f"Scraping details: {link}")
-            res = requests.get(link, headers=headers)
+            # def get_casting_by_URL(url: str) -> dict:
+                # global _next_id, _next_cast_id
+            headerss = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                            "AppleWebKit/537.36 (KHTML, like Gecko) "
+                            "Chrome/120.0.0.0 Safari/537.36",
+            }
+            res = requests.get(link, headers=headerss)
             if res.status_code != 200:
-                print(f"Failed to fetch {link}")
-                continue
+                print({"error": f"Failed to fetch {link}", "status": res.status_code})
+                
+            soup = BeautifulSoup(res.text, "html.parser")
 
-            detail_soup = BeautifulSoup(res.text, "html.parser")
-
-            #all_image
+            # All images
             image_matches = re.findall(
                 r'<meta\s+[^>]*property=["\']og:image["\'][^>]*content=["\']([^"\']+)["\'][^>]*>',
                 res.text,
                 re.IGNORECASE
             )
+            all_images = [url.strip() for url in image_matches] if image_matches else []
 
-            if image_matches:
-                all_images = ", ".join([url.strip() for url in image_matches])
-                print("All Images:", all_images)
-            else:
-                all_images = ""
-                print("No images found")
-
-            #title
-            title_match = re.search(
-                r'<meta\s+[^>]*property=["\']og:title["\'][^>]*content=["\']([^"\']+)["\'][^>]*>',
+            # Title
+            url_match = re.search(
+                r'<meta\s+[^>]*property=["\']og:url["\'][^>]*content=["\']([^"\']+)["\'][^>]*>',
                 res.text,
                 re.IGNORECASE
             )
-
-            if title_match:
-                title = title_match.group(1).strip()
-                print("Title:", title)
-            else:
-                title = ""
-                print("No title found")
+            href = url_match.group(1).strip() if url_match else ""
 
 
-            #full_name
-            full_name_match = re.search(r'ชื่อ-สกุล\s*:\s*(.+?)(?:<br>|</p>)', res.text)
-            if full_name_match:
-                full_name = full_name_match.group(1).strip()
-            else:
-                full_name = ""
-            print("Full Name:", full_name)
-            
-            #nick name
-            nick_match = re.search(r'ชื่อเล่น\s*:\s*(.+?)(?:<br>|</p>)', res.text)
-            if nick_match:
-                nick_name = nick_match.group(1).strip()
-            else:
-                nick_name = ""
-            print("Nickname:", nick_name)
+            print(all_images, href)
 
-            #birth
-            birth_match = re.search(r'เกิด(?:เมื่อ)?\s*:\s*(.+?)(?:<br>|</p>)', res.text)
-            if birth_match:
-                birth = birth_match.group(1).strip()
-            else:
-                birth = ""
-            print("Birth:", birth)
-            
-            # หา IG + ลิงก์
-            ig_match = re.search(
-                r'<a[^>]*href="([^"]+)"[^>]*>\s*IG\s*:\s*([^<]+)</a>',
-                res.text,
-                re.IGNORECASE
-            )
-
-            if ig_match:
-                ig_link = ig_match.group(1).strip()       # https://www.instagram.com/williamjkp
-                ig_username = ig_match.group(2).strip()   # williamjkp
-            else:
-                ig_link = ""
-                ig_username = ""
-
-            print("IG Username:", ig_username)
-            print("IG Link:", ig_link)
-            
-            # description
-            description = ""
-            description_more_1 = ""
-            description_more_2 = ""
-            block = detail_soup.find(attrs={"data-td-block-uid": "tdi_77"})
-
-            if block:
-                inner_div = block.find("div", class_="tdb-block-inner td-fix-index")
-                if inner_div:
-                    p_tags = inner_div.find_all("p")
-
-                    # --- <p> ตัวแรก ---
-                    if len(p_tags) >= 1:
-                        first_paragraph = p_tags[0].get_text("\n", strip=True)
-                        cleaned = re.sub(r'(ชื่อ-สกุล|ชื่อเล่น|เกิด)\s*:.*(?:\n)?', '', first_paragraph)
-                        parts = cleaned.strip().splitlines()
-
-                        if parts:
-                            description = parts[0].strip()
-                            description_more_1 = "\n".join(parts[1:]).strip()
-
-                    # --- <p> ตัวที่สอง ---
-                    if len(p_tags) >= 2:
-                        second_p = p_tags[1].get_text("\n", strip=True)
-                        lines = second_p.splitlines()
-
-                        capture = False
-                        description_more_arr = []
-                        for line in lines:
-                            if line.startswith(("ชื่อ-สกุล :", "ชื่อเล่น :", "เกิด :")):
-                                capture = True
-                                continue
-                            if capture:
-                                description_more_arr.append(line)
-
-                        description_more_2 = "\n".join(description_more_arr).strip()
-
-                    # --- Debug print ---
-                    if not description:
-                        print("No valid description found")
-                    else:
-                        print("Description:", description)
-                        print("Description more 1:", description_more_1)
-                        print("Description more 2:", description_more_2)
-
-
-            series_links = re.findall(r'href="(https://yflix\.me/series/[^"]+)"', res.text)
-            series_links = list(set(series_links))
-
-            for link in series_links:
-                print("series_match:", link)
-
-
-
-            all_images = ", ".join([url.strip() for url in image_matches])
             # Write to CSV
-            writer.writerow([all_images, title, description, full_name, nick_name, ig_username, ig_link, birth])
+            writer.writerow([all_images, href])
 
             # Be polite, avoid hammering server
             time.sleep(1)
 
 print(f"Done! All details saved to {casting_csv_file}")
+
+# def thai_url_to_slug(url: str) -> str:
+#     # แปลง percent-encoding -> ไทย
+#     decoded_url = unquote(url)
+    
+#     # ตัด path ออกมา
+#     path = urlparse(decoded_url).path.strip("/")
+#     segments = path.split("/")
+    
+#     # เอา segment สุดท้ายมาแปลง
+#     last_segment = segments[-1]
+    
+#     # ถอดเสียงไทย -> อังกฤษ
+#     slug_parts = [
+#         romanize(word, engine="thai2rom") or word
+#         for word in last_segment.split("-")
+#     ]
+#     slug = "-".join(slug_parts).lower()
+    
+#     # สร้าง path ใหม่
+#     new_segments = segments[:-1] + [slug]
+#     new_path = "/" + "/".join(new_segments) + "/"
+    
+#     # ต่อกลับกับ base URL
+#     return decoded_url.split(path)[0] + new_path
+
+# # ทดลองใช้
+# url = "https://yflix.me/casting/%e0%b8%a7%e0%b8%ad%e0%b8%a3%e0%b9%8c-%e0%b8%a7%e0%b8%99%e0%b8%a3%e0%b8%b1%e0%b8%99%e0%b8%95%e0%b9%8c-%e0%b8%a3%e0%b8%b1%e0%b8%a8%e0%b8%a1%e0%b8%b5%e0%b8%a3%e0%b8%b1%e0%b8%95%e0%b8%99%e0%b9%8c/"
+# print(thai_url_to_slug(url))
