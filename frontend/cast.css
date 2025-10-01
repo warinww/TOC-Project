@@ -7,6 +7,7 @@ body {
   --shadow: 0 4px 16px rgba(0,0,0,.06);
   --radius-lg: 15px;
   --radius-xl: 20px;
+  /* padding: 80px 0 80px 0; */
 }
 
 /* ====== กลับหน้าหลัก ====== */
@@ -35,6 +36,7 @@ body {
   max-width: 1300px;
   margin: 0 auto;
   padding: 0 10vw;
+  padding-bottom: 60px;
 }
 
 /* ====== ชื่อเรื่อง ====== */

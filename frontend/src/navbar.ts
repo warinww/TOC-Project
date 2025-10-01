@@ -1,26 +1,10 @@
 export function createNavbar() {
-    function toggleTheme() {
-      document.documentElement.classList.toggle("dark");
-
-      // Save theme in localStorage for persistence
-      if (document.documentElement.classList.contains("dark")) {
-        localStorage.setItem("theme", "dark");
-      } else {
-        localStorage.setItem("theme", "light");
-      }
-    }
-
-    // Apply saved theme on page load
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    }
-
     const nav = document.createElement("nav");
     nav.className = "navbox";
 
     const logodiv = document.createElement("div");
     logodiv.classList = "logoDiv";
+    logodiv.onclick = () => (window.location.href = "index.html");
     const logo = document.createElement("img");
     logo.src = "./assets/icons/logo.svg";
 
@@ -31,6 +15,21 @@ export function createNavbar() {
     searchBox.className = "searchBox";  
     const searchBar = document.createElement("input");
     searchBar.placeholder = "Search...";
+
+    const params = new URLSearchParams(window.location.search);
+    const title = params.get("title");
+    if (title) searchBar.value = title;
+
+    searchBar.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        const query = searchBar.value.trim();
+        if (query) {
+          window.location.href = `search_result.html?title=${encodeURIComponent(query)}&scan_all=true`;
+        }
+      }
+    });
+
     const searchIcon = document.createElement("img");
     searchIcon.src = "./assets/icons/search.svg";
     const filterIcon = document.createElement("img");
@@ -50,8 +49,22 @@ export function createNavbar() {
     changeThemeDiv.appendChild(darkMode);
     changeThemeDiv.appendChild(lightMode);
 
-    darkMode.addEventListener("click", toggleTheme);
-    lightMode.addEventListener("click", toggleTheme);
+    darkMode.addEventListener("click", () => {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    });
+
+    lightMode.addEventListener("click", () => {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    });
+
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
 
     nav.appendChild(logodiv);
     nav.appendChild(searchBox);

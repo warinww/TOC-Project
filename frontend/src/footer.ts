@@ -8,7 +8,7 @@ export function createFooter() {
     const linkdiv = document.createElement("div");  
     const sourcecode = document.createElement("a");
     sourcecode.textContent = "source code";    
-    sourcecode.href = "";
+    sourcecode.href = "https://github.com/17punchisama/TOC-Project.git";
     const presentation = document.createElement("a");
     presentation.textContent = "นำเสนอ";
     presentation.href = "";
@@ -17,7 +17,7 @@ export function createFooter() {
     members.href = "members.html";
     const ref = document.createElement("a");
     ref.textContent = "อ้างอิง";   
-    ref.href = "";
+    ref.href = "https://yflix.me/";
     linkdiv.appendChild(sourcecode);
     linkdiv.appendChild(presentation);
     linkdiv.appendChild(members);
