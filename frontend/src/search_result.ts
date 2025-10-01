@@ -53,7 +53,8 @@ async function runSearch() {
     card.onclick = () => (window.location.href = `detail.html?url=${encodeURIComponent(s.url)}`);
 
     const img = document.createElement("img");
-    img.src = s.poster; // เช่น /posters/123.webp
+    img.src =  "http://127.0.0.1:8000/image-proxy?url=" +
+      encodeURIComponent(s.poster);
     img.alt = s.title;
     img.loading = "lazy";
 

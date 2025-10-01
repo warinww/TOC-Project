@@ -35,6 +35,14 @@ body {
     cursor: pointer;
 }
 
+.footerBox button:disabled {
+    background-color: var(--color2); /* สีพื้นหลังอ่อนลง */
+    border-color: var(--color5);
+    color: var(--color5); /* ตัวอักษรสีจาง */
+    cursor: not-allowed;  /* เปลี่ยน cursor เป็นห้ามคลิก */
+    opacity: 0.6;         /* โปร่งใสเล็กน้อย */
+}
+
 .footerBox div {
     display: flex;
     gap: 5vw;
