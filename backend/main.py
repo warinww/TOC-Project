@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from crawl import series_dict, scrape_series
+from series_crawl import scrape_all
 import os
 
 POSTER_FOLDER = r"C:\toc-project\frontend\posters"
@@ -30,3 +31,6 @@ def root():
 def get_series_by_id(series_id: int):
     return series_dict.get(series_id, {"error": "Series not found"})
 
+@app.get("/series")
+def all_series(total_pages: int):
+    return scrape_all(total_pages)
