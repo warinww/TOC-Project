@@ -130,7 +130,7 @@ def save_series_to_csv_immediately(title: str):
     # ตรวจสอบว่าไฟล์ CSV มีอยู่แล้วหรือไม่
     file_exists = CSV_FILE_PATH.exists()
 
-    with open(CSV_FILE_PATH, mode='a', newline='', encoding='utf-8') as file:
+    with open(CSV_FILE_PATH, mode='a', newline='', encoding='utf-8-sig') as file:
         fieldnames = ['title']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
 

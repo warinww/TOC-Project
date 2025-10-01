@@ -7,13 +7,13 @@ export function createFooter() {
 
     exportcsv.addEventListener("click", async () => {
 
-        const response = await fetch("http://localhost:8000/static/data.csv");
+        const response = await fetch("http://localhost:8000/download-csv");
         const blob = await response.blob();
 
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "yflix_series_details.csv";
+        link.download = "series_titles.csv";
         link.click();
 
         URL.revokeObjectURL(url);
