@@ -168,6 +168,8 @@ async function loadSeries() {
   try {
     // 1. Fetch all series
     const resAll = await fetch("http://127.0.0.1:8000/");
+    const exportbt = document.getElementById("exportcsv");
+    exportbt?.removeAttribute("disabled");
     const dataDict: Record<string, any> = await resAll.json();
     seriesData = Object.entries(dataDict).map(([id, item]) => ({
       id: parseInt(id, 10),

@@ -3,7 +3,9 @@ export function createFooter() {
     footer.className = "footerBox";
 
     const exportcsv = document.createElement("button");
+    exportcsv.id = "exportcsv";
     exportcsv.textContent = "export .csv";
+    exportcsv.disabled = true;
 
     exportcsv.addEventListener("click", async () => {
 
