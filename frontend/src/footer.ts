@@ -17,7 +17,7 @@ export function createFooter() {
     members.href = "members.html";
     const ref = document.createElement("a");
     ref.textContent = "อ้างอิง";   
-    ref.href = "";
+    ref.href = "https://yflix.me/";
     linkdiv.appendChild(sourcecode);
     linkdiv.appendChild(presentation);
     linkdiv.appendChild(members);
