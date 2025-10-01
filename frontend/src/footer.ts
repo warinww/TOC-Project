@@ -5,6 +5,19 @@ export function createFooter() {
     const exportcsv = document.createElement("button");
     exportcsv.textContent = "export .csv";
 
+    exportcsv.addEventListener("click", async () => {
+        const response = await fetch("http://localhost:8000/static/data.csv");
+        const blob = await response.blob();
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "yflix_series_details.csv";
+        link.click();
+
+        URL.revokeObjectURL(url);
+    });
+
     const linkdiv = document.createElement("div");  
     const sourcecode = document.createElement("a");
     sourcecode.textContent = "source code";    
