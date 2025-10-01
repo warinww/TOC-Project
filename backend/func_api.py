@@ -133,32 +133,21 @@ def get_casting_by_URL(url: str) -> dict:
 
     # Description
     description = ""
-    description_more_1 = ""
-    description_more_2 = ""
     block = soup.find(attrs={"data-td-block-uid": "tdi_77"})
-    if block:
-        inner_div = block.find("div", class_="tdb-block-inner td-fix-index")
-        if inner_div:
-            p_tags = inner_div.find_all("p")
-            if len(p_tags) >= 1:
-                first_paragraph = p_tags[0].get_text("\n", strip=True)
-                cleaned = re.sub(r'(ชื่อ-สกุล|ชื่อเล่น|เกิด)\s*:.*(?:\n)?', '', first_paragraph)
-                parts = cleaned.strip().splitlines()
-                if parts:
-                    description = parts[0].strip()
-                    description_more_1 = "\n".join(parts[1:]).strip()
-            if len(p_tags) >= 2:
-                second_p = p_tags[1].get_text("\n", strip=True)
-                lines = second_p.splitlines()
-                capture = False
-                description_more_arr = []
-                for line in lines:
-                    if line.startswith(("ชื่อ-สกุล :", "ชื่อเล่น :", "เกิด :")):
-                        capture = True
-                        continue
-                    if capture:
-                        description_more_arr.append(line)
-                description_more_2 = "\n".join(description_more_arr).strip()
+
+    p_tags = re.findall(r'<p[^>]*>(.*?)</p>', str(block), re.DOTALL)
+
+    paragraph = ""
+    for i in range(len(p_tags)):
+        new_paragraph = re.sub(r'<br\s*/?>', '\n', p_tags[i], flags=re.IGNORECASE)
+        paragraph = paragraph + "\n" + new_paragraph
+    cleaned = re.sub(r'(ชื่อ-สกุล|ชื่อเล่น|เกิด(?:เมื่อ)?)\s*:.*(?:\n)?', '', paragraph)
+    lines = [line.strip() for line in cleaned.splitlines() if line.strip()]
+
+    with_colon = [line for line in lines if ":" in line]
+    no_colon = [line for line in lines if ":" not in line]
+    sorted_lines = with_colon + no_colon
+    description = "\n".join(sorted_lines)
 
     # Series links
     series_links = list(set(re.findall(r'href="(https://yflix\.me/series/[^"]+)"', res.text)))
@@ -174,8 +163,6 @@ def get_casting_by_URL(url: str) -> dict:
         "ig_username": ig_username,
         "ig_link": ig_link,
         "description": description,
-        "description_more_1": description_more_1,
-        "description_more_2": description_more_2,
         "series_links": series_links
     }
 # data = get_casting_by_URL("https://yflix.me/casting/namping-napatsakorn/")

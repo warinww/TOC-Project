@@ -3,7 +3,7 @@ import os
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from crawl import series_dict
-from func_api import scrape_series_detail
+from func_api import scrape_series_detail, get_casting_by_URL
 from fastapi.staticfiles import StaticFiles
 from crawl import scrape_page, series_dict
 from OnAir_use import scrape_OnAir
@@ -56,3 +56,8 @@ def get_series_by_id(series_id: int):
 @app.get("/api/series/OnAir")
 def get_series_on_air():
     return scrape_OnAir()
+
+@app.get("/casting")
+def get_cating_detail_by_url(url: str):
+    print("URL received:", url)
+    return get_casting_by_URL(url)
