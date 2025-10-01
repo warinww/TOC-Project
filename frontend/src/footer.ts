@@ -6,16 +6,17 @@ export function createFooter() {
     exportcsv.textContent = "export .csv";
 
     exportcsv.addEventListener("click", async () => {
-        // const response = await fetch("http://localhost:8000/static/data.csv");
-        // const blob = await response.blob();
 
-        // const url = URL.createObjectURL(blob);
-        // const link = document.createElement("a");
-        // link.href = url;
-        // link.download = "data.csv";
-        // link.click();
+        const response = await fetch("http://localhost:8000/download-csv");
+        const blob = await response.blob();
 
-        // URL.revokeObjectURL(url);
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "series_titles.csv";
+        link.click();
+
+        URL.revokeObjectURL(url);
     });
 
     const linkdiv = document.createElement("div");  
