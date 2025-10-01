@@ -7,13 +7,18 @@ import html
 from bs4 import BeautifulSoup
 from typing import Dict, Any
 
-# โครงสร้าง path: <repo-root>/frontend/posters
+# ===================== Directories =====================
 BASE_DIR = Path(__file__).resolve().parents[1]
+
 POSTER_DIR = BASE_DIR / "frontend" / "posters"
 POSTER_DIR.mkdir(parents=True, exist_ok=True)
-
 PUBLIC_PREFIX = "/posters"
 
+CAST_DIR = BASE_DIR / "frontend" / "casts"
+CAST_DIR.mkdir(parents=True, exist_ok=True)
+CAST_PUBLIC_PREFIX = "/casts"
+
+# ===================== Headers =====================
 HEADERS = {
     "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                    "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -26,139 +31,110 @@ HEADERS = {
 
 BASE_URL = "https://yflix.me/category/series/page/{}/"
 
-# เก็บข้อมูลรวม (id -> series_info)
-series_dict: Dict[int, Dict[str, Any]] = {}
-# map จากลิงก์ซีรีส์ -> id (กันสร้าง id ใหม่ซ้ำ)
-url_to_id: Dict[str, int] = {}
-# running id ครั้งแรกเท่านั้น
+# ===================== Global Storage =====================
+series_dict: Dict[int, Dict[str, Any]] = {}      # id -> series info
+url_to_id: Dict[str, int] = {}                  # series URL -> id
 _next_id = 1
 
+cast_dict: Dict[int, Dict[str, Any]] = {}       # id -> cast info
+cast_url_to_id: Dict[str, int] = {}             # cast URL -> id
+_next_cast_id = 1
 
+# ===================== Helpers =====================
 def normalize_img_url(url: str) -> str:
-    """ตัด suffix -WxH ออกจากรูปย่อย เพื่อพยายามขอไฟล์ full-size"""
+    """ตัด suffix -WxH เพื่อขอไฟล์ full-size"""
     return re.sub(r"-\d+x\d+(\.\w+)$", r"\1", url)
 
-
-def get_ext_from_url(url: str) -> str:
-    """คืน extension จาก path; default เป็น .jpg"""
-    ext = Path(urllib.parse.urlparse(url).path).suffix.lower()
-    if ext in [".jpg", ".jpeg", ".png", ".gif", ".webp"]:
-        return ".jpg" if ext == ".jpeg" else ext
-    return ".jpg"
-
-
-def _poster_public_path(stem: str, ext: str) -> str:
-    """คืน path สำหรับ frontend เช่น /posters/123.jpg"""
-    return f"{PUBLIC_PREFIX}/{stem}{ext}"
-
-
-def _poster_abs_path(stem: str, ext: str) -> Path:
-    """คืน path จริงบนเครื่องสำหรับเก็บไฟล์โปสเตอร์"""
-    return POSTER_DIR / f"{stem}{ext}"
-
-
-def save_original_if_needed(img_url: str, id_stem: str) -> str:
-    """
-    ดาวน์โหลดไฟล์ต้นฉบับ (ไม่แปลง) เฉพาะถ้ายังไม่มีไฟล์
-    คืน path สาธารณะสำหรับ frontend เช่น /posters/123.jpg
-    """
-    ext = get_ext_from_url(img_url)
-    abs_path = _poster_abs_path(id_stem, ext)
-    public = _poster_public_path(id_stem, ext)
-
+def save_poster_by_id(img_url: str, sid: int) -> str:
+    """ดาวน์โหลด poster ซีรีส์ ลง frontend/posters/<id>.jpg"""
+    if not img_url:
+        return ""
+    ext = Path(urllib.parse.urlparse(img_url).path).suffix.lower()
+    if ext not in [".jpg", ".jpeg", ".png", ".gif", ".webp"]:
+        ext = ".jpg"
+    filename = f"{sid}{ext}"
+    abs_path = POSTER_DIR / filename
+    public = f"{PUBLIC_PREFIX}/{filename}"
+    abs_path.parent.mkdir(parents=True, exist_ok=True)
     if abs_path.exists():
-        # มีไฟล์แล้ว ไม่โหลดซ้ำ
         return public
-
-    with requests.get(img_url, stream=True, headers=HEADERS, timeout=30) as r:
-        r.raise_for_status()
-        with open(abs_path, "wb") as f:
-            for chunk in r.iter_content(8192):
-                if chunk:
-                    f.write(chunk)
+    try:
+        with requests.get(img_url, stream=True, headers=HEADERS, timeout=30) as r:
+            r.raise_for_status()
+            with open(abs_path, "wb") as f:
+                for chunk in r.iter_content(8192):
+                    if chunk:
+                        f.write(chunk)
+    except Exception as e:
+        print(f"  x Failed to download poster {img_url}: {e}")
+        return ""
     return public
 
-
-def _upsert_series(sid: int, *, title: str, href: str, poster_url: str) -> Dict[str, Any]:
-    """อัปเดต/สร้างข้อมูลซีรีส์ 1 เรื่อง (ไม่เก็บ page, และไม่สร้าง id ใหม่ถ้าเคยมีอยู่)"""
-    # ขอไฟล์ full-size ถ้าเป็นไปได้
-    img_url_full = normalize_img_url(poster_url)
-
-    # เซฟโปสเตอร์ (ถ้ายังไม่มี)
+def save_cast_by_id(img_url: str, cast_id: int) -> str:
+    """ดาวน์โหลด cast image ลง frontend/casts/<id>.jpg"""
+    if not img_url:
+        return ""
+    ext = Path(urllib.parse.urlparse(img_url).path).suffix.lower()
+    if ext not in [".jpg", ".jpeg", ".png", ".gif", ".webp"]:
+        ext = ".jpg"
+    filename = f"{cast_id}{ext}"
+    abs_path = CAST_DIR / filename
+    public = f"{CAST_PUBLIC_PREFIX}/{filename}"
+    abs_path.parent.mkdir(parents=True, exist_ok=True)
+    if abs_path.exists():
+        return public
     try:
-        poster_public = save_original_if_needed(img_url_full, str(sid))
+        with requests.get(img_url, stream=True, headers=HEADERS, timeout=30) as r:
+            r.raise_for_status()
+            with open(abs_path, "wb") as f:
+                for chunk in r.iter_content(8192):
+                    if chunk:
+                        f.write(chunk)
     except Exception as e:
-        # fallback ไป url เดิม
-        try:
-            poster_public = save_original_if_needed(poster_url, str(sid))
-        except Exception as e2:
-            print(f"  x poster failed id={sid} full={e} fallback={e2}")
-            poster_public = ""
+        print(f"  x Failed to download cast image {img_url}: {e}")
+        return ""
+    return public
 
-    # series_info ที่เก็บจริง (ไม่ใส่ page)
-    info = {
-        "id": sid,
-        "title": title,
-        "url": href,
-        "poster": poster_public,
-    }
+# ===================== Scrape Functions =====================
+def _upsert_series(sid: int, *, title: str, href: str, poster_url: str) -> Dict[str, Any]:
+    poster_public = save_poster_by_id(normalize_img_url(poster_url), sid)
+    info = {"id": sid, "title": title, "url": href, "poster": poster_public}
     series_dict[sid] = info
     return info
 
-
 def scrape_page(page: int) -> Dict[int, Dict[str, Any]]:
-    """
-    Crawl เฉพาะหน้า page (1..17)
-    - ไม่เก็บ field 'page'
-    - ถ้า href เคยเจอแล้ว -> ใช้ id เดิม, อัปเดตข้อมูล/โปสเตอร์ให้ตรง
-    - ถ้า href ยังไม่เคย -> ออก id ใหม่ (ครั้งแรกเท่านั้น)
-    """
+    """Crawl หน้า series list"""
     global _next_id
-
     print(f"[CRAWL] page {page}")
-    html = requests.get(BASE_URL.format(page), headers=HEADERS, timeout=30).text
-    soup = BeautifulSoup(html, "html.parser")
-
+    html_content = requests.get(BASE_URL.format(page), headers=HEADERS, timeout=30).text
+    soup = BeautifulSoup(html_content, "html.parser")
     block = soup.find("div", id="tdi_45")
     if not block:
-        print(f"  ! ไม่พบ block id='tdi_45' ในหน้า {page}")
+        print(f"  ! ไม่พบ block id='tdi_45' หน้า {page}")
         return {}
-
     page_data: Dict[int, Dict[str, Any]] = {}
-
     for thumb in block.find_all("div", class_="td-module-thumb"):
         a_tag = thumb.find("a")
         img_span = thumb.find("span", class_="entry-thumb")
         if not (a_tag and img_span):
             continue
-
         title = (a_tag.get("title") or "").strip()
-        href  = a_tag.get("href") or ""
+        href = a_tag.get("href") or ""
         poster_url = img_span.get("data-img-url") or ""
         if not poster_url or not href:
             continue
-
-        # ใช้ id เดิมถ้ามี; ถ้าไม่มีก็จอง id ใหม่
         if href in url_to_id:
             sid = url_to_id[href]
         else:
             sid = _next_id
             _next_id += 1
             url_to_id[href] = sid
-
         info = _upsert_series(sid, title=title, href=href, poster_url=poster_url)
         page_data[sid] = info
-
     print(f"  ✓ page {page} -> {len(page_data)} รายการ")
     return page_data
 
-
 def scrape_all(total_pages: int = 17) -> Dict[int, Dict[str, Any]]:
-    """
-    Crawl ทุกหน้า 1..total_pages
-    - ไม่เก็บ field 'page'
-    - ไม่สร้าง id ใหม่ซ้ำ (href ชี้ id เดิมเสมอ)
-    """
     all_data: Dict[int, Dict[str, Any]] = {}
     for p in range(1, total_pages + 1):
         all_data.update(scrape_page(p))
@@ -166,7 +142,9 @@ def scrape_all(total_pages: int = 17) -> Dict[int, Dict[str, Any]]:
 
 def scrape_series_detail(url: str) -> dict:
     """Scrape ข้อมูลของ series จาก URL เดียว"""
-    res = requests.get(url, headers=HEADERS)
+    global _next_id, _next_cast_id
+
+    res = requests.get(url, headers=HEADERS, timeout=30)
     if res.status_code != 200:
         return {"error": f"Failed to fetch {url}", "status": res.status_code}
 
@@ -177,14 +155,24 @@ def scrape_series_detail(url: str) -> dict:
                       res.text, re.DOTALL | re.IGNORECASE)
     title = html.unescape(match.group(1).strip()) if match else ""
 
-    # modified year
-    modified_date = re.search(
-        r'<meta\s+property="article:modified_time"\s+content="(\d{4})-',
-        res.text
-    )
+    # modified date
+    modified_date = re.search(r'<meta\s+property="article:modified_time"\s+content="(\d{4})-', res.text)
     date = modified_date.group(1) if modified_date else ""
 
-    # castings (list ของ dict: name, url, image)
+    # id ของ series
+    if url in url_to_id:
+        sid = url_to_id[url]
+    else:
+        sid = _next_id
+        _next_id += 1
+        url_to_id[url] = sid
+
+    # poster
+    poster_match = re.search(r'<meta\s+property=["\']og:image["\']\s+content=["\'](.*?)["\']', res.text)
+    poster_url = poster_match.group(1).strip() if poster_match else ""
+    poster_public = save_poster_by_id(normalize_img_url(poster_url), sid)
+
+    # castings
     castings_divs = detail_soup.select("#tdi_67 .td_module_flex")
     castings = []
     for div in castings_divs:
@@ -194,20 +182,27 @@ def scrape_series_detail(url: str) -> dict:
         cast_url = a_tag.get("href")
         name_tag = div.select_one(".td-module-title a")
         cast_name = name_tag.get_text(strip=True) if name_tag else ""
-        # ดึงรูปจาก data-img-url หรือ style
+
         img_span = div.select_one(".entry-thumb")
         if img_span and img_span.get("data-img-url"):
-            cast_img = img_span["data-img-url"]
+            cast_img_url = img_span["data-img-url"]
         else:
-            # fallback ดึงจาก style
             style = img_span.get("style", "") if img_span else ""
             m = re.search(r'url\(&quot;(.*?)&quot;\)', style)
-            cast_img = m.group(1) if m else ""
-        castings.append({
-            "name": cast_name,
-            "url": cast_url,
-            "image": cast_img
-        })
+            cast_img_url = m.group(1) if m else ""
+
+        # check ถ้ามี cast_id แล้วใช้ id เดิม
+        if cast_url in cast_url_to_id:
+            cast_id = cast_url_to_id[cast_url]
+        else:
+            cast_id = _next_cast_id
+            _next_cast_id += 1
+            cast_url_to_id[cast_url] = cast_id
+
+        cast_img_public = save_cast_by_id(cast_img_url, cast_id)
+        cast_dict[cast_id] = {"id": cast_id, "name": cast_name, "url": cast_url, "image": cast_img_public}
+
+        castings.append({"id": cast_id, "name": cast_name, "url": cast_url, "image": cast_img_public})
 
     # trailer
     trailer_match = re.search(r'<iframe[^>]*src="(https://www\.youtube\.com/[^"]+)"', res.text)
@@ -217,24 +212,22 @@ def scrape_series_detail(url: str) -> dict:
     content_div = detail_soup.find("div", class_="tdb_single_content")
     if content_div:
         paragraphs = [p.get_text(" ", strip=True) for p in content_div.find_all("p")]
-        synopsis = " ".join(paragraphs)
-        synopsis = html.unescape(synopsis)
+        synopsis = html.unescape(" ".join(paragraphs))
         coming_soon = bool(re.search(r"เร็ว\s*ๆ\s*นี้", synopsis))
     else:
         synopsis = ""
         coming_soon = False
 
-    # poster
-    poster_match = re.search(r'<meta\s+property=["\']og:image["\']\s+content=["\'](.*?)["\']', res.text)
-    poster = poster_match.group(1).strip() if poster_match else ""
-
-    return {
+    info = {
+        "id": sid,
         "title": title,
         "date": date,
-        "castings": castings,  # list ของ dict {name, url, image}
+        "castings": castings,
         "trailer": trailer,
         "synopsis": synopsis,
-        "poster": poster,
+        "poster": poster_public,
         "coming_soon": coming_soon,
         "source_url": url
     }
+    series_dict[sid] = info
+    return info
