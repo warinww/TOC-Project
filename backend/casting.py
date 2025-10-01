@@ -21,7 +21,7 @@ casting_csv_file = "yflix_casting_details.csv"
 
 with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
     writer = csv.writer(file)
-    writer.writerow(["all_images" ,"title", "description", "full_name", "nick_name", "birth", "ig_username","ig_link", "work"])
+    writer.writerow(["all_images" ,"title", "description", "description_more_1", "description_more_2", "full_name", "nick_name", "birth", "ig_username","ig_link", "work"])
 
     for page in range(1, 2):
         print(f"Scraping list page {page}...")
@@ -170,7 +170,7 @@ with open(casting_csv_file, mode="w", newline="", encoding="utf-8-sig") as file:
 
             all_images = ", ".join([url.strip() for url in image_matches])
             # Write to CSV
-            writer.writerow([all_images, title, description, full_name, nick_name, ig_username, ig_link, birth])
+            writer.writerow([all_images, title, description, description_more_1, description_more_2, full_name, nick_name, birth, ig_username, ig_link, series_links])
 
             # Be polite, avoid hammering server
             time.sleep(1)
