@@ -6,6 +6,7 @@ import requests
 import html
 from bs4 import BeautifulSoup
 from typing import Dict, Any
+import csv
 
 # ===================== Directories =====================
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -17,6 +18,11 @@ PUBLIC_PREFIX = "/posters"
 CAST_DIR = BASE_DIR / "frontend" / "casts"
 CAST_DIR.mkdir(parents=True, exist_ok=True)
 CAST_PUBLIC_PREFIX = "/casts"
+
+filecsvname = "series_titles.csv"
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+CSV_FILE_PATH = BASE_DIR / "backend" / filecsvname
 
 # ===================== Headers =====================
 HEADERS = {
@@ -119,6 +125,24 @@ def save_cast_by_id(img_url: str, cast_id: int) -> str:
         return ""
     return public
 
+def save_series_to_csv_immediately(title: str):
+    """บันทึกชื่อเรื่องลงในไฟล์ CSV ทันทีหลังจาก scrape ข้อมูล"""
+    # ตรวจสอบว่าไฟล์ CSV มีอยู่แล้วหรือไม่
+    file_exists = CSV_FILE_PATH.exists()
+
+    with open(CSV_FILE_PATH, mode='a', newline='', encoding='utf-8') as file:
+        fieldnames = ['title']
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+        # ถ้าเป็นการเขียนครั้งแรก จะเขียน header
+        if not file_exists:
+            writer.writeheader()
+
+        # เขียนชื่อเรื่องลงในไฟล์
+        writer.writerow({'title': title})
+
+    print(f"Title '{title}' saved to CSV.")
+
 # ===================== Scrape Functions =====================
 def _upsert_series(sid: int, *, title: str, href: str, poster_url: str) -> Dict[str, Any]:
     poster_public = save_poster_by_id(normalize_img_url(poster_url), sid)
@@ -168,6 +192,9 @@ def scrape_page(page: int) -> Dict[int, Dict[str, Any]]:
 
         info = _upsert_series(sid, title=title, href=url, poster_url=poster_url)
         page_data[sid] = info
+
+        save_series_to_csv_immediately(title)
+
     print(f"  ✓ page {page} -> {len(page_data)} รายการ")
     return page_data
 
