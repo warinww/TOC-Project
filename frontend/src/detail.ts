@@ -5,7 +5,7 @@ createNavbar();
 
 const DEFAULT_COLLECTION_URL = "http://127.0.0.1:8000/series/detail";
 const FALLBACK_IMG =
-  "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
+  "https://www.serieslike.com/img/shop_01.png";
 
 function toNumId(v: unknown): number | undefined {
   const n = typeof v === "number" ? v : typeof v === "string" ? Number(v) : NaN;
