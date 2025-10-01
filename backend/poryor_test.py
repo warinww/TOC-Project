@@ -12,6 +12,7 @@ from home_crawl import (  # หรือ crawl.py ของคุณ
     scrape_page,
     scrape_all,
     scrape_series_detail as crawl_series_detail,
+    info_onair_series
 )
 
 app = FastAPI(title="Poryor Test API")
@@ -60,6 +61,10 @@ def _ensure_page_loaded(page: int) -> Dict[int, Dict[str, Any]]:
 def list_all() -> Dict[int, Dict[str, Any]]:
     _ensure_all_loaded()
     return series_dict
+
+@app.get("/api/series/OnAir")
+def get_series_on_air():
+    return info_onair_series()
 
 @app.get("/page")
 def list_by_page(page: int = Query(1, ge=1, le=17)) -> Dict[int, Dict[str, Any]]:
@@ -115,3 +120,4 @@ def cache_clear():
         page_cache.clear()
         search_cache.clear()
     return {"ok": True, "message": "cache cleared"}
+

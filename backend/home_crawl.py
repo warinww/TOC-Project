@@ -231,3 +231,48 @@ def scrape_series_detail(url: str) -> dict:
     }
     series_dict[sid] = info
     return info
+
+def scrape_OnAir():
+    url = f"https://yflix.me/category/series/page/2/"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                      "AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/120.0.0.0 Safari/537.36",
+    }
+
+    html = requests.get(url, headers=headers).text
+    soup = BeautifulSoup(html, "html.parser")
+
+    block = soup.find("div", id="tdi_40")
+    if not block:
+        return {"error": f"Block with id='tdi_40' not found on page 2."}
+
+    results = []
+    pattern = re.compile(
+        r'<div\s+class=["\']td-module-thumb["\'][^>]*>.*?<a\s+href=["\']([^"\']+)["\']',
+        re.DOTALL
+    )
+
+    matches = pattern.findall(str(block))
+
+    results = []
+    for href in matches:
+        results.append(href)
+    return results
+
+def info_onair_series():
+    onair_list = scrape_OnAir()
+    onair_dict = {}
+    for onair_series in onair_list :
+        for series_id in series_dict:
+            if onair_series == series_dict[series_id]["url"] :
+                info = {
+                    "id": series_dict[series_id]["id"],
+                    "title": series_dict[series_id]["title"],
+                    "url":series_dict[series_id]["url"],
+                    "poster":series_dict[series_id]["poster"]
+                }
+                onair_dict[series_dict[series_id]["id"]] = info
+
+        
+    return onair_dict
