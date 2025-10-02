@@ -15,7 +15,7 @@ export function createFooter() {
     exportcsv.textContent = "export .csv";
     exportcsv.disabled = true;
     exportcsv.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetch("http://localhost:8000/download-csv");
+        const response = yield fetch("http://127.0.0.1:8000/download-csv");
         const blob = yield response.blob();
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
