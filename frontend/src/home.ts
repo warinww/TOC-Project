@@ -79,7 +79,7 @@ function buildBanner(items: Series[]) {
 
     // ใช้ img แทน background-image
     const img = document.createElement("img");
-    img.src = "http://127.0.0.1:8000/image-proxy?url=" + encodeURIComponent(it.poster_url);
+    img.src = "http://0.0.0.0:8000/image-proxy?url=" + encodeURIComponent(it.poster_url);
     img.alt = it.title;
     img.className = "banner-img"; // ถ้าต้องใช้ style
     slide.appendChild(img);
@@ -150,7 +150,7 @@ function goBanner(step: number) { (window as any).goBanner?.(step); }
 async function loadSeries() {
   try {
     // 1. Fetch all series
-    const resAll = await fetch("http://127.0.0.1:8000/");
+    const resAll = await fetch("http://0.0.0.0:8000/");
     const exportbt = document.getElementById("exportcsv");
     exportbt?.removeAttribute("disabled");
     const dataDict: Record<string, any> = await resAll.json();
@@ -166,7 +166,7 @@ async function loadSeries() {
     filteredData = seriesData;
 
     // 2. Fetch onair series
-    const resOnAir = await fetch("http://127.0.0.1:8000/api/series/OnAir");
+    const resOnAir = await fetch("http://0.0.0.0:8000/api/series/OnAir");
     const onairDict: Record<string, any> = await resOnAir.json();
     bannerItems = Object.values(onairDict).map(item => ({
       id: item.id,
@@ -216,7 +216,7 @@ function renderSeries(data: Series[], page = 1) {
       };
 
       const img = document.createElement("img");
-      img.src =  "http://127.0.0.1:8000/image-proxy?url=" +
+      img.src =  "http://0.0.0.0:8000/image-proxy?url=" +
       encodeURIComponent(series.poster_url);
       img.alt = series.title;
       img.loading = "lazy";

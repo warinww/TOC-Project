@@ -31,7 +31,7 @@ const heading = document.querySelector(".poster-text") as HTMLParagraphElement;
 async function runSearch() {
   const title = getQueryParam("title") || "";
 
-  const res = await fetch(`http://127.0.0.1:8000/search?title=${encodeURIComponent(title)}&scan_all=true`);
+  const res = await fetch(`http://0.0.0.0:8000/search?title=${encodeURIComponent(title)}&scan_all=true`);
   const dataDict: Record<string, Series> = await res.json();
 
   const items: Series[] = Object.values(dataDict);
@@ -53,7 +53,7 @@ async function runSearch() {
     card.onclick = () => (window.location.href = `detail.html?url=${encodeURIComponent(s.url)}`);
 
     const img = document.createElement("img");
-    img.src =  "http://127.0.0.1:8000/image-proxy?url=" +
+    img.src =  "http://0.0.0.0:8000/image-proxy?url=" +
       encodeURIComponent(s.poster);
     img.alt = s.title;
     img.loading = "lazy";

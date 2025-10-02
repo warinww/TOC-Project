@@ -3,7 +3,7 @@ import { createNavbar } from "./navbar.js";
 import { createFooter } from "./footer.js";
 createNavbar();
 
-const DEFAULT_COLLECTION_URL = "http://127.0.0.1:8000/series/detail";
+const DEFAULT_COLLECTION_URL = "http://0.0.0.0:8000/series/detail";
 const FALLBACK_IMG = "https://www.serieslike.com/img/shop_01.png";
 
 /* ---------------- Utils ---------------- */

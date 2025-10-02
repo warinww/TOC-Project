@@ -4,7 +4,7 @@ import { createFooter } from "./footer.js";
 createNavbar();
 
 /** ====== Config ====== */
-const CASTING_API_BASE = "http://127.0.0.1:8000/casting";
+const CASTING_API_BASE = "http://0.0.0.0:8000/casting";
 const FALLBACK_IMG =
   "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png";
 
