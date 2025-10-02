@@ -3,7 +3,7 @@ import { createNavbar } from "./navbar.js";
 import { createFooter } from "./footer.js";
 createNavbar();
 
-const DEFAULT_COLLECTION_URL = "http://127.0.0.1:8000/series/detail";
+const DEFAULT_COLLECTION_URL = "https://toc.phabhavarin.uk/api/series/detail";
 const FALLBACK_IMG = "https://www.serieslike.com/img/shop_01.png";
 
 /* ---------------- Utils ---------------- */
@@ -111,7 +111,7 @@ function getApiBase(): string {
   try {
     if (apiOverride) {
       const u = new URL(apiOverride, document.baseURI);
-      return u.origin; // e.g. http://127.0.0.1:8000
+      return u.origin; // e.g. https://toc.phabhavarin.uk
     }
   } catch {}
   try {
@@ -124,7 +124,7 @@ function getApiBase(): string {
 
 /** สร้าง URL proxy สำหรับรูปภาพ */
 function viaImageProxy(absUrl: string): string {
-  const base = getApiBase(); // เช่น http://127.0.0.1:8000
+  const base = getApiBase(); // เช่น https://toc.phabhavarin.uk
   if (!base) return absUrl;
   return joinBasePath(base, "image-proxy") + "?url=" + encodeURIComponent(absUrl);
 }
@@ -178,7 +178,7 @@ export interface ShowDetailAttributes {
   trailer?: string;
   "back-href"?: string;
   cast?: string;
-  "data-src"?: string; // base ของ API detail (เช่น http://127.0.0.1:8000/series/detail)
+  "data-src"?: string; // base ของ API detail (เช่น https://toc.phabhavarin.uk/api/series/detail)
   "show-id"?: string;  // ถ้าไม่ใส่ จะอ่านจาก ?id=
 }
 
@@ -355,7 +355,7 @@ export class ShowDetail extends HTMLElement {
   /** โหมดโหลดข้อมูล:
    * - ถ้ามี ?url=... → เรียก {collectionUrl}?url=<encoded>
    * - ถ้าไม่มีก็ใช้ ?id=... หรือ attribute show-id → เรียก {collectionUrl}/{id}
-   * - รองรับ ?api=... เป็น base (เช่น http://127.0.0.1:8000 → /series/detail)
+   * - รองรับ ?api=... เป็น base (เช่น https://toc.phabhavarin.uk → /series/detail)
    */
   private async loadData(): Promise<void> {
     const attrSrc = this.getAttribute("data-src")?.trim();
