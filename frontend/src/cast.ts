@@ -4,7 +4,7 @@ import { createFooter } from "./footer.js";
 createNavbar();
 
 /** ====== Config ====== */
-const CASTING_API_BASE = "https://toc.phabhavarin.uk/api/casting";
+const CASTING_API_BASE = "/api/casting";
 const FALLBACK_IMG =
   "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png";
 
@@ -302,11 +302,11 @@ async function bootstrap() {
 
     let target = CASTING_API_BASE;
     if (qUrl) {
-      const u = new URL(CASTING_API_BASE);
+      const u = new URL(CASTING_API_BASE, location.origin);
       u.searchParams.set("url", qUrl);
       target = u.toString();
     } else if (qId) {
-      const u = new URL(CASTING_API_BASE);
+      const u = new URL(CASTING_API_BASE, location.origin);
       u.searchParams.set("id", qId);
       target = u.toString();
     }
@@ -315,8 +315,7 @@ async function bootstrap() {
     if (!res.ok) throw new Error(`Fetch casting failed: ${res.status}`);
     const raw = (await res.json()) as RawCastData;
 
-    const linkBase =
-      (qUrl ? toAbsoluteFrom(location.href, qUrl) : (res as Response).url) || CASTING_API_BASE;
+    const linkBase = (qUrl ? toAbsoluteFrom(location.href, qUrl) : (res as Response).url) || CASTING_API_BASE;
 
     const data = transformToPageData(raw, linkBase);
 
@@ -331,5 +330,3 @@ async function bootstrap() {
   }
 }
 bootstrap();
-
-

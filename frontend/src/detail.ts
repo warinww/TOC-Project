@@ -3,7 +3,7 @@ import { createNavbar } from "./navbar.js";
 import { createFooter } from "./footer.js";
 createNavbar();
 
-const DEFAULT_COLLECTION_URL = "https://toc.phabhavarin.uk/api/series/detail";
+const DEFAULT_COLLECTION_URL = "/api/series/detail";
 const FALLBACK_IMG = "https://www.serieslike.com/img/shop_01.png";
 
 /* ---------------- Utils ---------------- */
