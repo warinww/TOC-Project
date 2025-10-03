@@ -83,7 +83,7 @@ def image_proxy(url: str):
 
     return Response(content=r.content, media_type=r.headers.get("Content-Type", "image/jpeg"))
 
-@app.get("/api/series/OnAir")
+@app.get("/series/OnAir")
 def get_series_on_air():
     _ensure_all_loaded()
     return info_onair_series()
